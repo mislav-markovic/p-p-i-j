@@ -8,9 +8,10 @@ using InMyAppinion.Data;
 namespace InMyAppinion.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170404192929_FirstMigration")]
+    partial class FirstMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -189,7 +190,7 @@ namespace InMyAppinion.Data.Migrations
 
                     b.HasIndex("FacultyID");
 
-                    b.ToTable("Subject");
+                    b.ToTable("Subeject");
                 });
 
             modelBuilder.Entity("InMyAppinion.Models.SubjectReview", b =>
