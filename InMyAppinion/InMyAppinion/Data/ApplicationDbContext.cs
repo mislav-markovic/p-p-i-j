@@ -56,6 +56,9 @@ namespace InMyAppinion.Data
             builder.Entity<SubjectTagSet>().ToTable("SubjectTagSet");
             builder.Entity<City>().ToTable("City");
             builder.Entity<University>().ToTable("University");
+
+            builder.Entity<SubjectReviewTagSet>().HasKey(t => new { t.SubjectReviewID, t.SubjectReviewTagID });
+            builder.Entity<ProfessorReviewTagSet>().HasKey(t => new { t.ProfessorReviewID, t.ProfessorReviewTagID });
         }
     }
 }

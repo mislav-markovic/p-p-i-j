@@ -7,7 +7,6 @@ namespace InMyAppinion.Models
 {
     public class SubjectReviewTagSet
     {
-        public int ID { get; set; }
         public int SubjectReviewTagID { get; set; }
         public int SubjectReviewID { get; set; }
 
