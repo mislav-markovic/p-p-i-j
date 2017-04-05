@@ -107,7 +107,10 @@
     </div>
 </div>*@
 <div>
-    @Html.ActionLink("Professors","Index","Professors") <br />
+    <a asp-action="Index" asp-controller="Professors">Professors</a> <br />
+    <a asp-action="Index" asp-controller="Cities">Cities</a> <br />
+    <a asp-action="Index" asp-controller="Universities">Universities</a> <br />
+    @*@Html.ActionLink("Professors","Index","Professors") <br />
     @Html.ActionLink("Cities", "Index", "Cities") <br />
-    @Html.ActionLink("Universities", "Index", "Universities") <br />
+    @Html.ActionLink("Universities", "Index", "Universities") <br />*@
 </div>
