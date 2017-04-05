@@ -59,6 +59,8 @@ namespace InMyAppinion.Data
 
             builder.Entity<SubjectReviewTagSet>().HasKey(t => new { t.SubjectReviewID, t.SubjectReviewTagID });
             builder.Entity<ProfessorReviewTagSet>().HasKey(t => new { t.ProfessorReviewID, t.ProfessorReviewTagID });
+            builder.Entity<ProfessorSubjectSet>().HasKey(t => new { t.ProfessorID, t.SubjectID });
+            builder.Entity<SubjectTagSet>().HasKey(t => new { t.SubjectID, t.SubjectTagID });
         }
     }
 }

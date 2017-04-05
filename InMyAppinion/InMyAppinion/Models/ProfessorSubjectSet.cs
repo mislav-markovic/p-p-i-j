@@ -7,7 +7,6 @@ namespace InMyAppinion.Models
 {
     public class ProfessorSubjectSet
     {
-        public int ID { get; set; }
         public int ProfessorID { get; set; }
         public int SubjectID { get; set; }
 
