@@ -11,7 +11,8 @@ namespace InMyAppinion.Models
         public string Text { get; set; }
         public int QualityGrade { get; set; }
         public int InteractionGrade { get; set; }
-        public int MentorGrade { get; set; }
+        public int HelpfulnessGrade { get; set; }
+        public int? MentorGrade { get; set; }
         public decimal TotalGrade { get; set; }
         public int Points { get; set; }
         public DateTime Timestamp { get; set; }
