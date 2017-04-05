@@ -19,13 +19,17 @@ namespace InMyAppinion.Data
         public DbSet<Faculty> Faculty { get; set; }
         public DbSet<Professor> Professor { get; set; }
         public DbSet<ProfessorReview> ProfessorReview { get; set; }
-        public DbSet<ProfessorTag> ProfessorTag { get; set; }
-        public DbSet<ProfessorTagSet> ProfessorTagSet { get; set; }
+        public DbSet<ProfessorReviewTag> ProfessorReviewTag { get; set; }
+        public DbSet<ProfessorReviewTagSet> ProfessorReviewTagSet { get; set; }
         public DbSet<Subject> Subject { get; set; }
         public DbSet<SubjectReview> SubjectReview { get; set; }
+        public DbSet<SubjectReviewTag> SubjectReviewTag { get; set; }
+        public DbSet<SubjectReviewTagSet> SubjectReviewTagSet { get; set; }
+        public DbSet<City> City { get; set; }
+        public DbSet<University> University { get; set; }
         public DbSet<SubjectTag> SubjectTag { get; set; }
         public DbSet<SubjectTagSet> SubjectTagSet { get; set; }
-
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -42,12 +46,16 @@ namespace InMyAppinion.Data
             builder.Entity<Professor>().ToTable("Professor");
             builder.Entity<ProfessorReview>().ToTable("ProfessorReview");
             builder.Entity<ProfessorSubjectSet>().ToTable("ProfessorSubjectSet");
-            builder.Entity<ProfessorTag>().ToTable("ProfessorTag");
-            builder.Entity<ProfessorTagSet>().ToTable("ProfessorTagSet");
+            builder.Entity<ProfessorReviewTag>().ToTable("ProfessorReviewTag");
+            builder.Entity<ProfessorReviewTagSet>().ToTable("ProfessorReviewTagSet");
             builder.Entity<Subject>().ToTable("Subject");
             builder.Entity<SubjectReview>().ToTable("SubjectReview");
+            builder.Entity<SubjectReviewTag>().ToTable("SubjectReviewTag");
+            builder.Entity<SubjectReviewTagSet>().ToTable("SubjectReviewTagSet");
             builder.Entity<SubjectTag>().ToTable("SubjectTag");
             builder.Entity<SubjectTagSet>().ToTable("SubjectTagSet");
+            builder.Entity<City>().ToTable("City");
+            builder.Entity<University>().ToTable("University");
         }
     }
 }

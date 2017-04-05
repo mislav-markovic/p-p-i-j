@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace InMyAppinion.Models
 {
-    public class SubjectTagSet
+    public class SubjectReviewTagSet
     {
         public int ID { get; set; }
-        public int SubjectID { get; set; }
         public int SubjectTagID { get; set; }
+        public int SubjectReviewID { get; set; }
 
-        public Subject Subject { get; set; }
-        public SubjectTag SubjectTag { get; set; }
+        public SubjectReviewTag SubjectReviewTag { get; set; }
+        public SubjectReview SubjectReview { get; set; }
     }
 }

@@ -21,6 +21,6 @@ namespace InMyAppinion.Models
         public int ProfessorID { get; set; }
         public Professor Professor { get; set; }
 
-        public ICollection<ProfessorTagSet> ProfessorTagSet { get; set; }
+        public ICollection<ProfessorReviewTagSet> ProfessorReviewTagSet { get; set; }
     }
 }

@@ -21,6 +21,6 @@ namespace InMyAppinion.Models
         public ApplicationUser Author { get; set; }
         public Subject Subject { get; set; }
         
-        public ICollection<SubjectTagSet> SubjectTagSet { get; set; }
+        public ICollection<SubjectReviewTagSet> SubjectReviewTagSet { get; set; }
     }
 }

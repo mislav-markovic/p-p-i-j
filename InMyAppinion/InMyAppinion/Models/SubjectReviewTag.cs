@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 
 namespace InMyAppinion.Models
 {
-    public class ProfessorTag
+    public class SubjectReviewTag
     {
         public int ID { get; set; }
         public string Name { get; set; }
 
-        public ICollection<ProfessorTagSet> ProfessorTagSet { get; set; }
+        public ICollection<SubjectReviewTagSet> SubjectReviewTagSet { get; set; }
     }
 }

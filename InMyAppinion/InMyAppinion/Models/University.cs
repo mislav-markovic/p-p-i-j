@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace InMyAppinion.Models
 {
-    public class Faculty
+    public class University
     {
         public int ID { get; set; }
         public string Name { get; set; }
         public string ShortName { get; set; }
-        public int? UniversityID { get; set; }
+        public int CityID { get; set; }
 
-        public University University { get; set; }
-        public ICollection<Subject> Subjects { get; set; }
+        public City City { get; set; }
+        public ICollection<Faculty> Faculties { get; set; }
     }
 }

@@ -8,9 +8,10 @@ using InMyAppinion.Data;
 namespace InMyAppinion.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170405151941_ThirdMigration")]
+    partial class ThirdMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -93,7 +94,7 @@ namespace InMyAppinion.Data.Migrations
 
                     b.Property<string>("ShortName");
 
-                    b.Property<int?>("UniversityID");
+                    b.Property<int>("UniversityID");
 
                     b.HasKey("ID");
 
@@ -167,15 +168,13 @@ namespace InMyAppinion.Data.Migrations
 
                     b.Property<int>("ProfessorReviewID");
 
-                    b.Property<int?>("ProfessorReviewTagID");
-
                     b.Property<int>("ProfessorTagID");
 
                     b.HasKey("ID");
 
                     b.HasIndex("ProfessorReviewID");
 
-                    b.HasIndex("ProfessorReviewTagID");
+                    b.HasIndex("ProfessorTagID");
 
                     b.ToTable("ProfessorReviewTagSet");
                 });
@@ -269,15 +268,13 @@ namespace InMyAppinion.Data.Migrations
 
                     b.Property<int>("SubjectReviewID");
 
-                    b.Property<int?>("SubjectReviewTagID");
-
                     b.Property<int>("SubjectTagID");
 
                     b.HasKey("ID");
 
                     b.HasIndex("SubjectReviewID");
 
-                    b.HasIndex("SubjectReviewTagID");
+                    b.HasIndex("SubjectTagID");
 
                     b.ToTable("SubjectReviewTagSet");
                 });
@@ -440,8 +437,9 @@ namespace InMyAppinion.Data.Migrations
             modelBuilder.Entity("InMyAppinion.Models.Faculty", b =>
                 {
                     b.HasOne("InMyAppinion.Models.University", "University")
-                        .WithMany("Faculties")
-                        .HasForeignKey("UniversityID");
+                        .WithMany()
+                        .HasForeignKey("UniversityID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("InMyAppinion.Models.ProfessorReview", b =>
@@ -463,9 +461,10 @@ namespace InMyAppinion.Data.Migrations
                         .HasForeignKey("ProfessorReviewID")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("InMyAppinion.Models.ProfessorReviewTag", "ProfessorReviewTag")
+                    b.HasOne("InMyAppinion.Models.ProfessorReviewTag", "ProfessorTag")
                         .WithMany("ProfessorReviewTagSet")
-                        .HasForeignKey("ProfessorReviewTagID");
+                        .HasForeignKey("ProfessorTagID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("InMyAppinion.Models.ProfessorSubjectSet", b =>
@@ -508,9 +507,10 @@ namespace InMyAppinion.Data.Migrations
                         .HasForeignKey("SubjectReviewID")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("InMyAppinion.Models.SubjectReviewTag", "SubjectReviewTag")
+                    b.HasOne("InMyAppinion.Models.SubjectReviewTag", "SubjectTag")
                         .WithMany("SubjectReviewTagSet")
-                        .HasForeignKey("SubjectReviewTagID");
+                        .HasForeignKey("SubjectTagID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("InMyAppinion.Models.SubjectTagSet", b =>
@@ -529,7 +529,7 @@ namespace InMyAppinion.Data.Migrations
             modelBuilder.Entity("InMyAppinion.Models.University", b =>
                 {
                     b.HasOne("InMyAppinion.Models.City", "City")
-                        .WithMany("Universities")
+                        .WithMany()
                         .HasForeignKey("CityID")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
