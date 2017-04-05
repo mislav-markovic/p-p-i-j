@@ -48,7 +48,7 @@ namespace InMyAppinion.Controllers
         // GET: University/Create
         public IActionResult Create()
         {
-            ViewData["CityID"] = new SelectList(_context.City, "ID", "ID");
+            ViewData["CityID"] = new SelectList(_context.City, "ID", "Name");
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace InMyAppinion.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["CityID"] = new SelectList(_context.City, "ID", "ID", university.CityID);
+            ViewData["CityID"] = new SelectList(_context.City, "ID", "Name", university.CityID);
             return View(university);
         }
 
@@ -82,7 +82,7 @@ namespace InMyAppinion.Controllers
             {
                 return NotFound();
             }
-            ViewData["CityID"] = new SelectList(_context.City, "ID", "ID", university.CityID);
+            ViewData["CityID"] = new SelectList(_context.City, "ID", "Name", university.CityID);
             return View(university);
         }
 
@@ -118,7 +118,7 @@ namespace InMyAppinion.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["CityID"] = new SelectList(_context.City, "ID", "ID", university.CityID);
+            ViewData["CityID"] = new SelectList(_context.City, "ID", "Name", university.CityID);
             return View(university);
         }
 
