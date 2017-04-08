@@ -62,5 +62,7 @@ namespace InMyAppinion.Data
             builder.Entity<ProfessorSubjectSet>().HasKey(t => new { t.ProfessorID, t.SubjectID });
             builder.Entity<SubjectTagSet>().HasKey(t => new { t.SubjectID, t.SubjectTagID });
         }
+        
+        public DbSet<InMyAppinion.Models.ApplicationRole> ApplicationRole { get; set; }
     }
 }
