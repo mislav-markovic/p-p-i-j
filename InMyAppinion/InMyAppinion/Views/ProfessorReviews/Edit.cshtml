@@ -1,0 +1,99 @@
+@model InMyAppinion.Models.ProfessorReview
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <h4>ProfessorReview</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="ID" />
+        <div class="form-group">
+            <label asp-for="Text" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Text" class="form-control" />
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="QualityGrade" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="QualityGrade" class="form-control" />
+                <span asp-validation-for="QualityGrade" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="InteractionGrade" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="InteractionGrade" class="form-control" />
+                <span asp-validation-for="InteractionGrade" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="HelpfulnessGrade" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="HelpfulnessGrade" class="form-control" />
+                <span asp-validation-for="HelpfulnessGrade" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MentorGrade" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="MentorGrade" class="form-control" />
+                <span asp-validation-for="MentorGrade" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="TotalGrade" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="TotalGrade" class="form-control" />
+                <span asp-validation-for="TotalGrade" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Points" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Points" class="form-control" />
+                <span asp-validation-for="Points" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Timestamp" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Timestamp" class="form-control" />
+                <span asp-validation-for="Timestamp" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="AuthorID" class="control-label col-md-2"></label>
+            <div class="col-md-10">
+                <select asp-for="AuthorID" class="form-control" asp-items="ViewBag.AuthorID"></select>
+                <span asp-validation-for="AuthorID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ProfessorID" class="control-label col-md-2"></label>
+            <div class="col-md-10">
+                <select asp-for="ProfessorID" class="form-control" asp-items="ViewBag.ProfessorID"></select>
+                <span asp-validation-for="ProfessorID" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

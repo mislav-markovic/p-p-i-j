@@ -1,0 +1,89 @@
+@model InMyAppinion.Models.SubjectReview
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>SubjectReview</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Text" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Text" class="form-control" />
+                <span asp-validation-for="Text" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="UsefulnessGrade" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="UsefulnessGrade" class="form-control" />
+                <span asp-validation-for="UsefulnessGrade" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="InterestGrade" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="InterestGrade" class="form-control" />
+                <span asp-validation-for="InterestGrade" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="DifficultyGrade" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="DifficultyGrade" class="form-control" />
+                <span asp-validation-for="DifficultyGrade" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="TotalGrade" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="TotalGrade" class="form-control" />
+                <span asp-validation-for="TotalGrade" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Points" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Points" class="form-control" />
+                <span asp-validation-for="Points" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Timestamp" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Timestamp" class="form-control" />
+                <span asp-validation-for="Timestamp" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="AuthorID" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="AuthorID" class ="form-control" asp-items="ViewBag.AuthorID"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SubjectID" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="SubjectID" class ="form-control" asp-items="ViewBag.SubjectID"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

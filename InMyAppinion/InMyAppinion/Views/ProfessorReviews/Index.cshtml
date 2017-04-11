@@ -1,0 +1,89 @@
+@model IEnumerable<InMyAppinion.Models.ProfessorReview>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Text)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.QualityGrade)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.InteractionGrade)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.HelpfulnessGrade)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.MentorGrade)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalGrade)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Points)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Timestamp)
+                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Author)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Professor)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QualityGrade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InteractionGrade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HelpfulnessGrade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MentorGrade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalGrade)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Points)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timestamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Professor.ID)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
