@@ -49,6 +49,13 @@ namespace InMyAppinion
 
             services.AddMvc();
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    "CanReview",
+                    policyBuilder => policyBuilder.RequireRole("Korisnik"));
+            });
+
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
