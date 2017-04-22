@@ -30,7 +30,7 @@
 
     @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
     {
-        <a asp-action="Create" asp-controller="ProfessorReviews" asp-route-professorId="@Model.ID">Dodaj kritiku</a>@: |
+        <a asp-action="Create" asp-controller="ProfessorReviews" asp-route-Id="@Model.ID">Dodaj kritiku</a>@: |
     }
     <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
     <a asp-action="Index">Back to List</a>

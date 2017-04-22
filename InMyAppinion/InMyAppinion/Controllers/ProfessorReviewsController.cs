@@ -57,9 +57,9 @@ namespace InMyAppinion.Controllers
 
         // GET: ProfessorReviews/Create
         [Authorize(Roles = "Administrator,Korisnik")]
-        public IActionResult Create(int? professorId)
+        public IActionResult Create(int? Id)
         {
-            if (professorId == null)
+            if (Id == null)
             {
                 return NotFound();
             }
@@ -67,7 +67,7 @@ namespace InMyAppinion.Controllers
             var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             ViewData["AuthorID"] = userId;
-            ViewData["ProfessorID"] = professorId;
+            ViewData["ProfessorID"] = Id;
             ViewData["ProfessorTags"] = new SelectList(_context.ProfessorReviewTag, "ID", "Name");
             return View();
         }
@@ -77,7 +77,7 @@ namespace InMyAppinion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,Points,AuthorID,ProfessorID")] ProfessorReview professorReview, ICollection<int> tags)
+        public async Task<IActionResult> Create([Bind("Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,Points,AuthorID,ProfessorID")] ProfessorReview professorReview, ICollection<int> tags)
         {
             professorReview.TotalGrade = calculateTotalGrade(professorReview);
             professorReview.Timestamp = DateTime.Now;
