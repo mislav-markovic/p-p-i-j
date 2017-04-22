@@ -11,5 +11,11 @@ namespace InMyAppinion.Models
     {
         public bool IsBanned { get; set; }
         public int Points { get; set; }
+        public ICollection<VoteComment> VotedComments { get; set; }
+        public ICollection<VoteProfessorReview> VotedProfessorReview { get; set; }
+        public ICollection<VoteSubjectReview> VotedSubjectReview { get; set; }
+        public ICollection<Comment> Comments { get; set; }
+        public ICollection<ProfessorReview> ProfessorReviews { get; set; }
+        public ICollection<SubjectReview> SubjectReviews { get; set; }
     }
 }

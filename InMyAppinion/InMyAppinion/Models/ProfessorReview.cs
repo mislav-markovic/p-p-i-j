@@ -23,5 +23,7 @@ namespace InMyAppinion.Models
         public Professor Professor { get; set; }
 
         public ICollection<ProfessorReviewTagSet> ProfessorReviewTagSet { get; set; }
+        public ICollection<Comment> Comments { get; set; }
+        public ICollection<VoteProfessorReview> Votes { get; set; }
     }
 }

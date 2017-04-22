@@ -11,10 +11,12 @@ namespace InMyAppinion.Models
         public string Name { get; set; }
         public string ShortName { get; set; }
         public string Description { get; set; }
+        public bool Validated { get; set; }
         public int FacultyID { get; set; }
 
         public Faculty Faculty { get; set; }
         public ICollection<SubjectTagSet> SubjectTagSet { get; set; }
         public ICollection<ProfessorSubjectSet> Professors { get; set; }
+        public ICollection<SubjectReview> Reviews { get; set; }
     }
 }

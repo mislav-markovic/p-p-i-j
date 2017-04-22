@@ -33,7 +33,7 @@ namespace InMyAppinion.Controllers
                 return NotFound();
             }
 
-            var professor = await _context.Professor
+            var professor = await _context.Professor.Include(p => p.Reviews)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (professor == null)
             {

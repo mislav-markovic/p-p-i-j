@@ -22,5 +22,7 @@ namespace InMyAppinion.Models
         public Subject Subject { get; set; }
         
         public ICollection<SubjectReviewTagSet> SubjectReviewTagSet { get; set; }
+        public ICollection<Comment> Comments { get; set; }
+        public ICollection<VoteSubjectReview> Votes { get; set; }
     }
 }
