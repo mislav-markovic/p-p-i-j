@@ -42,7 +42,9 @@ namespace InMyAppinion.Controllers
             var professorReview = await _context.ProfessorReview
                 .Include(p => p.Author)
                 .Include(p => p.Professor)
+                .Include(p => p.ProfessorReviewTagSet).ThenInclude(p => p.ProfessorReviewTag)
                 .SingleOrDefaultAsync(m => m.ID == id);
+
             if (professorReview == null)
             {
                 return NotFound();
@@ -65,6 +67,7 @@ namespace InMyAppinion.Controllers
 
             ViewData["AuthorID"] = userId;
             ViewData["ProfessorID"] = professorId;
+            ViewData["ProfessorTags"] = new SelectList(_context.ProfessorReviewTag, "ID", "Name");
             return View();
         }
 
