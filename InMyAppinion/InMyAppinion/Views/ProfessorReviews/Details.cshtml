@@ -62,13 +62,15 @@
             @Html.DisplayNameFor(model => model.Author)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Author.Id)
+            @Html.DisplayFor(model => model.Author.UserName)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Professor)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Professor.ID)
+            @Html.DisplayFor(model => model.Professor.FirstName)
+             
+            @Html.DisplayFor(model => model.Professor.LastName)
         </dd>
         <dt>
             Tagovi
@@ -77,7 +79,7 @@
             @foreach (var t in Model.ProfessorReviewTagSet)
             {
                 @t.ProfessorReviewTag.Name
-                 
+                @: 
             }
         </dd>
     </dl>

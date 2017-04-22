@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InMyAppinion.Data;
 using InMyAppinion.Models;
+using InMyAppinion.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
@@ -76,10 +77,22 @@ namespace InMyAppinion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,Points,AuthorID,ProfessorID")] ProfessorReview professorReview)
+        public async Task<IActionResult> Create([Bind("ID,Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,Points,AuthorID,ProfessorID")] ProfessorReview professorReview, ICollection<int> tags)
         {
             professorReview.TotalGrade = calculateTotalGrade(professorReview);
             professorReview.Timestamp = DateTime.Now;
+            List<ProfessorReviewTagSet> tagSet = new List<ProfessorReviewTagSet>();
+
+            foreach(var tagId in tags)
+            {
+                var temp = new ProfessorReviewTagSet();
+                temp.ProfessorReviewID = professorReview.ID;
+                temp.ProfessorReviewTagID = tagId;
+                tagSet.Add(temp);
+            }
+
+            professorReview.ProfessorReviewTagSet = tagSet;
+
             if (ModelState.IsValid)
             {
                 _context.Add(professorReview);

@@ -1,4 +1,4 @@
-@model InMyAppinion.Models.ProfessorReview
+@model InMyAppinion.ViewModels.ProfessorReviewViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -75,9 +75,9 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ProfessorReviewTagSet" class="col-md-2 control-label"></label>
+            <label asp-for="tags" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="ProfessorReviewTagSet" asp-items="ViewBag.ProfessorTags" class="form-control" />
+                <select asp-for="tags" asp-items="ViewBag.ProfessorTags" multiple="multiple" class="form-control"></select>
             </div>
         </div>
         <div class="form-group">
