@@ -52,22 +52,21 @@ namespace InMyAppinion.Controllers
         {
             UserRoleViewModel model = new UserRoleViewModel
             {
-                RoleList = new SelectList(roleManager.Roles, "Id", "Name"),
+                RoleList = new SelectList(roleManager.Roles, "Name", "Name"),
                 UserList = new SelectList(userManager.Users, "Id", "UserName")
             };
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Join(string UserId, string RoleId)
+        public async Task<IActionResult> Join(string UserId, params string[] RoleId)
         {
             if (ModelState.IsValid)
             {
                 var user = await userManager.FindByIdAsync(UserId);
-                var role = await roleManager.FindByIdAsync(RoleId);
-                await userManager.AddToRoleAsync(user, role.Name);
+                await userManager.AddToRolesAsync(user, RoleId);
 
-                return RedirectToAction("Details", new { roleName = role.Name});
+                return RedirectToAction("Index");
             }
 
             return View();

@@ -19,7 +19,7 @@
         <div class="form-group">
             <label class="col-md-2 control-label">Uloga</label>
             <div class="col-md-10">
-                <select asp-for="RoleId" class="form-control" asp-items="@Model.RoleList"></select>
+                <select asp-for="RoleId" class="form-control chosen-select" multiple asp-items="@Model.RoleList"></select>
             </div>
         </div>
         <div class="form-group">
@@ -33,3 +33,11 @@
 <div>
     <a asp-action="Index">Natrag na listu uloga</a>
 </div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(".chosen-select").chosen();
+        });
+    </script>
+}
