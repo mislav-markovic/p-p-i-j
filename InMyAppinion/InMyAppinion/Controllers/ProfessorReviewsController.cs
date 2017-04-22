@@ -59,7 +59,7 @@ namespace InMyAppinion.Controllers
         [Authorize(Roles = "Administrator,Korisnik")]
         public IActionResult Create(int? Id)
         {
-            if (Id == null)
+            if (!Id.HasValue)
             {
                 return NotFound();
             }

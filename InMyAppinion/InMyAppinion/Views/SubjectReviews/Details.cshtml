@@ -56,13 +56,22 @@
             @Html.DisplayNameFor(model => model.Author)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Author.Id)
+            @Html.DisplayFor(model => model.Author.UserName)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Subject)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Subject.ID)
+            @Html.DisplayFor(model => model.Subject.Name)
+        </dd>
+        <dt>
+            Tagovi
+        </dt>
+        <dd>
+            @foreach(var tag in Model.SubjectReviewTagSet)
+            { 
+                @tag.SubjectReviewTag.Name@: | 
+            }
         </dd>
     </dl>
 </div>

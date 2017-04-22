@@ -36,6 +36,7 @@ namespace InMyAppinion.Controllers
 
             var subject = await _context.Subject
                 .Include(s => s.Faculty)
+                .Include(s => s.Reviews)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (subject == null)
             {

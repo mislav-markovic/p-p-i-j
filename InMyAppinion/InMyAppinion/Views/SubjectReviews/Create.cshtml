@@ -1,4 +1,4 @@
-@model InMyAppinion.Models.SubjectReview
+@model InMyAppinion.ViewModels.SubjectReviewViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -40,36 +40,23 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="TotalGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="TotalGrade" class="form-control" />
-                <span asp-validation-for="TotalGrade" class="text-danger"></span>
+                <input asp-for="Points" type="hidden" value="0" class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Points" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Points" class="form-control" />
-                <span asp-validation-for="Points" class="text-danger"></span>
+                <input asp-for="AuthorID" class ="form-control" type="hidden" value="@ViewBag.AuthorID" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Timestamp" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Timestamp" class="form-control" />
-                <span asp-validation-for="Timestamp" class="text-danger"></span>
+                <input asp-for="SubjectID" class ="form-control" type="hidden" value="@ViewBag.SubjectID" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="AuthorID" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="AuthorID" class ="form-control" asp-items="ViewBag.AuthorID"></select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="SubjectID" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="SubjectID" class ="form-control" asp-items="ViewBag.SubjectID"></select>
+                <select asp-for="tags" class="form-control chosen-select" multiple asp-items="ViewBag.SubjectTags"></select>
             </div>
         </div>
         <div class="form-group">
@@ -84,6 +71,10 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $(".chosen-select").chosen();
+        });
+    </script>
 }
