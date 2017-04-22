@@ -46,37 +46,32 @@
                 <span asp-validation-for="MentorGrade" class="text-danger"></span>
             </div>
         </div>
-        <div class="form-group">
-            <label asp-for="TotalGrade" class="col-md-2 control-label"></label>
+        @*<div class="form-group">
             <div class="col-md-10">
-                <input asp-for="TotalGrade" class="form-control" />
+                <input asp-for="TotalGrade" type="hidden" value="0" class="form-control" />
                 <span asp-validation-for="TotalGrade" class="text-danger"></span>
             </div>
-        </div>
+        </div>*@
         <div class="form-group">
-            <label asp-for="Points" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Points" class="form-control" />
+                <input asp-for="Points" type="hidden" value="0" class="form-control" />
                 <span asp-validation-for="Points" class="text-danger"></span>
             </div>
         </div>
+        @*<div class="form-group">
+        <div class="col-md-10">
+            <input asp-for="Timestamp" type="hidden" value="@ViewBag.Timestamp" class="form-control" />
+            <span asp-validation-for="Timestamp" class="text-danger"></span>
+        </div>
+    </div>*@
         <div class="form-group">
-            <label asp-for="Timestamp" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Timestamp" class="form-control" />
-                <span asp-validation-for="Timestamp" class="text-danger"></span>
+                <input asp-for="AuthorID" type="hidden" value="@ViewBag.AuthorID" class ="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="AuthorID" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <select asp-for="AuthorID" class ="form-control" asp-items="ViewBag.AuthorID"></select>
-            </div>
-        </div>
-        <div class="form-group">
-            <label asp-for="ProfessorID" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <select asp-for="ProfessorID" class ="form-control" asp-items="ViewBag.ProfessorID"></select>
+                <input asp-for="ProfessorID" type="hidden" value="@ViewBag.ProfessorID" class ="form-control" />
             </div>
         </div>
         <div class="form-group">

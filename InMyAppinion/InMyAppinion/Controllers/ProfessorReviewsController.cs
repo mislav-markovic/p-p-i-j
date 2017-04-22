@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InMyAppinion.Data;
 using InMyAppinion.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace InMyAppinion.Controllers
 {
@@ -22,7 +25,9 @@ namespace InMyAppinion.Controllers
         // GET: ProfessorReviews
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ProfessorReview.Include(p => p.Author).Include(p => p.Professor);
+            var applicationDbContext = _context.ProfessorReview
+                .Include(p => p.Author)
+                .Include(p => p.Professor);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -46,11 +51,20 @@ namespace InMyAppinion.Controllers
             return View(professorReview);
         }
 
+
         // GET: ProfessorReviews/Create
-        public IActionResult Create()
+        [Authorize(Roles = "Administrator,Korisnik")]
+        public IActionResult Create(int? professorId)
         {
-            ViewData["AuthorID"] = new SelectList(_context.User, "Id", "Id");
-            ViewData["ProfessorID"] = new SelectList(_context.Professor, "ID", "ID");
+            if (professorId == null)
+            {
+                return NotFound();
+            }
+
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ViewData["AuthorID"] = userId;
+            ViewData["ProfessorID"] = professorId;
             return View();
         }
 
@@ -59,8 +73,10 @@ namespace InMyAppinion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,TotalGrade,Points,Timestamp,AuthorID,ProfessorID")] ProfessorReview professorReview)
+        public async Task<IActionResult> Create([Bind("ID,Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,Points,AuthorID,ProfessorID")] ProfessorReview professorReview)
         {
+            professorReview.TotalGrade = calculateTotalGrade(professorReview);
+            professorReview.Timestamp = DateTime.Now;
             if (ModelState.IsValid)
             {
                 _context.Add(professorReview);
@@ -70,6 +86,29 @@ namespace InMyAppinion.Controllers
             ViewData["AuthorID"] = new SelectList(_context.User, "Id", "Id", professorReview.AuthorID);
             ViewData["ProfessorID"] = new SelectList(_context.Professor, "ID", "ID", professorReview.ProfessorID);
             return View(professorReview);
+        }
+
+        private decimal calculateTotalGrade(ProfessorReview pr)
+        {
+            int sum = 0;
+            decimal result = 0;
+
+                sum += pr.HelpfulnessGrade; 
+                sum += pr.InteractionGrade;
+                sum += pr.QualityGrade;
+
+            if (pr.MentorGrade.HasValue)
+            {
+                sum += pr.MentorGrade.Value;
+                result = sum / (decimal) 4;    
+            }
+            else
+            {
+                result = sum / (decimal)3;
+            }
+
+            return result;
+
         }
 
         // GET: ProfessorReviews/Edit/5
