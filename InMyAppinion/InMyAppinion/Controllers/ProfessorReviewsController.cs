@@ -79,6 +79,7 @@ namespace InMyAppinion.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,Points,AuthorID,ProfessorID")] ProfessorReview professorReview, ICollection<int> tags)
         {
+            if (professorReview.MentorGrade == 0) professorReview.MentorGrade = null;
             professorReview.TotalGrade = calculateTotalGrade(professorReview);
             professorReview.Timestamp = DateTime.Now;
             List<ProfessorReviewTagSet> tagSet = new List<ProfessorReviewTagSet>();

@@ -1,4 +1,4 @@
-@model InMyAppinion.ViewModels.ProfessorReviewViewModel
+﻿@model InMyAppinion.ViewModels.ProfessorReviewViewModel
 
 @{
     ViewData["Title"] = "Kritika Profesora";
@@ -14,36 +14,35 @@
         <div class="form-group">
             <label asp-for="Text" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @*<input asp-for="Text" class="form-control" />*@
-                @Html.TextAreaFor(m=>m.Text,new { @class="form-control"})
+                @Html.TextAreaFor(m=>m.Text,new { @class="form-control" })
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="QualityGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="QualityGrade" class="form-control" />
+                <input asp-for="QualityGrade" class="form-control slider-tick" />
                 <span asp-validation-for="QualityGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="InteractionGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="InteractionGrade" class="form-control" />
+                <input asp-for="InteractionGrade" class="form-control slider-tick" />
                 <span asp-validation-for="InteractionGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="HelpfulnessGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="HelpfulnessGrade" class="form-control" />
+                <input asp-for="HelpfulnessGrade" class="form-control slider-tick" />
                 <span asp-validation-for="HelpfulnessGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="MentorGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="MentorGrade" class="form-control" />
+                <input asp-for="MentorGrade" class="form-control slider-tick-mentor" />
                 <span asp-validation-for="MentorGrade" class="text-danger"></span>
             </div>
         </div>
@@ -87,4 +86,40 @@
             $(".chosen-select").chosen();
         });
     </script>
+
+    <script>
+        $(".slider-tick").slider({
+            ticks: [1, 2, 3, 4, 5],
+            ticks_labels: ["1", "2", "3", "4", "5"],
+            value: 1,
+            formatter: function (value) {
+                switch (value) {
+                    case 1: return "Loš";
+                    case 2: return "Meh";
+                    case 3: return "OK";
+                    case 4: return "Dobar";
+                    case 5: return "Super";
+                };
+            }
+        });
+    </script>
+
+    <script>
+            $(".slider-tick-mentor").slider({
+                ticks: [0, 1, 2, 3, 4, 5],
+                ticks_labels: ["", "1", "2", "3", "4", "5"],
+                value: 0,
+                formatter: function (value) {
+                    switch (value) {
+                        case 0: return "Nije mentor";
+                        case 1: return "Loš";
+                        case 2: return "Meh";
+                        case 3: return "OK";
+                        case 4: return "Dobar";
+                        case 5: return "Super";
+                    };
+                }    
+            });
+    </script>
 }
+

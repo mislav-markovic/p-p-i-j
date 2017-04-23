@@ -1,4 +1,4 @@
-@model InMyAppinion.ViewModels.SubjectReviewViewModel
+﻿@model InMyAppinion.ViewModels.SubjectReviewViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -14,28 +14,28 @@
         <div class="form-group">
             <label asp-for="Text" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Text" class="form-control" />
+                @Html.TextAreaFor(m => m.Text, new { @class="form-control" })
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="UsefulnessGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="UsefulnessGrade" class="form-control" />
+                <input asp-for="UsefulnessGrade" class="form-control slider-tick" />
                 <span asp-validation-for="UsefulnessGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="InterestGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="InterestGrade" class="form-control" />
+                <input asp-for="InterestGrade" class="form-control slider-tick" />
                 <span asp-validation-for="InterestGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="DifficultyGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="DifficultyGrade" class="form-control" />
+                <input asp-for="DifficultyGrade" class="form-control slider-tick" />
                 <span asp-validation-for="DifficultyGrade" class="text-danger"></span>
             </div>
         </div>
@@ -55,6 +55,7 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="tags" class="col-md-2 control-label"></label>
             <div class="col-md-10">
                 <select asp-for="tags" class="form-control chosen-select" multiple asp-items="ViewBag.SubjectTags"></select>
             </div>
@@ -76,5 +77,22 @@
         $(document).ready(function () {
             $(".chosen-select").chosen();
         });
+    </script>
+
+    <script>
+            $(".slider-tick").slider({
+                ticks: [1, 2, 3, 4, 5],
+                ticks_labels: ["1", "2", "3", "4", "5"],
+                value: 1,
+                formatter: function (value) {
+                    switch (value) {
+                        case 1: return "Loš";
+                        case 2: return "Meh";
+                        case 3: return "OK";
+                        case 4: return "Dobar";
+                        case 5: return "Super";
+                    };
+                }
+            });
     </script>
 }
