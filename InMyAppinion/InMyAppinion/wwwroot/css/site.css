@@ -52,3 +52,16 @@ textarea {
 ul.nav li.dropdown:hover ul.dropdown-menu {
     display: block;
 }
+
+#comments {
+    border: 1px solid gray;
+}
+
+#comments > * > h5 > span{
+    font-weight: bold;
+    color: #128ee9;
+}
+
+.clear {
+    clear: both;
+}

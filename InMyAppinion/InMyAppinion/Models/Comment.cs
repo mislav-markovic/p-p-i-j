@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,6 +11,8 @@ namespace InMyAppinion.Models
         public int ID { get; set; }
         public string Text { get; set; }
         public int Points { get; set; }
+
+        [DataType(DataType.Date)]
         public DateTime Timestamp { get; set; }
         public int? ParentID { get; set; }
         public int? ProfessorReviewID { get; set; }
