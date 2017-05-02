@@ -58,7 +58,7 @@ namespace InMyAppinion.Controllers
                             var result = new
                             {
                                 successful = true,
-                                message = "Glasanje uspjeöno obavljeno",
+                                message = "Glasanje uspje≈°no obavljeno",
                                 points = review.Points
                             };
                             return Json(result);
@@ -103,7 +103,7 @@ namespace InMyAppinion.Controllers
                     var result = new
                     {
                         successful = true,
-                        message = "Glasanje uspjeöno obavljeno",
+                        message = "Glasanje uspje≈°no obavljeno",
                         points = review.Points
                     };
                     return Json(result);

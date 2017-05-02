@@ -64,13 +64,17 @@ function VoteReview(selector, url) {
             $("#tempmessage").html(data.message);
             console.log(data.message);
             if (data.successful) {
-                $("#points").replaceAll(data.points);
-                if (vote == 'true') {
-                    $("#voteup").children.remove();
-                    $("#voteup").remove();
+                $("#points").text(data.points);
+                if (vote === true) {
+                    $("#voteup").prop('disabled', true);
+                    $("#voteup").hide();
+                    $("#votedown").prop('disabled', false);
+                    $("#votedown").show();
                 } else {
-                    $("#votedown").children.remove();
-                    $("#votedown").remove();
+                    $("#votedown").prop('disabled', true);
+                    $("#votedown").hide();
+                    $("#voteup").prop('disabled', false);
+                    $("#voteup").show();
                 }
             }
         });
