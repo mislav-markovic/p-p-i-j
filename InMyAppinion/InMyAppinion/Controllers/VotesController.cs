@@ -122,5 +122,100 @@ namespace InMyAppinion.Controllers
 
             return NotFound();
         }
+
+        [HttpPost]
+        [Authorize(Roles = "Korisnik")]
+        public async Task<IActionResult> VoteComment(bool vote, int id)
+        {
+            int voteValue = 0;
+
+            if (vote) voteValue = 1;
+            else voteValue = -1;
+
+            var voter = _userManager.GetUserId(User);
+            var comment = await _context.Comment.SingleOrDefaultAsync(r => r.ID == id);
+            var hasVoted = await _context.VoteComment.SingleOrDefaultAsync(v => v.CommentID == id && v.VoterID == voter);
+
+            if (comment == null)
+            {
+                return NotFound();
+            }
+
+            if (hasVoted != null)
+            {
+                if (hasVoted.Vote != vote)
+                {
+                    comment.Points += 2 * voteValue;
+                    hasVoted.Vote = vote;
+
+                    try
+                    {
+                        _context.VoteComment.Update(hasVoted);
+                        _context.Comment.Update(comment);
+                        _context.SaveChanges();
+
+                        var result = new
+                        {
+                            successful = true,
+                            message = "Glasanje na komentaru uspješno obavljeno",
+                            points = comment.Points
+                        };
+                        return Json(result);
+                    }
+                    catch (Exception e)
+                    {
+                        var error = new
+                        {
+                            successful = false,
+                            message = "Glasanje na komentaru nije uspjelo",
+                        };
+                        return Json(error);
+                    }
+                }
+                else
+                {
+                    var result = new
+                    {
+                        successful = false,
+                        message = "Isti glas na komentaru"
+                    };
+                    return Json(result);
+                }
+
+            }
+
+            var voteTable = new VoteComment
+            {
+                VoterID = voter,
+                Vote = vote,
+                CommentID = id
+            };
+
+            comment.Points += voteValue;
+
+            try
+            {
+                _context.VoteComment.Add(voteTable);
+                _context.Comment.Update(comment);
+                _context.SaveChanges();
+
+                var result = new
+                {
+                    successful = true,
+                    message = "Glasanje na komentaru uspješno obavljeno",
+                    points = comment.Points
+                };
+                return Json(result);
+            }
+            catch (Exception e)
+            {
+                var error = new
+                {
+                    successful = false,
+                    message = "Glasanje na komentaru nije uspjelo",
+                };
+                return Json(error);
+            }
+        }
     }
 }

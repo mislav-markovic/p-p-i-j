@@ -81,3 +81,37 @@ function VoteReview(selector, url) {
         });
     });
 }
+
+function VoteComment(selector, url, commentid) {
+    $(document).on('click', selector, function (event) {
+        event.preventDefault();
+        var vote = $(this).data('vote');
+        var id = $(this).data(commentid);
+        console.log(selector);
+        console.log(vote);
+        console.log(url);
+
+        $("#tempmessage").removeClass("alert-success");
+        $("#tempmessage").removeClass("alert-danger");
+        $("#tempmessage").html('');
+        $.post(url, { id: id, vote: vote }, function (data) {
+            $("#tempmessage").addClass("panel-body");
+            $("#tempmessage").html(data.message);
+            console.log(data.message);
+            if (data.successful) {
+                $("#points-comment-" + id).text(data.points);
+                if (vote === true) {
+                    $("#voteup-comment-" + id).prop('disabled', true);
+                    $("#voteup-comment-" + id).hide();
+                    $("#votedown-comment-" + id).prop('disabled', false);
+                    $("#votedown-comment-" + id).show();
+                } else {
+                    $("#votedown-comment-" + id).prop('disabled', true);
+                    $("#votedown-comment-" + id).hide();
+                    $("#voteup-comment-" + id).prop('disabled', false);
+                    $("#voteup-comment-" + id).show();
+                }
+            }
+        });
+    });
+}

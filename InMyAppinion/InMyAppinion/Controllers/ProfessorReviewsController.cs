@@ -63,6 +63,22 @@ namespace InMyAppinion.Controllers
                 if(voted != null){
                     ViewData["voted"] = voted.Vote.ToString();
                 }
+
+                string userId = _userManager.GetUserId(User);
+                var list = _context.VoteComment.Where(v => v.VoterID == userId);
+
+                foreach(var comm in professorReview.Comments)
+                {
+                    if(list.Any(k => k.CommentID == comm.ID))
+                    {
+                        ViewData[comm.ID.ToString()] = list.First(k => k.CommentID == comm.ID).Vote.ToString();
+                    }
+                    else
+                    {
+                        ViewData[comm.ID.ToString()] = "";
+                    }
+                }
+
             }
 
             return View(professorReview);
