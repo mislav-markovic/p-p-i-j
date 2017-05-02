@@ -11,7 +11,7 @@
             //$("#tempmessage").html(data.message);
             if (data.success) {
                 $('#comments').append('<div id="' + data.commentId + '"></div>');
-                $('#' + data.commentId).append('<button data-commentid="' + data.commentId + '" class="newButton"><span class="newSpan"></span></button>');
+                $('#' + data.commentId).append('<button data-commentid="' + data.commentId + '" data-userid="' + data.userId + '" class="newButton"><span class="newSpan"></span></button>');
                 $('.newButton').addClass("pull-right btn btn-danger btn-xs deleteajax");
                 $('.newSpan').addClass("glyphicon glyphicon-remove");
                 $('#' + data.commentId).append('<h5><span>' + user + '</span></h5>' + '<p class="comment"> ' + paramval + '</p ><hr/>');
@@ -33,4 +33,16 @@ function DeleteCommentAjax(selector, url, paramname) {
             }
         });
     });
+}
+
+function HideDeleteButtons(btnClass, user) {
+    var x = document.getElementsByClassName(btnClass);
+    var i;
+    for (i = 0; i < x.length; i++) {
+        if (x[i].dataset.userid === user) {
+            x[i].style.visibility = 'visible';
+        } else {
+            x[i].style.visibility = 'hidden';
+        }
+    }
 }

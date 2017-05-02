@@ -29,7 +29,64 @@ namespace InMyAppinion.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(int id, string type, string text)
         {
-            if(type.ToLower() == "subject")
+            Comment comment = new Comment
+            {
+                AuthorID = _userManager.GetUserId(User),
+                Author = await _userManager.GetUserAsync(User),
+                Timestamp = DateTime.Now,
+                Text = text
+            };
+
+            dynamic review = null;
+            if (type.ToLower() == "subject")
+            {
+                review = await _context.SubjectReview.SingleOrDefaultAsync(r => r.ID == id);
+                comment.SubjectReviewID = id;
+            } 
+            else if(type.ToLower() == "professor")
+            {
+                review = await _context.ProfessorReview.SingleOrDefaultAsync(r => r.ID == id);
+                comment.ProfessorReviewID = id;
+            }
+            else
+            {
+                var result = new
+                {
+                    message = "Pogreška u dodavanju komentara!",
+                    success = false
+                };
+                return Json(result);
+            }
+
+            if (review == null)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                _context.Comment.Add(comment);
+                await _context.SaveChangesAsync();
+
+                var result = new
+                {
+                    message = "Komentar uspješno dodan.",
+                    success = true,
+                    commentId = comment.ID
+                };
+                return Json(result);
+            }
+            catch (Exception exc)
+            {
+                var result = new
+                {
+                    message = "Pogreška u dodavanju komentara!",
+                    success = false
+                };
+                return Json(result);
+            }
+
+            /*if(type.ToLower() == "subject")
             {
                 var review = await _context.SubjectReview.SingleOrDefaultAsync(r => r.ID == id);
                 if(review == null)
@@ -115,7 +172,7 @@ namespace InMyAppinion.Controllers
                     success = false
                 };
                 return Json(result);
-            }
+            }*/
         }
 
         [HttpPost]
