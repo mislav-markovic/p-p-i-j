@@ -69,6 +69,7 @@ namespace InMyAppinion.Controllers
             ViewData["AuthorID"] = userId;
             ViewData["ProfessorID"] = Id;
             ViewData["ProfessorTags"] = new SelectList(_context.ProfessorReviewTag, "ID", "Name");
+
             return View();
         }
 
