@@ -85,94 +85,6 @@ namespace InMyAppinion.Controllers
                 };
                 return Json(result);
             }
-
-            /*if(type.ToLower() == "subject")
-            {
-                var review = await _context.SubjectReview.SingleOrDefaultAsync(r => r.ID == id);
-                if(review == null)
-                {
-                    return NotFound();
-                }
-
-                try
-                {
-                    Comment comment = new Comment
-                    {
-                        AuthorID = _userManager.GetUserId(User),
-                        Author = await _userManager.GetUserAsync(User),
-                        Timestamp = DateTime.Now,
-                        SubjectReviewID = await _context.SubjectReview.Where(r => r.ID == id).Select(r => r.ID).SingleOrDefaultAsync(),
-                        Text = text
-                    };
-                    _context.Add(comment);
-                    await _context.SaveChangesAsync();
-
-                    var result = new
-                    {
-                        message = "Komentar uspješno dodan.",
-                        success = true,
-                        commentId = comment.ID
-                    };
-                    return Json(result);
-                }
-                catch(Exception exc)
-                {
-                    var result = new
-                    {
-                        message = "Pogreška u dodavanju komentara!",
-                        success = false
-                    };
-                    return Json(result);
-                }
-            }
-            else if(type.ToLower() == "professor")
-            {
-                var review = await _context.ProfessorReview.SingleOrDefaultAsync(r => r.ID == id);
-                if (review == null)
-                {
-                    return NotFound();
-                }
-
-                try
-                {
-                    Comment comment = new Comment
-                    {
-                        AuthorID = _userManager.GetUserId(User),
-                        Author = await _userManager.GetUserAsync(User),
-                        Timestamp = DateTime.Now,
-                        ProfessorReviewID = review.ID,
-                        Text = text
-                    };
-                    _context.Add(comment);
-                    await _context.SaveChangesAsync();
-
-                    var result = new
-                    {
-                        message = "Komentar uspješno dodan.",
-                        success = true,
-                        commentId = comment.ID
-                    };
-                    return Json(result);
-                }
-                catch (Exception exc)
-                {
-                    var result = new
-                    {
-                        message = "Pogreška u dodavanju komentara!",
-                        success = false
-                    };
-                    return Json(result);
-                }
-            }
-            else
-            {
-                var result = new
-                {
-                    message = "Pogreška u dodavanju komentara!",
-                    success = false
-                };
-                return Json(result);
-            }*/
         }
 
         [HttpPost]
@@ -191,7 +103,7 @@ namespace InMyAppinion.Controllers
 
             try
             {
-                _context.Remove(comment);
+                _context.Comment.Remove(comment);
                 await _context.SaveChangesAsync();
 
                 var result = new

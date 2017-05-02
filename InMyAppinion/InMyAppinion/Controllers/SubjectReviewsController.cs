@@ -38,6 +38,7 @@ namespace InMyAppinion.Controllers
             var subjectReview = await _context.SubjectReview
                 .Include(s => s.Author)
                 .Include(s => s.Subject)
+                .Include(s => s.Comments)
                 .Include(s => s.SubjectReviewTagSet).ThenInclude(s => s.SubjectReviewTag)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (subjectReview == null)

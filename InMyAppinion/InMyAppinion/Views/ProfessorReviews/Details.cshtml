@@ -1,6 +1,8 @@
 @model InMyAppinion.Models.ProfessorReview
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = "Details";
@@ -89,13 +91,16 @@
             </dd>
         </dl>
         <hr />
-        <div class="clear">
-            <textarea id="text" class="form-control" rows="3" data-text title="Unesite komentar"></textarea>
-            <input hidden data-reviewId="@Model.ID" />
-            <input hidden data-type="professor" />
-            <input id="username" hidden value="@User.Identity.Name" /><br />
-            <button class="btn btn-sm btn-default addajax">Dodaj komentar</button>
-        </div>
+        @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
+        {
+            <div class="clear">
+                <textarea id="text" class="form-control" rows="3" data-text title="Unesite komentar"></textarea>
+                <input hidden data-reviewId="@Model.ID" />
+                <input hidden data-type="professor" />
+                <input id="username" hidden value="@User.Identity.Name" /><br />
+                <button class="btn btn-sm btn-default addajax">Dodaj komentar</button>
+            </div>
+        }
     </div>
     <h4>Komentari</h4>
     <div id="comments" class="col-lg-6">
