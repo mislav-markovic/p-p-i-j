@@ -61,6 +61,7 @@ function VoteReview(selector, url) {
         $("#tempmessage").html('');
         $.post(url, { vote: vote }, function (data) {
             $("#tempmessage").addClass("panel-body");
+            $("#tempmessage").addClass(data.successful ? "alert-success" : "alert-danger");
             $("#tempmessage").html(data.message);
             console.log(data.message);
             if (data.successful) {

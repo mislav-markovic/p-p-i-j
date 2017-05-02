@@ -96,6 +96,7 @@
                 <button class="btn btn-lg btn-success voteajax" id="voteup" data-vote="true"><span class="glyphicon glyphicon-thumbs-up"></span></button>
                 <button class="btn btn-lg btn-danger voteajax" id="votedown" data-vote="false"><span class="glyphicon glyphicon-thumbs-down"></span></button>
             }
+            <input hidden id="voted" value="@ViewBag.voted" />
         <hr />
         @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
         {
@@ -149,7 +150,21 @@
         $(function () {
             VoteReview(".voteajax", '@Url.Action("VoteReview", "Votes", new { id=Model.ID, type="professor"})')
 
-        })
+        });
     </script>
 
+    <script>
+        $(document).ready(function () {
+            var v = $("#voted").val();
+            if(v === 'True'){
+                $('#voteup').prop('disabled', true);
+                $('#voteup').hide();
+            }
+            else if(v === 'False'){
+                $('#votedown').prop('disabled', true);
+                $('#votedown').hide();
+            }
+            $("#voted").remove();
+        });
+    </script>
 }

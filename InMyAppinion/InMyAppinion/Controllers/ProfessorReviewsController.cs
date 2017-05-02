@@ -17,10 +17,14 @@ namespace InMyAppinion.Controllers
     public class ProfessorReviewsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProfessorReviewsController(ApplicationDbContext context)
+        public ProfessorReviewsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
-            _context = context;    
+            _context = context;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         // GET: ProfessorReviews
@@ -50,6 +54,15 @@ namespace InMyAppinion.Controllers
             if (professorReview == null)
             {
                 return NotFound();
+            }
+
+            if(_signInManager.IsSignedIn(User)){
+                var voted = await _context.VoteProfessorReview
+                            .Where(v => v.ProfessorReview.ID == professorReview.ID && v.Voter.UserName == User.Identity.Name)
+                            .SingleOrDefaultAsync();
+                if(voted != null){
+                    ViewData["voted"] = voted.Vote.ToString();
+                }
             }
 
             return View(professorReview);
