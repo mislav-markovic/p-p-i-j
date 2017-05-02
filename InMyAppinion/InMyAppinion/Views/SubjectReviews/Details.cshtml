@@ -1,4 +1,9 @@
 @model InMyAppinion.Models.SubjectReview
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@inject SignInManager<ApplicationUser> SignInManager
 
 @{
     ViewData["Title"] = "Details";
@@ -9,73 +14,119 @@
 <div>
     <h4>SubjectReview</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Text)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Text)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.UsefulnessGrade)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.UsefulnessGrade)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.InterestGrade)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.InterestGrade)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.DifficultyGrade)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.DifficultyGrade)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.TotalGrade)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.TotalGrade)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Points)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Points)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Timestamp)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Timestamp)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Author)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Author.UserName)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Subject)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.Subject.Name)
-        </dd>
-        <dt>
-            Tagovi
-        </dt>
-        <dd>
-            @foreach(var tag in Model.SubjectReviewTagSet)
-            { 
-                @tag.SubjectReviewTag.Name@: | 
+    <div class="col-lg-6">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Text)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Text)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.UsefulnessGrade)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.UsefulnessGrade)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.InterestGrade)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.InterestGrade)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.DifficultyGrade)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.DifficultyGrade)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.TotalGrade)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.TotalGrade)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Points)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Points)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Timestamp)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Timestamp)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Author)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Author.UserName)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Subject)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Subject.Name)
+            </dd>
+            <dt>
+                Tagovi
+            </dt>
+            <dd>
+                @foreach (var tag in Model.SubjectReviewTagSet)
+                {
+                    @tag.SubjectReviewTag.Name@: |
             }
-        </dd>
-    </dl>
+            </dd>
+        </dl>
+        <hr />
+        @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
+        {
+            <div class="clear">
+                <textarea id="text" class="form-control" rows="3" data-text title="Unesite komentar"></textarea>
+                <input hidden data-reviewId="@Model.ID" />
+                <input hidden data-type="professor" />
+                <input id="username" hidden value="@User.Identity.Name" /><br />
+                <button class="btn btn-sm btn-default addajax">Dodaj komentar</button>
+            </div>
+        }
+    </div>
+    <h4>Komentari</h4>
+    <div id="comments" class="col-lg-6">
+        @foreach (var c in Model.Comments)
+        {
+            <div id="@c.ID">
+                @if(SignInManager.IsSignedIn(User) && (User.Identity.Name == c.Author.UserName ||
+                    await UserManager.IsInRoleAsync(await UserManager.FindByNameAsync(User.Identity.Name), "Administrator"))){
+                    <button data-commentid="@c.ID" data-userid="@c.AuthorID" class="pull-right btn btn-danger btn-xs deleteajax">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                }
+                <h5><span>@await UserManager.FindByIdAsync(c.AuthorID)</span>, @c.Timestamp</h5>
+                <p class="comment">@c.Text</p>
+                <hr />
+            </div>
+        }
+    </div>
 </div>
-<div>
+<div class="clear">
+    <br />
     <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+@section Scripts {
+    <script>
+        $(function () {
+            AddCommentAjax(".addajax", '@Url.Action("Create", "Comments", new { id=Model.ID, type="subject" })', 'text', 'username');
+        });
+    </script>
+
+    <script>
+        $(function () {
+            DeleteCommentAjax(".deleteajax", '@Url.Action("Delete", "Comments", "")', 'commentid');
+        });
+    </script>
+
+}

@@ -29,7 +29,11 @@ namespace InMyAppinion.Data
         public DbSet<University> University { get; set; }
         public DbSet<SubjectTag> SubjectTag { get; set; }
         public DbSet<SubjectTagSet> SubjectTagSet { get; set; }
-        
+        public DbSet<Comment> Comment { get; set; }
+        public DbSet<VoteComment> VoteComment { get; set; }
+        public DbSet<VoteProfessorReview> VoteProfessorReview { get; set; }
+        public DbSet<VoteSubjectReview> VoteSubjectReview { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

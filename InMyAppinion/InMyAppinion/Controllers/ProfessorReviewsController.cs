@@ -44,6 +44,7 @@ namespace InMyAppinion.Controllers
                 .Include(p => p.Author)
                 .Include(p => p.Professor)
                 .Include(p => p.ProfessorReviewTagSet).ThenInclude(p => p.ProfessorReviewTag)
+                .Include(p => p.Comments).ThenInclude(p => p.Author)
                 .SingleOrDefaultAsync(m => m.ID == id);
 
             if (professorReview == null)
