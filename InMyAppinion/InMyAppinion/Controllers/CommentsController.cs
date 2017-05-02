@@ -7,6 +7,7 @@ using InMyAppinion.Data;
 using Microsoft.EntityFrameworkCore;
 using InMyAppinion.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InMyAppinion.Controllers
 {
@@ -27,6 +28,7 @@ namespace InMyAppinion.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Korisnik")]
         public async Task<IActionResult> Create(int id, string type, string text)
         {
             Comment comment = new Comment
@@ -52,7 +54,7 @@ namespace InMyAppinion.Controllers
             {
                 var result = new
                 {
-                    message = "Pogreška u dodavanju komentara!",
+                    message = "PogreÅ¡ka u dodavanju komentara!",
                     success = false
                 };
                 return Json(result);
@@ -70,7 +72,7 @@ namespace InMyAppinion.Controllers
 
                 var result = new
                 {
-                    message = "Komentar uspješno dodan.",
+                    message = "Komentar uspjeÅ¡no dodan.",
                     success = true,
                     commentId = comment.ID
                 };
@@ -80,7 +82,7 @@ namespace InMyAppinion.Controllers
             {
                 var result = new
                 {
-                    message = "Pogreška u dodavanju komentara!",
+                    message = "PogreÅ¡ka u dodavanju komentara!",
                     success = false
                 };
                 return Json(result);
@@ -88,6 +90,7 @@ namespace InMyAppinion.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Korisnik")]
         public async Task<IActionResult> Delete(int? id)
         {
             if(id == null)
@@ -108,7 +111,7 @@ namespace InMyAppinion.Controllers
 
                 var result = new
                 {
-                    message = "Komentar uspješno obrisan.",
+                    message = "Komentar uspjeÅ¡no obrisan.",
                     success = true,
                 };
                 return Json(result);
@@ -117,7 +120,7 @@ namespace InMyAppinion.Controllers
             {
                 var result = new
                 {
-                    message = "Pogreška u brisanju komentara!",
+                    message = "PogreÅ¡ka u brisanju komentara!",
                     success = false
                 };
                 return Json(result);

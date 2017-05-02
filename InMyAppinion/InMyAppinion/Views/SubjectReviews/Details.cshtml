@@ -3,6 +3,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
+@inject SignInManager<ApplicationUser> SignInManager
 
 @{
     ViewData["Title"] = "Details";
@@ -96,9 +97,12 @@
         @foreach (var c in Model.Comments)
         {
             <div id="@c.ID">
-                <button data-commentid="@c.ID" data-userid="@c.AuthorID" class="pull-right btn btn-danger btn-xs deleteajax">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </button>
+                @if(SignInManager.IsSignedIn(User) && (User.Identity.Name == c.Author.UserName ||
+                    await UserManager.IsInRoleAsync(await UserManager.FindByNameAsync(User.Identity.Name), "Administrator"))){
+                    <button data-commentid="@c.ID" data-userid="@c.AuthorID" class="pull-right btn btn-danger btn-xs deleteajax">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                }
                 <h5><span>@await UserManager.FindByIdAsync(c.AuthorID)</span>, @c.Timestamp</h5>
                 <p class="comment">@c.Text</p>
                 <hr />
@@ -124,9 +128,5 @@
             DeleteCommentAjax(".deleteajax", '@Url.Action("Delete", "Comments", "")', 'commentid');
         });
     </script>
-    <script>
-        $(function () {
-            HideDeleteButtons("deleteajax", '@UserManager.GetUserId(User)');
-        });
-    </script>
+
 }
