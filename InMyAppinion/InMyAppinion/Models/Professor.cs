@@ -27,5 +27,13 @@ namespace InMyAppinion.Models
         public ICollection<ProfessorSubjectSet> Subjects { get; set; }
         [Display(Name = "Kritike")]
         public ICollection<ProfessorReview> Reviews { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + LastName;
+            }
+        }
     }
 }

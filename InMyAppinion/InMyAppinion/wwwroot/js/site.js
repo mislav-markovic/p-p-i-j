@@ -2,6 +2,7 @@
     $(document).on('click', selector, function (event) {
         var paramval = $('#' + paramname).val();
         var user = $('#' + username).val();
+        console.log(url);
         //$("#tempmessage").removeClass("alert-success");
         //$("#tempmessage").removeClass("alert-danger");
         //$("#tempmessage").html('');
@@ -45,4 +46,33 @@ function HideDeleteButtons(btnClass, user) {
             x[i].style.visibility = 'hidden';
         }
     }
+}
+
+function VoteReview(selector, url) {
+    $(document).on('click', selector, function (event) {
+        event.preventDefault();
+        var vote = $(this).data('vote');
+        console.log(selector);
+        console.log(vote);
+        console.log(url);
+
+        $("#tempmessage").removeClass("alert-success");
+        $("#tempmessage").removeClass("alert-danger");
+        $("#tempmessage").html('');
+        $.post(url, { vote: vote }, function (data) {
+            $("#tempmessage").addClass("panel-body");
+            $("#tempmessage").html(data.message);
+            console.log(data.message);
+            if (data.successful) {
+                $("#points").replaceAll(data.points);
+                if (vote == 'true') {
+                    $("#voteup").children.remove();
+                    $("#voteup").remove();
+                } else {
+                    $("#votedown").children.remove();
+                    $("#votedown").remove();
+                }
+            }
+        });
+    });
 }

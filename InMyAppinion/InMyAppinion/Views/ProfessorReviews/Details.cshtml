@@ -6,15 +6,14 @@
 @inject SignInManager<ApplicationUser> SignInManager
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Recenzija";
 }
 
 <div id="tempmessage" class="hidden-panel"></div>
 
-<h2>Details</h2>
+<h2>@Model.Professor.FullName</h2>
 
 <div>
-    <h4>ProfessorReview</h4>
     <hr />
     <div class="col-lg-6">
         <dl class="dl-horizontal">
@@ -57,7 +56,7 @@
             <dt>
                 @Html.DisplayNameFor(model => model.Points)
             </dt>
-            <dd>
+            <dd id="points">
                 @Html.DisplayFor(model => model.Points)
             </dd>
             <dt>
@@ -92,6 +91,12 @@
             </dd>
         </dl>
         <hr />
+            @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
+            {
+                <button class="btn btn-lg btn-success voteajax" id="voteup" data-vote="true"><span class="glyphicon glyphicon-thumbs-up"></span></button>
+                <button class="btn btn-lg btn-danger voteajax" id="votedown" data-vote="false"><span class="glyphicon glyphicon-thumbs-down"></span></button>
+            }
+        <hr />
         @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
         {
             <div class="clear">
@@ -99,7 +104,7 @@
                 <input hidden data-reviewId="@Model.ID" />
                 <input hidden data-type="professor" />
                 <input id="username" hidden value="@User.Identity.Name" /><br />
-                <button class="btn btn-sm btn-default addajax">Dodaj komentar</button>
+                <button class="btn btn-info addajax"><span class="glyphicon">Dodaj komentar</span></button>
             </div>
         }
     </div>
@@ -138,6 +143,13 @@
         $(function () {
             DeleteCommentAjax(".deleteajax", '@Url.Action("Delete", "Comments", "")', 'commentid');
         });
+    </script>
+
+    <script>
+        $(function () {
+            VoteReview(".voteajax", '@Url.Action("VoteReview", "Votes", new { id=Model.ID, type="professor"})')
+
+        })
     </script>
 
 }
