@@ -49,7 +49,7 @@
             <dt>
                 @Html.DisplayNameFor(model => model.Points)
             </dt>
-            <dd>
+            <dd id="points">
                 @Html.DisplayFor(model => model.Points)
             </dd>
             <dt>
@@ -83,10 +83,17 @@
         <hr />
         @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
         {
+            <button class="btn btn-lg btn-success voteajax" id="voteup" data-vote="true"><span class="glyphicon glyphicon-thumbs-up"></span></button>
+            <button class="btn btn-lg btn-danger voteajax" id="votedown" data-vote="false"><span class="glyphicon glyphicon-thumbs-down"></span></button>
+        }
+        <input hidden id="voted" value="@ViewBag.voted" />
+        <hr />
+        @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
+        {
             <div class="clear">
                 <textarea id="text" class="form-control" rows="3" data-text title="Unesite komentar"></textarea>
                 <input hidden data-reviewId="@Model.ID" />
-                <input hidden data-type="professor" />
+                <input hidden data-type="subject" />
                 <input id="username" hidden value="@User.Identity.Name" /><br />
                 <button class="btn btn-sm btn-default addajax">Dodaj komentar</button>
             </div>
@@ -97,14 +104,21 @@
         @foreach (var c in Model.Comments)
         {
             <div id="@c.ID">
-                @if(SignInManager.IsSignedIn(User) && (User.Identity.Name == c.Author.UserName ||
-                    await UserManager.IsInRoleAsync(await UserManager.FindByNameAsync(User.Identity.Name), "Administrator"))){
+                @if (SignInManager.IsSignedIn(User) && (User.Identity.Name == c.Author.UserName ||
+                    await UserManager.IsInRoleAsync(await UserManager.FindByNameAsync(User.Identity.Name), "Administrator")))
+                {
                     <button data-commentid="@c.ID" data-userid="@c.AuthorID" class="pull-right btn btn-danger btn-xs deleteajax">
                         <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 }
-                <h5><span>@await UserManager.FindByIdAsync(c.AuthorID)</span>, @c.Timestamp</h5>
+                <h5><span>@await UserManager.FindByIdAsync(c.AuthorID)</span>, @c.Timestamp, <span id="points-comment-@c.ID">@c.Points</span></h5>
                 <p class="comment">@c.Text</p>
+                @if (await AuthorizationService.AuthorizeAsync(User, "CanReview") && (User.Identity.Name != c.Author.UserName))
+                {
+                    <button class="btn btn-sm btn-success voteajax-comment" id="voteup-comment-@c.ID" data-vote="true" data-commentid="@c.ID"><span class="glyphicon glyphicon-thumbs-up"></span></button>
+                    <button class="btn btn-sm btn-danger voteajax-comment" id="votedown-comment-@c.ID" data-vote="false" data-commentid="@c.ID"><span class="glyphicon glyphicon-thumbs-down"></span></button>
+                }
+                <input hidden id="comment-vote-@c.ID" class="comment-vote" data-commid="@c.ID" value="@ViewData[c.ID.ToString()]" />
                 <hr />
             </div>
         }
@@ -126,6 +140,47 @@
     <script>
         $(function () {
             DeleteCommentAjax(".deleteajax", '@Url.Action("Delete", "Comments", "")', 'commentid');
+        });
+    </script>
+
+    <script>
+        $(function () {
+            VoteReview(".voteajax", '@Url.Action("VoteReview", "Votes", new { id=Model.ID, type="subject"})');
+            VoteComment(".voteajax-comment", '@Url.Action("VoteComment", "Votes", "")', 'commentid');
+        })
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var v = $("#voted").val();
+            if (v === 'True') {
+                $('#voteup').prop('disabled', true);
+                $('#voteup').hide();
+            }
+            else if (v === 'False') {
+                $('#votedown').prop('disabled', true);
+                $('#votedown').hide();
+            }
+            $("#voted").remove();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            var x = document.getElementsByClassName("comment-vote");
+            var i;
+            for (i = 0; i < x.length; i++) {
+                var id = x[i].dataset.commid;
+                var vote = $("#comment-vote-" + id).val();
+
+                if (vote === 'True') {
+                    $('#voteup-comment-' + id).prop('disabled', true);
+                    $('#voteup-comment-' + id).hide();
+                } else if (vote === 'False') {
+                    $('#votedown-comment-' + id).prop('disabled', true);
+                    $('#votedown-comment-' + id).hide();
+                }
+            }
         });
     </script>
 

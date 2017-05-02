@@ -26,14 +26,15 @@ namespace InMyAppinion.Controllers
         [Authorize(Roles = "Korisnik")]
         public async Task<IActionResult> VoteReview(bool vote, int id, string type)
         {
-            if(type.ToLower() == "professor")
+            int voteValue = 0;
+
+            if (vote) voteValue = 1;
+            else voteValue = -1;
+
+            var voter = _userManager.GetUserId(User);
+
+            if (type.ToLower() == "professor")
             {
-                int voteValue = 0;
-
-                if (vote) voteValue = 1;
-                else voteValue = -1;
-
-                var voter = _userManager.GetUserId(User);
                 var review = await _context.ProfessorReview.SingleOrDefaultAsync(r => r.ID == id);
                 var hasVoted = await _context.VoteProfessorReview.SingleOrDefaultAsync(v => v.ProfessorReviewID == id && v.VoterID == voter);
 
@@ -118,9 +119,101 @@ namespace InMyAppinion.Controllers
                     return Json(error);
                 }
             }
+            else if(type.ToLower() == "subject")
+            {
+                var review = await _context.SubjectReview.SingleOrDefaultAsync(r => r.ID == id);
+                var hasVoted = await _context.VoteSubjectReview.SingleOrDefaultAsync(v => v.SubjectReviewID == id && v.VoterID == voter);
 
+                if (review == null)
+                {
+                    return NotFound();
+                }
 
-            return NotFound();
+                if (hasVoted != null)
+                {
+                    if (hasVoted.Vote != vote)
+                    {
+                        review.Points += 2 * voteValue;
+                        hasVoted.Vote = vote;
+
+                        try
+                        {
+                            _context.VoteSubjectReview.Update(hasVoted);
+                            _context.SubjectReview.Update(review);
+                            _context.SaveChanges();
+
+                            var result = new
+                            {
+                                successful = true,
+                                message = "Glasanje uspješno obavljeno",
+                                points = review.Points
+                            };
+                            return Json(result);
+                        }
+                        catch (Exception e)
+                        {
+                            var error = new
+                            {
+                                successful = false,
+                                message = "Glasanje nije uspjelo",
+                            };
+                            return Json(error);
+                        }
+                    }
+                    else
+                    {
+                        var result = new
+                        {
+                            successful = false,
+                            message = "Isti glas"
+                        };
+                        return Json(result);
+                    }
+
+                }
+
+                var voteTable = new VoteSubjectReview
+                {
+                    VoterID = voter,
+                    Vote = vote,
+                    SubjectReviewID = id
+                };
+
+                review.Points += voteValue;
+
+                try
+                {
+                    _context.VoteSubjectReview.Add(voteTable);
+                    _context.SubjectReview.Update(review);
+                    _context.SaveChanges();
+
+                    var result = new
+                    {
+                        successful = true,
+                        message = "Glasanje uspješno obavljeno",
+                        points = review.Points
+                    };
+                    return Json(result);
+                }
+                catch (Exception e)
+                {
+                    var error = new
+                    {
+                        successful = false,
+                        message = "Glasanje nije uspjelo",
+                    };
+                    return Json(error);
+                }
+            }
+            else
+            {
+                var error = new
+                {
+                    successful = false,
+                    message = "Pogrešan tip glasa"
+                };
+                return Json(error);
+            }
         }
 
         [HttpPost]
