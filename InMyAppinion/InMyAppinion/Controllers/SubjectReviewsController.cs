@@ -93,9 +93,10 @@ namespace InMyAppinion.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["AuthorID"] = new SelectList(_context.User, "Id", "Id", subjectReview.AuthorID);
-            ViewData["SubjectID"] = new SelectList(_context.Subject, "ID", "ID", subjectReview.SubjectID);
-            return View(subjectReview);
+            ViewData["AuthorID"] = subjectReview.AuthorID;
+            ViewData["SubjectID"] = subjectReview.SubjectID;
+            ViewData["SubjectTags"] = new SelectList(_context.SubjectReviewTag, "ID", "Name");
+            return View();
         }
 
         private decimal calculateTotalGrade(SubjectReview sr)

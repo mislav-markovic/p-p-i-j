@@ -102,9 +102,10 @@ namespace InMyAppinion.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["AuthorID"] = new SelectList(_context.User, "Id", "Id", professorReview.AuthorID);
-            ViewData["ProfessorID"] = new SelectList(_context.Professor, "ID", "ID", professorReview.ProfessorID);
-            return View(professorReview);
+            ViewData["AuthorID"] = professorReview.AuthorID;
+            ViewData["ProfessorID"] = professorReview.ProfessorID;
+            ViewData["ProfessorTags"] = new SelectList(_context.ProfessorReviewTag, "ID", "Name");
+            return View();
         }
 
         private decimal calculateTotalGrade(ProfessorReview pr)

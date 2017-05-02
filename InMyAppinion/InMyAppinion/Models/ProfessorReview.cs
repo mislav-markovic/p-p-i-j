@@ -30,23 +30,18 @@ namespace InMyAppinion.Models
         public int? MentorGrade { get; set; }
         [Display(Name = "Ukupna ocjena")]
         [Range(0.0, 5.0, ErrorMessage = "Ocjena mora biti između 1 i 5")]
-        [Required(ErrorMessage = "Ukupna ocjena je obavezna")]
         public decimal TotalGrade { get; set; }
         [Display(Name = "Bodovi")]
-        [Required]
         public int Points { get; set; }
         [Display(Name = "Datum")]
-        [Required]
         public DateTime Timestamp { get; set; }
 
         [Display(Name = "Autor recenzije")]
         [Required(ErrorMessage = "Recenzija mora imati autora")]
         public string AuthorID { get; set; }
         [Display(Name = "Autor recenzije")]
-        [Required(ErrorMessage = "Recenzija mora imati autora")]
         public ApplicationUser Author { get; set; }
         [Display(Name = "Recenzija o profesoru")]
-        [Required(ErrorMessage = "Recenzija mora biti o određenom profesoru")]
         public int ProfessorID { get; set; }
         public Professor Professor { get; set; }
 

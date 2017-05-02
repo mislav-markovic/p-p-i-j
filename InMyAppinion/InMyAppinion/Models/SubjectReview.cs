@@ -26,14 +26,11 @@ namespace InMyAppinion.Models
         [Range(1, 5, ErrorMessage = "Ocjena mora biti između 1 i 5")]
         public int DifficultyGrade { get; set; }
         [Display(Name = "Ukupna ocjena")]
-        [Required(ErrorMessage = "Obavezna ocjena")]
-        [Range(1.0, 5.0, ErrorMessage = "Ocjena mora biti između 1 i 5")]
+        [Range(0.0, 5.0, ErrorMessage = "Ocjena mora biti između 1 i 5")]
         public decimal TotalGrade { get; set; }
         [Display(Name = "Bodovi")]
-        [Required]
         public int Points { get; set; }
         [Display(Name = "Datum")]
-        [Required]
         public DateTime Timestamp { get; set; }
         [Display(Name = "Autor recenzije")]
         [Required(ErrorMessage = "Recenzija mora imati autora")]
@@ -43,7 +40,6 @@ namespace InMyAppinion.Models
         public int SubjectID { get; set; }
 
         [Display(Name = "Autor recenzije")]
-        [Required(ErrorMessage = "Recenzija mora imati autora")]
         public ApplicationUser Author { get; set; }
         public Subject Subject { get; set; }
         
