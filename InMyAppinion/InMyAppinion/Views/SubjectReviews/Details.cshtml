@@ -81,7 +81,7 @@
             </dd>
         </dl>
         <hr />
-        @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
+        @if ((await AuthorizationService.AuthorizeAsync(User, "CanReview") && (User.Identity.Name != Model.Author.UserName)))
         {
             <button class="btn btn-lg btn-success voteajax" id="voteup" data-vote="true"><span class="glyphicon glyphicon-thumbs-up"></span></button>
             <button class="btn btn-lg btn-danger voteajax" id="votedown" data-vote="false"><span class="glyphicon glyphicon-thumbs-down"></span></button>
