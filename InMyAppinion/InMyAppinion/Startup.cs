@@ -55,6 +55,12 @@ namespace InMyAppinion
                     "CanReview",
                     policyBuilder => policyBuilder.RequireRole("Korisnik"));
             });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    "CanModerate",
+                    policyBuilder => policyBuilder.RequireRole("Moderator", "Administrator"));
+            });
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();

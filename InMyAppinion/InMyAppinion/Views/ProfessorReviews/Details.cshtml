@@ -11,7 +11,22 @@
 
 <div id="tempmessage" class="hidden-panel"></div>
 
-<h2>@Model.Professor.FullName</h2>
+<div class=row>
+    <div class="col-md-3">
+        <h2>@Model.Professor.FullName</h2>
+    </div>
+    @if(await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+    {
+        <div class="col-md-2 margins">
+            <form asp-action="Delete">
+                <input type="hidden" name="id" value="@Model.ID" />
+                <button type="submit" class="btn btn-danger del" title="Obriši recenziju">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </form>
+        </div>
+    }
+</div>
 
 <div>
     <hr />
@@ -105,7 +120,7 @@
                 <input hidden data-reviewId="@Model.ID" />
                 <input hidden data-type="professor" />
                 <input id="username" hidden value="@User.Identity.Name" /><br />
-                <button class="btn btn-info addajax"><span class="glyphicon">Dodaj komentar</span></button>
+                <button class="btn btn-info addajax"><span class="glyphicon"></span>Dodaj komentar</button>
             </div>
         }
     </div>
@@ -115,7 +130,7 @@
         {
             <div id="@c.ID">
                 @if (SignInManager.IsSignedIn(User) && (User.Identity.Name == c.Author.UserName ||
-                    await UserManager.IsInRoleAsync(await UserManager.FindByNameAsync(User.Identity.Name), "Administrator")))
+                    await AuthorizationService.AuthorizeAsync(User, "CanModerate")))
                 {
                     <button data-commentid="@c.ID" data-userid="@c.AuthorID" class="pull-right btn btn-danger btn-xs deleteajax">
                         <span class="glyphicon glyphicon-remove"></span>
@@ -192,5 +207,15 @@
                 }
             }
         });
+    </script>
+
+    <script>
+            $(document).ready(function () {
+                $(".del").click(function () {
+                    if (!confirm("Jeste li sigurni?")) {
+                        return false;
+                    }
+                });
+            });
     </script>
 }

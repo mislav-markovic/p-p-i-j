@@ -86,7 +86,7 @@ namespace InMyAppinion.Controllers
 
 
         // GET: ProfessorReviews/Create
-        [Authorize(Roles = "Administrator,Korisnik")]
+        [Authorize(Roles = "Korisnik")]
         public IActionResult Create(int? Id)
         {
             if (!Id.HasValue)
