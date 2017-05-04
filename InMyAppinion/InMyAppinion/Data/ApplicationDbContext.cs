@@ -21,6 +21,7 @@ namespace InMyAppinion.Data
         public DbSet<ProfessorReview> ProfessorReview { get; set; }
         public DbSet<ProfessorReviewTag> ProfessorReviewTag { get; set; }
         public DbSet<ProfessorReviewTagSet> ProfessorReviewTagSet { get; set; }
+        public DbSet<ProfessorSubjectSet> ProfessorSubjectSet { get; set; }
         public DbSet<Subject> Subject { get; set; }
         public DbSet<SubjectReview> SubjectReview { get; set; }
         public DbSet<SubjectReviewTag> SubjectReviewTag { get; set; }

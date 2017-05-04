@@ -25,6 +25,19 @@
             @Html.DisplayFor(model => model.LastName)
         </dd>
         <dt>
+            @Html.DisplayNameFor(model => model.Subjects)
+        </dt>
+        <dd>
+            <ul>
+                @foreach (var item in Model.Subjects)
+                {
+                    <li>
+                        @item.Subject.Name
+                    </li>
+                }
+            </ul>
+        </dd>
+        <dt>
             Kritike
         </dt>
         <dd>
