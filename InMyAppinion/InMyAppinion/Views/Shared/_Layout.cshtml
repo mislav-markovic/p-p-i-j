@@ -56,8 +56,7 @@
                         @using (Html.BeginForm("Search", "Search", FormMethod.Get))
                         {
                             @Html.TextBox("query", null, new { @class = "span", title = "Ako se upiše prazno polje ostaje se na trenutnoj stranici",placeholder="Želim znati..." })
-                            <span class="btn glyphicon glyphicon-search"></span>
-
+                            <button style="background-color:inherit;border:inherit"><span class="btn glyphicon glyphicon-search"/></button>
                         }
                     </a>
                     </li>
