@@ -6,9 +6,8 @@ using InMyAppinion.Models;
 
 namespace InMyAppinion.ViewModels
 {
-    public class SearchViewModels
-    {
-        internal class SubjectSearchViewModel {
+
+        public class SubjectSearchViewModel {
 
             public IEnumerable<Subject> subjects { get; set; }
             //public IEnumerable<SubjectReview> subrevs { get; set; }
@@ -19,7 +18,7 @@ namespace InMyAppinion.ViewModels
 
         }
 
-        internal class ProfessorSearchViewModel {
+        public class ProfessorSearchViewModel {
             public IEnumerable<Professor> professors { get; set; }
 
             public IEnumerable<ProfessorReview> profrevs { get; set; }
@@ -34,4 +33,4 @@ namespace InMyAppinion.ViewModels
 
 
     }
-}
+

@@ -18,12 +18,29 @@ namespace InMyAppinion.Controllers
             _context = context;
         }
 
-
-        public IActionResult Index()
+        [HttpGet]
+        public IActionResult Search(string query)
         {
-            var sub = new SearchViewModels.SubjectSearchViewModel();
+            if (query != null) {
 
-            return View();
+                    var model = new SubjectSearchViewModel();
+                    model.tag = _context.SubjectTag.Where(o => o.Name.ToLower() == query.ToLower()).FirstOrDefault();
+                    model.subtagset = _context.SubjectTagSet.Where(o => o.SubjectTagID == model.tag.ID).ToList();
+                //var tmp = _context.Subject.FirstOrDefault();
+                //model.subjects = new List<Models.Subject>();
+                /*foreach (var sts in model.subtagset)
+                {
+                    model.subjects.Append(sts.Subject);
+                    model.subjects.Append(_context.Subject.Where(o => o.ShortName.ToLower() == "ppij").First());
+                }*/
+                    model.subjects = _context.Subject.ToList();
+
+                    return View(model);
+
+            }
+            var model2 = new SubjectSearchViewModel();
+            model2.subjects = _context.Subject.ToList();
+            return View(model2);
         }
     }
 }
