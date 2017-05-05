@@ -1,0 +1,17 @@
+@model InMyAppinion.ViewModels.SubjectSearchViewModel
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h2>Rezultati pretrage za @Model.tag.Name.ToLower()</h2>
+
+@* @foreach (var sub in Model.subjects) { 
+
+    <span>@sub.Name - @sub.ShortName</span> <br />
+}*@
+
+@foreach(var sts in Model.subtagset)
+{
+    @sts.Subject.Name <br />
+
+}
