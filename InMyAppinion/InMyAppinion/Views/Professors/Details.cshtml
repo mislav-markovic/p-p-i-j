@@ -1,4 +1,4 @@
-@model InMyAppinion.Models.Professor
+@model InMyAppinion.Models.ProfessorViewModels.ProfessorDetailViewModel
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 
@@ -23,6 +23,52 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.LastName)
+        </dd>
+        <dt>
+            Predaje na predmetima
+        </dt>
+        <dd>
+            @foreach (var item in Model.Subjects)
+            {
+                <a asp-action="Details" asp-controller="Subject" asp-route-Id="@item.ID">@item.Name</a>@: |
+
+            }
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AvgInteractivity)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AvgInteractivity)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AvgAccessibility)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AvgAccessibility)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AvgMentoring)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AvgMentoring)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AvgQuality)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AvgQuality)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.AvgTotal)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AvgTotal)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Biography)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Biography)
         </dd>
         <dt>
             Kritike
