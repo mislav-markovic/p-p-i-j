@@ -1,6 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using InMyAppinion.Models
+@using Microsoft.AspNetCore.Authorization
 
+@inject IAuthorizationService AuthorizationService
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
@@ -11,10 +13,10 @@
             <li>
                 <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage"><span class="glyphicon glyphicon-user"></span> @UserManager.GetUserName(User)</a>
             </li>
-            @if (await UserManager.IsInRoleAsync(await UserManager.FindByNameAsync(User.Identity.Name), "Administrator"))
+            @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
             {
-                <li>
-                    <a asp-controller="Roles" asp-action="Index">Roles</a>
+                <li >
+                    <a asp-controller="CP" asp-action="Index">Moderator CP</a>
                 </li>
             }
             <li>

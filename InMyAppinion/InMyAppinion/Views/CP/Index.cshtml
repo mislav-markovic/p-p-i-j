@@ -1,0 +1,61 @@
+﻿@inject UserManager<ApplicationUser> UserManager
+@model IEnumerable<InMyAppinion.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Korisnici";
+}
+
+<div id="tempmessage" class="hidden-panel"></div>
+
+<h2>Korisnici</h2>
+
+@if(await UserManager.IsInRoleAsync(await UserManager.FindByNameAsync(User.Identity.Name), "Administrator")){
+<h4><a asp-controller="Roles" asp-action="Index">Uloge</a></h4>
+}
+
+<table class="table table-responsive">
+    <thead>
+        <tr>
+            <th>
+                Korisničko ime
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                Ban?
+            </th>
+            <th>
+                Bodovi
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(model => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Email)
+            </td>
+            <td>
+                <form asp-action="EditPhysical" method="post">
+                    <input asp-for="@item.IsBanned" data-playerid="@item.Id" class="editajax" />
+                </form>
+            </td>
+            <td>
+                @Html.DisplayFor(model => item.Points)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+@section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            SetBanAjax(".editajax", '@Url.Action("BanUser")','playerid');
+        });
+    </script>
+}
