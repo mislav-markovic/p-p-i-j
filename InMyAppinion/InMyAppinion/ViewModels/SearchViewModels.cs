@@ -16,6 +16,8 @@ namespace InMyAppinion.ViewModels
 
             public SubjectTag tag { get; set; }
 
+            public string query { get; set; }
+
         }
 
         public class ProfessorSearchViewModel {

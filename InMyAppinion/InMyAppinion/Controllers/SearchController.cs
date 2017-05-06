@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using InMyAppinion.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using InMyAppinion.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace InMyAppinion.Controllers
 {
@@ -21,25 +22,33 @@ namespace InMyAppinion.Controllers
         [HttpGet]
         public IActionResult Search(string query)
         {
-            if (query != null) {
+            if (query != null && query!="") {
 
                     var model = new SubjectSearchViewModel();
-                    model.tag = _context.SubjectTag.Where(o => o.Name.ToLower() == query.ToLower()).FirstOrDefault();
-                    model.subtagset = _context.SubjectTagSet.Where(o => o.SubjectTagID == model.tag.ID).ToList();
-                //var tmp = _context.Subject.FirstOrDefault();
-                //model.subjects = new List<Models.Subject>();
-                /*foreach (var sts in model.subtagset)
+                try
                 {
-                    model.subjects.Append(sts.Subject);
-                    model.subjects.Append(_context.Subject.Where(o => o.ShortName.ToLower() == "ppij").First());
-                }*/
-                    model.subjects = _context.Subject.ToList();
-
-                    return View(model);
+                    model.tag = _context.SubjectTag.Where(o => o.Name.ToLower()==query.ToLower()).FirstOrDefault();
+                    model.subtagset = _context.SubjectTagSet.Where(o => o.SubjectTagID == model.tag.ID).ToList();
+                    model.query = query;
+                    var subjects = _context.Subject.ToList();
+                    //var tmp = _context.Subject.FirstOrDefault();
+                    var tmp = new List<Models.Subject>();
+                    foreach (var sts in model.subtagset) {
+                        tmp.Add(sts.Subject);
+                    }
+                    model.subjects = tmp;
+                }
+                //model.subjects = _context.Subject.ToList();
+                catch {
+                    model.query = query;
+                }
+                return View(model);
 
             }
             var model2 = new SubjectSearchViewModel();
             model2.subjects = _context.Subject.ToList();
+            //model2.subtagset = _context.SubjectTagSet.ToList();
+            model2.query = query;
             return View(model2);
         }
     }
