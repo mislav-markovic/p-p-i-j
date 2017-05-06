@@ -7,16 +7,20 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InMyAppinion.Data;
 using InMyAppinion.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace InMyAppinion.Controllers
 {
     public class SubjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public SubjectsController(ApplicationDbContext context)
+        public SubjectsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _context = context;    
+            _context = context;
+            _userManager = userManager;
         }
 
         // GET: Subjects
@@ -47,27 +51,75 @@ namespace InMyAppinion.Controllers
         }
 
         // GET: Subjects/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["FacultyID"] = new SelectList(_context.Faculty, "ID", "ShortName");
+            var currUser = await _userManager.GetUserAsync(User);
+            bool isUser;
+            if (await _userManager.IsInRoleAsync(currUser, "Administrator") || await _userManager.IsInRoleAsync(currUser, "Moderator"))
+            {
+                isUser = false;
+            }
+            else
+            {
+                isUser = true;
+            }
+
+            ViewData["IsUser"] = isUser;
+            ViewData["FacultyID"] = new SelectList(_context.Faculty, "ID", "Name");
+            ViewData["ProfessorID"] = new SelectList(_context.Professor, "ID", "FullName");
+            ViewData["SubjectTag"] = new SelectList(_context.SubjectTag, "ID", "Name");
             return View();
         }
 
         // POST: Subjects/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "Korisnik")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,ShortName,Description,FacultyID")] Subject subject)
+        public async Task<IActionResult> Create([Bind("Name,ShortName,Description,FacultyID")] Subject subject, bool isUser, ICollection<int> tags, ICollection<int> professorIDs)
         {
+
+            subject.Validated = !isUser;
+
+            var tagSet = new HashSet<SubjectTagSet>();
+            var dbTags = _context.SubjectTag.AsNoTracking().Select(t => t.ID).ToList();
+
+            foreach(var tagID in tags)
+            {
+                if(dbTags.Any(t => t == tagID))
+                {
+                    tagSet.Add(new SubjectTagSet { SubjectID = subject.ID, SubjectTagID = tagID });
+                }
+            }
+
+            subject.SubjectTagSet = tagSet;
+
+            var professorSet = new HashSet<ProfessorSubjectSet>();
+            var dbProfessors = _context.Professor.AsNoTracking().Select(p => p.ID).ToList();
+
+            foreach(var profID in professorIDs)
+            {
+                if(dbProfessors.Any(p => p == profID))
+                {
+                    professorSet.Add(new ProfessorSubjectSet { ProfessorID = profID, SubjectID = subject.ID });
+                }
+            }
+
+            subject.Professors = professorSet;
+
             if (ModelState.IsValid)
             {
                 _context.Add(subject);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["FacultyID"] = new SelectList(_context.Faculty, "ID", "ID", subject.FacultyID);
-            return View(subject);
+
+            ViewData["IsUser"] = isUser;
+            ViewData["FacultyID"] = new SelectList(_context.Faculty, "ID", "Name");
+            ViewData["ProfessorID"] = new SelectList(_context.Professor, "ID", "FullName");
+            ViewData["SubjectTag"] = new SelectList(_context.SubjectTag, "ID", "Name");
+            return View();
         }
 
         // GET: Subjects/Edit/5
