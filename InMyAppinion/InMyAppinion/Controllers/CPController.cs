@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using InMyAppinion.Data;
 using InMyAppinion.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace InMyAppinion.Controllers
 {
@@ -81,6 +82,47 @@ namespace InMyAppinion.Controllers
                 };
                 return Json(result);
             }
+        }
+
+        public IActionResult SetSubjectTags()
+        {
+            ViewData["Subjects"] = new SelectList(_context.Subject, "ID", "Name");
+            ViewData["Tags"] = new SelectList(_context.SubjectTag, "Name", "Name");
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SetSubjectTags(int id, string[] tags)
+        {
+            var subject = _context.Subject.SingleOrDefault(s => s.ID == id);
+            if(subject == null)
+            {
+                return NotFound();
+            }
+
+            foreach(var tagName in tags)
+            {
+                var tag = _context.SubjectTag.SingleOrDefault(t => t.Name == tagName);
+                if(tag == null)
+                {
+                    tag = new SubjectTag { Name = tagName };
+                    _context.SubjectTag.Add(tag);
+                    await _context.SaveChangesAsync();
+                }
+                if (_context.SubjectTagSet.SingleOrDefault(st => st.SubjectID == id && st.SubjectTagID == tag.ID) == null)
+                {
+                    _context.SubjectTagSet.Add(
+                        new SubjectTagSet
+                        {
+                            SubjectID = id,
+                            SubjectTagID = tag.ID,
+                        }
+                    );
+                    await _context.SaveChangesAsync();
+                }
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }

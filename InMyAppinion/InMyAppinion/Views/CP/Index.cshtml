@@ -9,9 +9,11 @@
 
 <h2>Korisnici</h2>
 
+<h4>
 @if(await UserManager.IsInRoleAsync(await UserManager.FindByNameAsync(User.Identity.Name), "Administrator")){
-<h4><a asp-controller="Roles" asp-action="Index">Uloge</a></h4>
+<a asp-controller="Roles" asp-action="Index">Uloge</a>
 }
+ | <a asp-action="SetSubjectTags"> Dodaj predmetne tagove</a></h4>
 
 <table class="table table-responsive">
     <thead>
