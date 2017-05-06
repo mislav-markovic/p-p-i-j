@@ -1,4 +1,6 @@
 @model IEnumerable<InMyAppinion.Models.Subject>
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = "Index";
@@ -12,18 +14,22 @@
 <table class="table">
     <thead>
         <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ShortName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Description)
-                </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShortName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Faculty)
             </th>
+            @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+            {
+                <th>@Html.DisplayNameFor(model => model.Validated)</th>
+            }
             <th></th>
         </tr>
     </thead>
@@ -42,6 +48,10 @@
             <td>
                 @item.Faculty.ShortName
             </td>
+            @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+            {
+                <td>@(item.Validated ? "Da" : "Ne")</td>
+            }
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ID">Details</a> |

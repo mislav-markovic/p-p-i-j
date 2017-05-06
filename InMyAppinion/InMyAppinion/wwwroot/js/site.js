@@ -23,7 +23,7 @@
     });
 }
 
-function SetBanAjax(selector, url, paramname) {
+function SetEditAjax(selector, url, paramname) {
     $(document).on('click', selector, function (event) {
         event.preventDefault();
         var paramval = $(this).data(paramname);
@@ -134,5 +134,30 @@ function VoteComment(selector, url, commentid) {
                 }
             }
         });
+    });
+}
+
+function SetDeleteAjax(selector, url, paramname1, paramname2) {
+    $(document).on('click', selector, function (event) {
+        event.preventDefault();
+        var tag = $(this).data(paramname1);
+        var subject = $(this).data(paramname2);
+        var span = $(this).parent('span');
+        if (confirm('Obrisati zapis?')) {
+            var token = $('input[name="__RequestVerificationToken"]').first().val();
+            $("#tempmessage").children().remove();
+            $("#tempmessage").removeClass("alert-success");
+            $("#tempmessage").removeClass("alert-danger");
+            $("#tempmessage").html('');
+            $.post(url, { tagid: tag, subjectid: subject, __RequestVerificationToken: token }, function (data) {
+                if (data.success) {
+                    $(span).remove();
+                }
+                $("#tempmessage").addClass(data.success ? "alert alert-success" : "alert alert-danger");
+                $("#tempmessage").html(data.message);
+            }).fail(function (jqXHR) {
+                alert(jqXHR.status + " : " + jqXHR.responseText);
+            });
+        }
     });
 }

@@ -37,6 +37,8 @@ namespace InMyAppinion.Controllers
             var subject = await _context.Subject
                 .Include(s => s.Faculty)
                 .Include(s => s.Reviews)
+                .Include(s => s.SubjectTagSet)
+                .ThenInclude(t => t.SubjectTag)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (subject == null)
             {
@@ -156,6 +158,75 @@ namespace InMyAppinion.Controllers
         private bool SubjectExists(int id)
         {
             return _context.Subject.Any(e => e.ID == id);
+        }
+
+        public IActionResult Validate(int id)
+        {
+            var subject = _context.Subject.SingleOrDefault(p => p.ID == id);
+            if (subject == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    subject.Validated = !subject.Validated;
+                    _context.Update(subject);
+                    _context.SaveChanges();
+                    var result = new
+                    {
+                        message = $"Predmet {subject.Name} potvrðen.",
+                        success = true
+                    };
+                    return Json(result);
+                }
+                catch (Exception exc)
+                {
+                    var result = new
+                    {
+                        message = $"Pogreška pri ažuriranju: + {exc.InnerException}",
+                        success = false
+                    };
+                    return Json(result);
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteSubjectTagSet(int tagid, int subjectid)
+        {
+            var subjectTagSet = await _context.SubjectTagSet
+                                .SingleOrDefaultAsync(s => s.SubjectID == subjectid && s.SubjectTagID == tagid);
+
+            if (subjectTagSet == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    _context.Remove(subjectTagSet);
+                    await _context.SaveChangesAsync();
+                    var result = new
+                    {
+                        message = $"Tag uspješno obrisan.",
+                        success = true
+                    };
+                    return Json(result);
+                }
+                catch (Exception exc)
+                {
+                    var result = new
+                    {
+                        message = $"Pogreška pri brisanju: + {exc.InnerException}",
+                        success = false
+                    };
+                    return Json(result);
+                }
+            }
         }
     }
 }
