@@ -51,6 +51,7 @@ namespace InMyAppinion.Controllers
         }
 
         // GET: Subjects/Create
+        [Authorize(Roles = "Korisnik")]
         public async Task<IActionResult> Create()
         {
             var currUser = await _userManager.GetUserAsync(User);
