@@ -34,7 +34,33 @@
             @Html.DisplayNameFor(model => model.Faculty)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.Faculty.ID)
+            @Html.DisplayFor(model => model.Faculty.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Professors)
+        </dt>
+        <dd>
+            @foreach(var prof in Model.Professors)
+            {
+                <ul>
+                    <li>
+                        <a asp-action="Details" asp-controller="Professors" asp-route-id="@prof.ProfessorID">@prof.Professor.FullName</a>
+                    </li>
+                </ul>
+            }
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.SubjectTagSet)
+        </dt>
+        <dd>
+            @foreach (var tag in Model.SubjectTagSet)
+            {
+                <ul>
+                    <li>
+                        @tag.SubjectTag.Name
+                    </li>
+                </ul>
+            }
         </dd>
         <dt>
             Kritike
