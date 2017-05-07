@@ -1,4 +1,4 @@
-@model InMyAppinion.Models.SubjectReview
+﻿@model InMyAppinion.Models.SubjectReview
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
 @using Microsoft.AspNetCore.Authorization
@@ -9,8 +9,6 @@
     ViewData["Title"] = "Recenzija";
 }
 
-<div id="tempmessage" class="hidden-panel"></div>
-
 <div class=row>
     <div class="col-md-6">
         <h2>@Model.Subject.Name</h2>
@@ -20,7 +18,7 @@
         <div class="col-md-2 margins">
             <form asp-action="Delete">
                 <input type="hidden" name="id" value="@Model.ID" />
-                <button type="submit" class="btn btn-danger del" title="Obri�i recenziju">
+                <button type="submit" class="btn btn-danger del" title="Obriši recenziju">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
             </form>
@@ -199,6 +197,16 @@
                 }
             }
         });
+    </script>
+
+    <script>
+            $(document).ready(function () {
+                $(".del").click(function () {
+                    if (!confirm("Jeste li sigurni?")) {
+                        return false;
+                    }
+                });
+            });
     </script>
 
 }

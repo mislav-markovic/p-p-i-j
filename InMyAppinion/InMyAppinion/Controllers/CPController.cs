@@ -62,6 +62,7 @@ namespace InMyAppinion.Controllers
                     msg = $"Korisnik {user.UserName} dobio bananu!";
                     await _userManager.SetLockoutEnabledAsync(user, true);
                     user.LockoutEnd = new DateTimeOffset(DateTime.Now).AddDays(7);
+                    await _userManager.UpdateSecurityStampAsync(user);
                 }
                 user.IsBanned = !user.IsBanned;
                 _context.Update(user);

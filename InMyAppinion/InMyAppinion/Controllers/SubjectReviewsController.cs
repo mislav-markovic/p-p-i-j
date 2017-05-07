@@ -227,8 +227,21 @@ namespace InMyAppinion.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var subjectReview = await _context.SubjectReview.SingleOrDefaultAsync(m => m.ID == id);
-            _context.SubjectReview.Remove(subjectReview);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.SubjectReview.Remove(subjectReview);
+                await _context.SaveChangesAsync();
+
+                TempData[Constants.Message] = $"Recenzija uspješno obrisana.";
+                TempData[Constants.ErrorOccurred] = false;
+            }
+            catch (Exception exc)
+            {
+                ModelState.AddModelError(string.Empty, exc.ToString());
+                TempData[Constants.Message] = "Pogreška u brisanju recenzije";
+                TempData[Constants.ErrorOccurred] = true;
+                return RedirectToAction("Details", new { id = id });
+            }
             return RedirectToAction("Index");
         }
 

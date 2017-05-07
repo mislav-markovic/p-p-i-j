@@ -43,11 +43,17 @@ namespace InMyAppinion
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options => 
+            {
+                options.SecurityStampValidationInterval = TimeSpan.Zero;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddMvc();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
 
             services.AddAuthorization(options =>
             {
@@ -110,6 +116,7 @@ namespace InMyAppinion
 
             app.UseIdentity();
 
+            app.UseSession();
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
