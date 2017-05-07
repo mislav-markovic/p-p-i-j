@@ -65,3 +65,7 @@ ul.nav li.dropdown:hover ul.dropdown-menu {
 .clear {
     clear: both;
 }
+
+.margins {
+    margin-top: 17px;
+}

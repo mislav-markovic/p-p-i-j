@@ -20,6 +20,7 @@ namespace InMyAppinion.Models
         [Display(Name = "Biografija")]
         [StringLength(2000, ErrorMessage = "{0} može imati najviše 2000 znakova")]
         public string Biography { get; set; }
+        [Display(Name = "Potvrđen?")]
         public bool Validated { get; set; }
 
         [Display(Name = "Predmeti")]

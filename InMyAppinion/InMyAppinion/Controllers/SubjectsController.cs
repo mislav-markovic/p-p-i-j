@@ -212,5 +212,97 @@ namespace InMyAppinion.Controllers
         {
             return _context.Subject.Any(e => e.ID == id);
         }
+
+        public IActionResult Validate(int id)
+        {
+            var subject = _context.Subject.SingleOrDefault(p => p.ID == id);
+            if (subject == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    subject.Validated = !subject.Validated;
+                    _context.Update(subject);
+                    _context.SaveChanges();
+                    var result = new
+                    {
+                        message = $"Predmet {subject.Name} potvrðen.",
+                        success = true
+                    };
+                    return Json(result);
+                }
+                catch (Exception exc)
+                {
+                    var result = new
+                    {
+                        message = $"Pogreška pri ažuriranju: + {exc.InnerException}",
+                        success = false
+                    };
+                    return Json(result);
+                }
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteSubjectTagSet(int tagid, int subjectid)
+        {
+            var subjectTagSet = await _context.SubjectTagSet
+                                .SingleOrDefaultAsync(s => s.SubjectID == subjectid && s.SubjectTagID == tagid);
+
+            if (subjectTagSet == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    _context.Remove(subjectTagSet);
+                    await _context.SaveChangesAsync();
+                    var result = new
+                    {
+                        message = $"Tag uspješno obrisan.",
+                        success = true
+                    };
+                    return Json(result);
+                }
+                catch (Exception exc)
+                {
+                    var result = new
+                    {
+                        message = $"Pogreška pri brisanju: + {exc.InnerException}",
+                        success = false
+                    };
+                    return Json(result);
+                }
+            }
+        }
+
+        public IActionResult SubjectTagsCloud()
+        {
+            return View();
+        }
+
+        public IActionResult GetCloud()
+        {
+            List<object> list = new List<object>();
+            var tags = _context.SubjectTag.Include(s => s.SubjectTagSet).ToList();
+            foreach(var item in tags)
+            {
+                var result = new
+                {
+                    text = item.Name,
+                    weight = item.SubjectTagSet.Count,
+                    link = "../Search/Search?query=" + item.Name
+                };
+                list.Add(result);
+            }
+
+            return Json(list);
+        }
     }
 }

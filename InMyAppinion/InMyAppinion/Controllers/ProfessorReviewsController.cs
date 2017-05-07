@@ -86,7 +86,7 @@ namespace InMyAppinion.Controllers
 
 
         // GET: ProfessorReviews/Create
-        [Authorize(Roles = "Administrator,Korisnik")]
+        [Authorize(Roles = "Korisnik")]
         public IActionResult Create(int? Id)
         {
             if (!Id.HasValue)
@@ -241,8 +241,23 @@ namespace InMyAppinion.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var professorReview = await _context.ProfessorReview.SingleOrDefaultAsync(m => m.ID == id);
-            _context.ProfessorReview.Remove(professorReview);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var comments = _context.Comment.Where(c => c.ProfessorReviewID == id);
+                _context.Comment.RemoveRange(comments);
+                _context.ProfessorReview.Remove(professorReview);
+                await _context.SaveChangesAsync();
+
+                TempData[Constants.Message] = $"Recenzija uspješno obrisana.";
+                TempData[Constants.ErrorOccurred] = false;
+            }
+            catch (Exception exc)
+            {
+                ModelState.AddModelError(string.Empty, exc.ToString());
+                TempData[Constants.Message] = "Pogreška u brisanju recenzije";
+                TempData[Constants.ErrorOccurred] = true;
+                return RedirectToAction("Details", new { id = id });
+            }
             return RedirectToAction("Index");
         }
 

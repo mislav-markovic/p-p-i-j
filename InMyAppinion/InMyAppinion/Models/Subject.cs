@@ -21,6 +21,7 @@ namespace InMyAppinion.Models
         [Required(ErrorMessage = "{0} je obavezan", AllowEmptyStrings = false)]
         [StringLength(500, MinimumLength = 3, ErrorMessage = "{0} mora biti između 3 i 500 znakova")]
         public string Description { get; set; }
+        [Display(Name = "Potvrđen?")]
         public bool Validated { get; set; }
         [Required(ErrorMessage = "Obaveno je pridružiti fakultet predmetu")]
         public int FacultyID { get; set; }

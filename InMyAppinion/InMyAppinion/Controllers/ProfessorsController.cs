@@ -186,5 +186,38 @@ namespace InMyAppinion.Controllers
         {
             return _context.Professor.Any(e => e.ID == id);
         }
+
+        public IActionResult Validate(int id)
+        {
+            var professor = _context.Professor.SingleOrDefault(p => p.ID == id);
+            if (professor == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                try
+                {
+                    professor.Validated = !professor.Validated;
+                    _context.Update(professor);
+                    _context.SaveChanges();
+                    var result = new
+                    {
+                        message = $"Profesor {professor.FullName} potvrðen.",
+                        success = true
+                    };
+                    return Json(result);
+                }
+                catch (Exception exc)
+                {
+                    var result = new
+                    {
+                        message = $"Pogreška pri ažuriranju: + {exc.InnerException}",
+                        success = false
+                    };
+                    return Json(result);
+                }
+            }
+        }
     }
 }

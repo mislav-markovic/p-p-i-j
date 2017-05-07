@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="~/css/site.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.7.0/chosen.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.3/css/bootstrap-slider.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqcloud/1.0.4/jqcloud.css">
     </environment>
     <environment names="Staging,Production">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -19,6 +20,7 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.7.0/chosen.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.3/css/bootstrap-slider.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqcloud/1.0.4/jqcloud.css">
     </environment>
     @Html.Raw(JavaScriptSnippet.FullScript)
 </head>
@@ -55,6 +57,18 @@
         </div>
     </nav>
     <div class="container body-content">
+        <div id="tempmessage">
+            @if (TempData[Constants.Message] != null)
+            {
+                bool error = false;
+                var obj = TempData[Constants.ErrorOccurred];
+                if (obj != null)
+                {
+                    error = (bool)obj;
+                }
+                <div class="alert @(error ? "alert-danger" : "alert-success")">@TempData[Constants.Message]</div>
+            }
+        </div>
         @RenderBody()
         <hr />
         <footer>
@@ -68,6 +82,7 @@
         <script src="~/js/site.js" asp-append-version="true"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.7.0/chosen.jquery.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.3/bootstrap-slider.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqcloud/1.0.4/jqcloud-1.0.4.js"></script>
     </environment>
     <environment names="Staging,Production">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
@@ -85,6 +100,7 @@
         <script src="~/js/site.min.js" asp-append-version="true"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.7.0/chosen.jquery.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.7.3/bootstrap-slider.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqcloud/1.0.4/jqcloud-1.0.4.js"></script>
     </environment>
 
     @RenderSection("Scripts", required: false)

@@ -3,13 +3,13 @@
         var paramval = $('#' + paramname).val();
         var user = $('#' + username).val();
         console.log(url);
-        //$("#tempmessage").removeClass("alert-success");
-        //$("#tempmessage").removeClass("alert-danger");
-        //$("#tempmessage").html('');
+        $("#tempmessage").removeClass("alert-success");
+        $("#tempmessage").removeClass("alert-danger");
+        $("#tempmessage").html('');
         $.post(url, { text: paramval }, function (data) {
             $("#tempmessage").addClass(data.success ? "alert-success" : "alert-danger");
-            //$("#tempmessage").addClass("panel-body");
-            //$("#tempmessage").html(data.message);
+            $("#tempmessage").addClass("panel-body");
+            $("#tempmessage").html(data.message);
             if (data.success) {
                 $('#comments').append('<div id="' + data.commentId + '"></div>');
                 $('#' + data.commentId).append('<button data-commentid="' + data.commentId + '" data-userid="' + data.userId + '" class="newButton"><span class="newSpan"></span></button>');
@@ -19,6 +19,27 @@
                 $('#text').val('');
                 console.log(data.commentId);
             }
+        });
+    });
+}
+
+function SetEditAjax(selector, url, paramname) {
+    $(document).on('click', selector, function (event) {
+        event.preventDefault();
+        var paramval = $(this).data(paramname);
+        $("#tempmessage").removeClass("alert-success");
+        $("#tempmessage").removeClass("alert-danger");
+        $("#tempmessage").html('');
+        var chk = $(this).is(":checked");
+        var x = $(this);
+        console.log(chk);
+        $.get(url, { id: paramval }, function (data) {
+            $("#tempmessage").addClass(data.success ? "alert-success" : "alert-danger");
+            if (data.success) {
+                $(x).prop("checked", chk);
+            }
+            $("#tempmessage").addClass("panel-body");
+            $("#tempmessage").html(data.message);
         });
     });
 }
@@ -113,5 +134,30 @@ function VoteComment(selector, url, commentid) {
                 }
             }
         });
+    });
+}
+
+function SetDeleteAjax(selector, url, paramname1, paramname2) {
+    $(document).on('click', selector, function (event) {
+        event.preventDefault();
+        var tag = $(this).data(paramname1);
+        var subject = $(this).data(paramname2);
+        var span = $(this).parent('span');
+        if (confirm('Obrisati zapis?')) {
+            var token = $('input[name="__RequestVerificationToken"]').first().val();
+            $("#tempmessage").children().remove();
+            $("#tempmessage").removeClass("alert-success");
+            $("#tempmessage").removeClass("alert-danger");
+            $("#tempmessage").html('');
+            $.post(url, { tagid: tag, subjectid: subject, __RequestVerificationToken: token }, function (data) {
+                if (data.success) {
+                    $(span).remove();
+                }
+                $("#tempmessage").addClass(data.success ? "alert alert-success" : "alert alert-danger");
+                $("#tempmessage").html(data.message);
+            }).fail(function (jqXHR) {
+                alert(jqXHR.status + " : " + jqXHR.responseText);
+            });
+        }
     });
 }

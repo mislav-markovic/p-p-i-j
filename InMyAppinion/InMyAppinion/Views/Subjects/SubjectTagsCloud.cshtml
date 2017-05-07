@@ -1,0 +1,22 @@
+﻿@model string
+
+@{
+    ViewData["Title"] = "SubjectTagsCloud";
+}
+
+<h2>Područja</h2>
+
+<div id="cloud"></div>
+
+@section Scripts{
+    <script>
+        $.get('@Url.Action("GetCloud")', function (data) {
+            var values = data;
+
+            $('#cloud').jQCloud(values, {
+                width: 600,
+                height: 300
+            });
+        });
+    </script>
+}
