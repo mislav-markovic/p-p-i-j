@@ -86,8 +86,8 @@ namespace InMyAppinion.Controllers
 
         public IActionResult SetSubjectTags()
         {
-            ViewData["Subjects"] = new SelectList(_context.Subject, "ID", "Name");
-            ViewData["Tags"] = new SelectList(_context.SubjectTag, "Name", "Name");
+            ViewData["Subjects"] = new SelectList(_context.Subject.OrderBy(s => s.Name), "ID", "Name");
+            ViewData["Tags"] = new SelectList(_context.SubjectTag.OrderBy(t => t.Name), "Name", "Name");
             return View();
         }
 

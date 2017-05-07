@@ -228,5 +228,28 @@ namespace InMyAppinion.Controllers
                 }
             }
         }
+
+        public IActionResult SubjectTagsCloud()
+        {
+            return View();
+        }
+
+        public IActionResult GetCloud()
+        {
+            List<object> list = new List<object>();
+            var tags = _context.SubjectTag.Include(s => s.SubjectTagSet).ToList();
+            foreach(var item in tags)
+            {
+                var result = new
+                {
+                    text = item.Name,
+                    weight = item.SubjectTagSet.Count,
+                    link = "../Search/Search?query=" + item.Name
+                };
+                list.Add(result);
+            }
+
+            return Json(list);
+        }
     }
 }
