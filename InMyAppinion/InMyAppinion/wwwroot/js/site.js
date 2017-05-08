@@ -115,3 +115,81 @@ function VoteComment(selector, url, commentid) {
         });
     });
 }
+
+function GraphByYear(chartid, url) {
+    $(document).ready(function () {
+        console.log(url);
+        console.log(chartid);
+
+        $.ajax({
+            url: url,
+            async: false,
+            type: 'GET',
+            success: function (data) {
+                console.log(data);
+
+                var grades = [];
+                var content = $.parseJSON(data);
+                var tickArray = [];
+                $.each(content, function (key, value) {
+                    var year = parseInt(key);
+                    tickArray.push(year);
+                    console.log([year, value]);
+                    //grades.push([value, parseInt(key)]);
+                    grades.push([parseInt(key), value]);
+                });
+                console.log(grades);
+                var plot = $.jqplot(chartid, [grades], {
+                    // Turns on animatino for all series in this plot.
+                    animate: true,
+                    series: [
+                        {
+                            pointLabels: {
+                                show: true
+                            },
+                            rendererOptions: {
+                                // speed up the animation a little bit.
+                                // This is a number of milliseconds.
+                                // Default for a line series is 2500.
+                                animation: {
+                                    speed: 1500
+                                }
+                            }
+                        }
+                    ],
+                    axesDefaults: {
+                        pad: 5
+                    },
+                    axes: {
+                        xaxis: {
+                            ticks: tickArray,
+                            tickOptions: {
+                                formatString: "%d"
+                            },
+                            drawMajorGridlines: false,
+                            drawMinorGridlines: false,
+                            drawMajorTickMarks: false
+                        },
+                        yaxis: {
+                            min: 1,
+                            max: 5,
+                            tickInterval: 1,
+                            tickOptions: {                                
+                                formatString: "%.2f"
+                            },
+                            rendererOptions: {
+                                forceTickAt0: true
+                            }
+                        }
+                    },
+                    highlighter: {
+                        show: true,
+                        showLabel: true,
+                        tooltipAxes: 'y',
+                        sizeAdjust: 7.5, tooltipLocation: 'ne'
+                    }
+                });
+            }
+        });
+    });
+}
