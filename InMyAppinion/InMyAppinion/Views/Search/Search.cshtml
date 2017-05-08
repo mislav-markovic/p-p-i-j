@@ -10,10 +10,11 @@
     <span>@sub.Name - @sub.ShortName</span> <br />
 }*@
 
-@if (Model.subjects.Count()>0) {
+@if (Model.subjects!=null) {
     foreach (var sts in Model.subjects)
     {
-    @sts.Name <br />
+        <a asp-action="Details" asp-controller="Subjects" asp-route-id="@sts.ID">@sts.Name </a>
+    <br />
     }
 }
 else
