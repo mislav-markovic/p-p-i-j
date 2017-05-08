@@ -14,7 +14,7 @@ namespace InMyAppinion.ViewModels
 
             public IEnumerable<SubjectTagSet> subtagset { get; set; }
 
-            public SubjectTag tag { get; set; }
+            public IEnumerable<SubjectTag> tags { get; set; }
 
             public string query { get; set; }
 

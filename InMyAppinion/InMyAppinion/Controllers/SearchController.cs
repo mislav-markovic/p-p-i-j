@@ -27,15 +27,23 @@ namespace InMyAppinion.Controllers
                     var model = new SubjectSearchViewModel();
                 try
                 {
-                    model.tag = _context.SubjectTag.Where(o => o.Name.ToLower()==query.ToLower()).FirstOrDefault();
-                    model.subtagset = _context.SubjectTagSet.Where(o => o.SubjectTagID == model.tag.ID).ToList();
-                    model.query = query;
-                    var subjects = _context.Subject.ToList();
-                    //var tmp = _context.Subject.FirstOrDefault();
+                    model.tags = _context.SubjectTag.Where(o => o.Name.ToLower().Contains(query.ToLower())).ToList();
                     var tmp = new List<Models.Subject>();
-                    foreach (var sts in model.subtagset) {
-                        tmp.Add(sts.Subject);
+                    var subjects = _context.Subject.ToList();
+                    model.query = query;
+                    foreach (var tag in model.tags)
+                    {
+                        model.subtagset = _context.SubjectTagSet.Where(o => o.SubjectTagID == tag.ID).ToList();
+
+                        
+                        foreach (var sts in model.subtagset)
+                        {
+                            tmp.Add(sts.Subject);
+                        }
                     }
+                    //var tmp = _context.Subject.FirstOrDefault();
+
+                    
                     model.subjects = tmp;
                 }
                 //model.subjects = _context.Subject.ToList();
