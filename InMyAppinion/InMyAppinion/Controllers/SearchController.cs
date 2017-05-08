@@ -52,7 +52,7 @@ namespace InMyAppinion.Controllers
 
 
                     // professor part
-                    var profs = _context.Professor.Where(o=>o.FullName.Contains(query)).ToList();
+                    var profs = _context.Professor.Where(o=>o.FullName.ToLower().Contains(query.ToLower())).ToList();
                     model.profservmod.professors = profs;
                 }
                 //model.subjects = _context.Subject.ToList();
