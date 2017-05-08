@@ -1,22 +1,43 @@
-﻿@model InMyAppinion.ViewModels.SubjectSearchViewModel
+﻿@model InMyAppinion.ViewModels.SearchViewModel
 @{
     ViewData["Title"] = "Tražim "+Model.query;
 }
 
-<h2>Rezultati pretrage za @Model.query</h2>
-
+@if (Model.query!= "" && Model.query!=null)
+{
+    <h2> Rezultati pretrage za @Model.query </h2>
+}
+else { 
+    <h2>Svi rezultati</h2>
+}
 @* @foreach (var sub in Model.subjects) { 
 
     <span>@sub.Name - @sub.ShortName</span> <br />
 }*@
 
-@if (Model.subjects != null && Model.subjects.Count()>0)
+<h3> Predmeti </h3>
+@if (Model.subservmod.subjects != null && Model.subservmod.subjects.Count()>0)
 {
-    foreach (var sts in Model.subjects)
+    foreach (var sts in Model.subservmod.subjects)
     {
         //<span>beufcbwekjn</span> <br />
         <a asp-action="Details" asp-controller="Subjects" asp-route-id="@sts.ID">@sts.Name </a>
     <br />
+    }
+}
+else
+{
+    <span>Nema ničega</span>
+}
+
+<h3> Profesori </h3>
+@if (Model.profservmod.professors != null && Model.profservmod.professors.Count() > 0)
+{
+    foreach (var prof in Model.profservmod.professors)
+    {
+        //<span>beufcbwekjn</span> <br />
+        <a asp-action="Details" asp-controller="Professors" asp-route-id="@prof.ID">@prof.FullName </a>
+        <br />
     }
 }
 else

@@ -16,7 +16,7 @@ namespace InMyAppinion.ViewModels
 
             public IEnumerable<SubjectTag> tags { get; set; }
 
-            public string query { get; set; }
+
 
         }
 
@@ -27,9 +27,19 @@ namespace InMyAppinion.ViewModels
 
             public IEnumerable<ProfessorReviewTagSet> profrevtagset { get; set; }
 
-            public ProfessorReviewTag tag { get; set; }
+            public IEnumerable<ProfessorReviewTag> tags { get; set; }
 
         }
+
+    public class SearchViewModel {
+
+        public ProfessorSearchViewModel profservmod { get; set; }
+
+        public SubjectSearchViewModel subservmod { get; set; }
+
+        public string query { get; set; }
+
+    }
 
 
 

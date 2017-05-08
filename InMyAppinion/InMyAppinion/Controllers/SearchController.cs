@@ -24,28 +24,36 @@ namespace InMyAppinion.Controllers
         {
             if (query != null && query!="") {
 
-                    var model = new SubjectSearchViewModel();
+                    var model = new SearchViewModel();
+                    model.subservmod = new SubjectSearchViewModel();
+                    model.profservmod = new ProfessorSearchViewModel();
                 try
                 {
-                    model.tags = _context.SubjectTag.Where(o => o.Name.ToLower().Contains(query.ToLower())).ToList();
+
+                    // subject part
+                    model.subservmod.tags = _context.SubjectTag.Where(o => o.Name.ToLower().Contains(query.ToLower())).ToList();
                     var tmp = new HashSet<Models.Subject>();
                     var subjects = _context.Subject.ToList();
                     model.query = query;
-                    foreach (var tag in model.tags)
+                    foreach (var tag in model.subservmod.tags)
                     {
-                        model.subtagset = _context.SubjectTagSet.Where(o => o.SubjectTagID == tag.ID).ToList();
+                        model.subservmod.subtagset = _context.SubjectTagSet.Where(o => o.SubjectTagID == tag.ID).ToList();
 
                         
-                        foreach (var sts in model.subtagset)
+                        foreach (var sts in model.subservmod.subtagset)
                         {
                                 tmp.Add(sts.Subject);
                             
                         }
                     }
-                    //var tmp = _context.Subject.FirstOrDefault();
+                    //var tmp = _context.Subject.FirstOrDefault();  
+                    model.subservmod.subjects = tmp;
 
-                    
-                    model.subjects = tmp;
+
+
+                    // professor part
+                    var profs = _context.Professor.Where(o=>o.FullName.Contains(query)).ToList();
+                    model.profservmod.professors = profs;
                 }
                 //model.subjects = _context.Subject.ToList();
                 catch {
@@ -54,8 +62,11 @@ namespace InMyAppinion.Controllers
                 return View(model);
 
             }
-            var model2 = new SubjectSearchViewModel();
-            model2.subjects = _context.Subject.ToList();
+            var model2 = new SearchViewModel();
+            model2.subservmod = new SubjectSearchViewModel();
+            model2.profservmod = new ProfessorSearchViewModel();
+            model2.profservmod.professors = _context.Professor.ToList();
+            model2.subservmod.subjects = _context.Subject.ToList();
             //model2.subtagset = _context.SubjectTagSet.ToList();
             model2.query = query;
             return View(model2);
