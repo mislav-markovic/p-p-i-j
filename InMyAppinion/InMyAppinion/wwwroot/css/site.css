@@ -52,3 +52,20 @@ textarea {
 ul.nav li.dropdown:hover ul.dropdown-menu {
     display: block;
 }
+
+
+
+
+.nav > li > a:hover{
+    border: inherit;
+    background-color:inherit;
+}
+
+#comments > * > h5 > span{
+    font-weight: bold;
+    color: #128ee9;
+}
+
+.clear {
+    clear: both;
+}

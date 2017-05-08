@@ -17,10 +17,14 @@ namespace InMyAppinion.Controllers
     public class ProfessorReviewsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProfessorReviewsController(ApplicationDbContext context)
+        public ProfessorReviewsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
-            _context = context;    
+            _context = context;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         // GET: ProfessorReviews
@@ -44,11 +48,37 @@ namespace InMyAppinion.Controllers
                 .Include(p => p.Author)
                 .Include(p => p.Professor)
                 .Include(p => p.ProfessorReviewTagSet).ThenInclude(p => p.ProfessorReviewTag)
+                .Include(p => p.Comments).ThenInclude(p => p.Author)
                 .SingleOrDefaultAsync(m => m.ID == id);
 
             if (professorReview == null)
             {
                 return NotFound();
+            }
+
+            if(_signInManager.IsSignedIn(User)){
+                var voted = await _context.VoteProfessorReview
+                            .Where(v => v.ProfessorReview.ID == professorReview.ID && v.Voter.UserName == User.Identity.Name)
+                            .SingleOrDefaultAsync();
+                if(voted != null){
+                    ViewData["voted"] = voted.Vote.ToString();
+                }
+
+                string userId = _userManager.GetUserId(User);
+                var list = _context.VoteComment.Where(v => v.VoterID == userId);
+
+                foreach(var comm in professorReview.Comments)
+                {
+                    if(list.Any(k => k.CommentID == comm.ID))
+                    {
+                        ViewData[comm.ID.ToString()] = list.First(k => k.CommentID == comm.ID).Vote.ToString();
+                    }
+                    else
+                    {
+                        ViewData[comm.ID.ToString()] = "";
+                    }
+                }
+
             }
 
             return View(professorReview);
@@ -59,7 +89,7 @@ namespace InMyAppinion.Controllers
         [Authorize(Roles = "Administrator,Korisnik")]
         public IActionResult Create(int? Id)
         {
-            if (Id == null)
+            if (!Id.HasValue)
             {
                 return NotFound();
             }
@@ -69,6 +99,7 @@ namespace InMyAppinion.Controllers
             ViewData["AuthorID"] = userId;
             ViewData["ProfessorID"] = Id;
             ViewData["ProfessorTags"] = new SelectList(_context.ProfessorReviewTag, "ID", "Name");
+
             return View();
         }
 
@@ -79,6 +110,7 @@ namespace InMyAppinion.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,Points,AuthorID,ProfessorID")] ProfessorReview professorReview, ICollection<int> tags)
         {
+            if (professorReview.MentorGrade == 0) professorReview.MentorGrade = null;
             professorReview.TotalGrade = calculateTotalGrade(professorReview);
             professorReview.Timestamp = DateTime.Now;
             List<ProfessorReviewTagSet> tagSet = new List<ProfessorReviewTagSet>();
@@ -99,9 +131,10 @@ namespace InMyAppinion.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["AuthorID"] = new SelectList(_context.User, "Id", "Id", professorReview.AuthorID);
-            ViewData["ProfessorID"] = new SelectList(_context.Professor, "ID", "ID", professorReview.ProfessorID);
-            return View(professorReview);
+            ViewData["AuthorID"] = professorReview.AuthorID;
+            ViewData["ProfessorID"] = professorReview.ProfessorID;
+            ViewData["ProfessorTags"] = new SelectList(_context.ProfessorReviewTag, "ID", "Name");
+            return View();
         }
 
         private decimal calculateTotalGrade(ProfessorReview pr)

@@ -7,16 +7,24 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using InMyAppinion.Data;
 using InMyAppinion.Models;
+using InMyAppinion.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace InMyAppinion.Controllers
 {
     public class SubjectReviewsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public SubjectReviewsController(ApplicationDbContext context)
+        public SubjectReviewsController(ApplicationDbContext context, SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager)
         {
-            _context = context;    
+            _context = context;
+            _signInManager = signInManager;
+            _userManager = userManager;
         }
 
         // GET: SubjectReviews
@@ -37,20 +45,58 @@ namespace InMyAppinion.Controllers
             var subjectReview = await _context.SubjectReview
                 .Include(s => s.Author)
                 .Include(s => s.Subject)
+                .Include(s => s.SubjectReviewTagSet).ThenInclude(s => s.SubjectReviewTag)
+                .Include(s => s.Comments).ThenInclude(s => s.Author)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (subjectReview == null)
             {
                 return NotFound();
             }
 
+            if (_signInManager.IsSignedIn(User))
+            {
+                var voted = await _context.VoteSubjectReview
+                            .Where(v => v.SubjectReview.ID == subjectReview.ID && v.Voter.UserName == User.Identity.Name)
+                            .SingleOrDefaultAsync();
+                if (voted != null)
+                {
+                    ViewData["voted"] = voted.Vote.ToString();
+                }
+
+                string userId = _userManager.GetUserId(User);
+                var list = _context.VoteComment.Where(v => v.VoterID == userId);
+
+                foreach (var comm in subjectReview.Comments)
+                {
+                    if (list.Any(k => k.CommentID == comm.ID))
+                    {
+                        ViewData[comm.ID.ToString()] = list.First(k => k.CommentID == comm.ID).Vote.ToString();
+                    }
+                    else
+                    {
+                        ViewData[comm.ID.ToString()] = "";
+                    }
+                }
+
+            }
+
             return View(subjectReview);
         }
 
         // GET: SubjectReviews/Create
-        public IActionResult Create()
+        public IActionResult Create(int? Id)
         {
-            ViewData["AuthorID"] = new SelectList(_context.User, "Id", "Id");
-            ViewData["SubjectID"] = new SelectList(_context.Subject, "ID", "ID");
+            if (!Id.HasValue)
+            {
+                return NotFound();
+            }
+
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+
+            ViewData["AuthorID"] = userId;
+            ViewData["SubjectID"] = Id;
+            ViewData["SubjectTags"] = new SelectList(_context.SubjectReviewTag, "ID", "Name");
             return View();
         }
 
@@ -59,17 +105,45 @@ namespace InMyAppinion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Text,UsefulnessGrade,InterestGrade,DifficultyGrade,TotalGrade,Points,Timestamp,AuthorID,SubjectID")] SubjectReview subjectReview)
+        public async Task<IActionResult> Create([Bind("Text,UsefulnessGrade,InterestGrade,DifficultyGrade,Points,AuthorID,SubjectID")] SubjectReview subjectReview, List<int> tags)
         {
+            subjectReview.TotalGrade = calculateTotalGrade(subjectReview);
+            subjectReview.Timestamp = DateTime.Now;
+            List<SubjectReviewTagSet> tagSet = new List<SubjectReviewTagSet>();
+
+            foreach(var tag in tags)
+            {
+                SubjectReviewTagSet temp = new SubjectReviewTagSet();
+                temp.SubjectReviewID = subjectReview.ID;
+                temp.SubjectReviewTagID = tag;
+                tagSet.Add(temp);
+            }
+            subjectReview.SubjectReviewTagSet = tagSet;
+
             if (ModelState.IsValid)
             {
                 _context.Add(subjectReview);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["AuthorID"] = new SelectList(_context.User, "Id", "Id", subjectReview.AuthorID);
-            ViewData["SubjectID"] = new SelectList(_context.Subject, "ID", "ID", subjectReview.SubjectID);
-            return View(subjectReview);
+            ViewData["AuthorID"] = subjectReview.AuthorID;
+            ViewData["SubjectID"] = subjectReview.SubjectID;
+            ViewData["SubjectTags"] = new SelectList(_context.SubjectReviewTag, "ID", "Name");
+            return View();
+        }
+
+        private decimal calculateTotalGrade(SubjectReview sr)
+        {
+            int sum = 0;
+            decimal result = 0;
+
+            sum += sr.UsefulnessGrade;
+            sum += sr.InterestGrade;
+            sum += sr.DifficultyGrade;
+
+            result = sum / (decimal) 3;
+            return result;
+
         }
 
         // GET: SubjectReviews/Edit/5

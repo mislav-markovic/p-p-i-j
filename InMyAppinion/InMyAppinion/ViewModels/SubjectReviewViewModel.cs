@@ -6,7 +6,7 @@ using InMyAppinion.Models;
 
 namespace InMyAppinion.ViewModels
 {
-    public class ProfessorReviewViewModel : ProfessorReview
+    public class SubjectReviewViewModel : SubjectReview
     {
         public ICollection<int> tags { get; set; }
     }
