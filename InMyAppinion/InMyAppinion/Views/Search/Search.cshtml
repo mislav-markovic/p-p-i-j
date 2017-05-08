@@ -15,32 +15,51 @@ else {
     <span>@sub.Name - @sub.ShortName</span> <br />
 }*@
 
-<h3> Predmeti </h3>
-@if (Model.subservmod.subjects != null && Model.subservmod.subjects.Count()>0)
-{
-    foreach (var sts in Model.subservmod.subjects)
-    {
-        //<span>beufcbwekjn</span> <br />
-        <a asp-action="Details" asp-controller="Subjects" asp-route-id="@sts.ID">@sts.Name </a>
-    <br />
-    }
-}
-else
-{
-    <span>Nema ničega</span>
-}
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-1">Predmeti (@Model.subservmod.subjects.Count())</a></li>
+        <li><a href="#tabs-2">Profesori (@Model.profservmod.professors.Count())</a></li>
+    </ul>
+    <div id="tabs-1">
+        @if (Model.subservmod.subjects != null && Model.subservmod.subjects.Count() > 0)
+        {
+            foreach (var sts in Model.subservmod.subjects)
+            {
+                //<span>beufcbwekjn</span> <br />
+                <a asp-action="Details" asp-controller="Subjects" asp-route-id="@sts.ID">@sts.Name </a>
+                <br />
+            }
+        }
+        else
+        {
+            <span>Nema ničega</span>
+        }
+    </div>
+    <div id="tabs-2">
+        @if (Model.profservmod.professors != null && Model.profservmod.professors.Count() > 0)
+        {
+            foreach (var prof in Model.profservmod.professors)
+            {
+                //<span>beufcbwekjn</span> <br />
+                <a asp-action="Details" asp-controller="Professors" asp-route-id="@prof.ID">@prof.FullName </a>
+                <br />
+            }
+        }
+        else
+        {
+            <span>Nema ničega</span>
+        }
+    </div>
+</div>
 
-<h3> Profesori </h3>
-@if (Model.profservmod.professors != null && Model.profservmod.professors.Count() > 0)
-{
-    foreach (var prof in Model.profservmod.professors)
-    {
-        //<span>beufcbwekjn</span> <br />
-        <a asp-action="Details" asp-controller="Professors" asp-route-id="@prof.ID">@prof.FullName </a>
-        <br />
-    }
-}
-else
-{
-    <span>Nema ničega</span>
+@section Scripts {
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+        $(function () {
+            $("#tabs").tabs();
+        });
+    </script>
 }
