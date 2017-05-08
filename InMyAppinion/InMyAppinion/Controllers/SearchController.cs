@@ -28,7 +28,7 @@ namespace InMyAppinion.Controllers
                 try
                 {
                     model.tags = _context.SubjectTag.Where(o => o.Name.ToLower().Contains(query.ToLower())).ToList();
-                    var tmp = new List<Models.Subject>();
+                    var tmp = new HashSet<Models.Subject>();
                     var subjects = _context.Subject.ToList();
                     model.query = query;
                     foreach (var tag in model.tags)
@@ -38,7 +38,8 @@ namespace InMyAppinion.Controllers
                         
                         foreach (var sts in model.subtagset)
                         {
-                            tmp.Add(sts.Subject);
+                                tmp.Add(sts.Subject);
+                            
                         }
                     }
                     //var tmp = _context.Subject.FirstOrDefault();
