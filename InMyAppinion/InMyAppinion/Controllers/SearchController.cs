@@ -42,8 +42,10 @@ namespace InMyAppinion.Controllers
                         
                         foreach (var sts in model.subservmod.subtagset)
                         {
+                            if (sts.Subject.Validated) { 
                                 tmp.Add(sts.Subject);
-                            
+                            }
+
                         }
                     }
                     //var tmp = _context.Subject.FirstOrDefault();  
@@ -52,7 +54,7 @@ namespace InMyAppinion.Controllers
 
 
                     // professor part
-                    var profs = _context.Professor.Where(o=>o.FullName.ToLower().Contains(query.ToLower())).ToList();
+                    var profs = _context.Professor.Where(o => o.Validated && o.FullName.ToLower().Contains(query.ToLower())).ToList();
                     model.profservmod.professors = profs;
                 }
                 //model.subjects = _context.Subject.ToList();

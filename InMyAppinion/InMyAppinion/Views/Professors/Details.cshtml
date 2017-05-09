@@ -43,7 +43,7 @@
                 @foreach (var item in Model.Subjects)
                 {
                     <li>
-                        @item.Subject.Name
+                        @item.Name
                     </li>
                 }
             </ul>
@@ -74,7 +74,13 @@
             @Html.DisplayNameFor(model => model.AvgMentoring)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.AvgMentoring)
+            @if(Model.AvgMentoring != 0) { 
+                @Html.DisplayFor(model => model.AvgMentoring)
+            }
+            else
+            {
+                @:---
+            }
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.AvgQuality)

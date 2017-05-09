@@ -69,27 +69,37 @@ namespace InMyAppinion.Controllers
 
         private double calcQuality(ICollection<ProfessorReview> reviews)
         {
-            return Math.Round(reviews.Select(r => r.QualityGrade).Average(), 2);
+            return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.QualityGrade).Average(), 2) : 0;
         }
 
         private double calcTotalGrade(ICollection<ProfessorReview> reviews)
         {
-            return Math.Round((double)reviews.Select(r => r.TotalGrade).Average(), 2);
+            return reviews.Count() != 0 ? Math.Round((double)reviews.Select(r => r.TotalGrade).Average(), 2) : 0;
         }
 
         private double calcMentoring(ICollection<ProfessorReview> reviews)
         {
-            return Math.Round((double)reviews.Select(r => r.MentorGrade).Average(), 2);
+            double result;
+            if(reviews.Count() != 0)
+            {
+                var query = reviews.Where(r => r.MentorGrade.HasValue).Select(r => r.MentorGrade);
+                result = query.Count() != 0 ? (double)query.Average() : 0;
+            }
+            else
+            {
+                result = 0;
+            }
+            return Math.Round(result, 2);
         }
 
         private double calcInteractivity(ICollection<ProfessorReview> reviews)
         {
-            return Math.Round(reviews.Select(r => r.InteractionGrade).Average(), 2);
+            return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.InteractionGrade).Average(), 2) : 0;
         }
 
         private double calcAccessibility(ICollection<ProfessorReview> reviews)
         {
-            return Math.Round(reviews.Select(r => r.HelpfulnessGrade).Average(), 2);
+            return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.HelpfulnessGrade).Average(), 2) : 0;
         }
 
         // GET: Professor/Create
