@@ -52,6 +52,17 @@
                         </ul>
                     </li>
                 </ul>
+                <ul class="nav navbar-header navbar-left">
+                    <li>
+                    <a>
+                        @using (Html.BeginForm("Search", "Search", FormMethod.Get))
+                        {
+                            @Html.TextBox("query", null, new { @class = "span", /*title = "Ako se upiše prazno polje ostaje se na trenutnoj stranici",*/ placeholder="Želim znati..." })
+                            <button style="background-color:inherit;border:inherit"><span class="btn btn-xs glyphicon glyphicon-search"/></button>
+                        }
+                    </a>
+                    </li>
+                </ul>
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>

@@ -76,7 +76,7 @@
                 @Html.DisplayNameFor(model => model.Timestamp)
             </dt>
             <dd>
-                @Html.DisplayFor(model => model.Timestamp)
+                @Model.Timestamp.Date.ToString("d")
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => model.Author)
@@ -98,8 +98,8 @@
             <dd>
                 @foreach (var t in Model.ProfessorReviewTagSet)
             {
-                    @t.ProfessorReviewTag.Name
-                    @:
+                    <b class="btn btn-xs btn-info">@t.ProfessorReviewTag.Name</b>
+                    
             }
             </dd>
         </dl>
@@ -118,19 +118,19 @@
                 <input hidden data-reviewId="@Model.ID" />
                 <input hidden data-type="professor" />
                 <input id="username" hidden value="@User.Identity.Name" /><br />
-                <button class="btn btn-info addajax"><span class="glyphicon"></span>Dodaj komentar</button>
+                <button class="btn btn-info addajax"><span class="glyphicon glyphicon-plus"></span>Dodaj komentar</button>
             </div>
         }
     </div>
     <h4>Komentari</h4>
-    <div id="comments" class="col-lg-6">
+    <div id="comments" class="col-lg-6" style="background-color:whitesmoke">
         @foreach (var c in Model.Comments)
         {
             <div id="@c.ID">
                 @if (SignInManager.IsSignedIn(User) && (User.Identity.Name == c.Author.UserName ||
                     await AuthorizationService.AuthorizeAsync(User, "CanModerate")))
                 {
-                    <button data-commentid="@c.ID" data-userid="@c.AuthorID" class="pull-right btn btn-danger btn-xs deleteajax">
+                    <button data-commentid="@c.ID" data-userid="@c.AuthorID" class="pull-right btn btn-danger btn-xs deleteajax" title="Izbriši komentar">
                         <span class="glyphicon glyphicon-remove"></span>
                     </button>
                 }
@@ -138,8 +138,8 @@
                 <p class="comment">@c.Text</p>
                 @if (await AuthorizationService.AuthorizeAsync(User, "CanReview") && (User.Identity.Name != c.Author.UserName))
                 {
-                    <button class="btn btn-sm btn-success voteajax-comment" id="voteup-comment-@c.ID" data-vote="true" data-commentid="@c.ID"><span class="glyphicon glyphicon-thumbs-up"></span></button>
-                    <button class="btn btn-sm btn-danger voteajax-comment" id="votedown-comment-@c.ID" data-vote="false" data-commentid="@c.ID"><span class="glyphicon glyphicon-thumbs-down"></span></button>
+                    <button class="btn btn-sm btn-success voteajax-comment glyphicon glyphicon-thumbs-up" id="voteup-comment-@c.ID" data-vote="true" data-commentid="@c.ID"></button>
+                    <button class="btn btn-sm btn-danger voteajax-comment glyphicon glyphicon-thumbs-down" id="votedown-comment-@c.ID" data-vote="false" data-commentid="@c.ID"></button>
                 }
                 <input hidden id="comment-vote-@c.ID" class="comment-vote" data-commid="@c.ID" value="@ViewData[c.ID.ToString()]" />
                 <hr />
