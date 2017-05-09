@@ -36,7 +36,7 @@ namespace InMyAppinion.Controllers
 
             var professor = await _context.Professor
                 .Include(p => p.Reviews)
-                .Include(p => p.Subjects)
+                .Include(p => p.Subjects).ThenInclude(s => s.Subject)
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (professor == null)
             {
@@ -64,27 +64,52 @@ namespace InMyAppinion.Controllers
 
         private double calcQuality(ICollection<ProfessorReview> reviews)
         {
-            return Math.Round(reviews.Select(r => r.QualityGrade).Average(), 2);
+            if (reviews == null || reviews.Count == 0)
+            {
+                return 0;
+            }
+            return Math.Round(reviews.Select(r => r.QualityGrade).DefaultIfEmpty().Average(), 2);
         }
 
         private double calcTotalGrade(ICollection<ProfessorReview> reviews)
         {
-            return Math.Round((double)reviews.Select(r => r.TotalGrade).Average(), 2);
+            if (reviews == null || reviews.Count == 0)
+            {
+                return 0;
+            }
+            var av = reviews.Select(r => r.TotalGrade).DefaultIfEmpty().Average();
+
+            return Math.Round((double)av, 2);
         }
 
         private double calcMentoring(ICollection<ProfessorReview> reviews)
         {
-            return Math.Round((double)reviews.Select(r => r.MentorGrade).Average(), 2);
+            if (reviews == null || reviews.Count == 0)
+            {
+                return 0;
+            }
+            var av = reviews.Select(r => r.MentorGrade).DefaultIfEmpty().Average();
+            if (av == null) return 0;
+
+            return Math.Round((double)av, 2);
         }
 
         private double calcInteractivity(ICollection<ProfessorReview> reviews)
         {
-            return Math.Round(reviews.Select(r => r.InteractionGrade).Average(), 2);
+            if (reviews == null || reviews.Count == 0)
+            {
+                return 0;
+            }
+            return Math.Round(reviews.Select(r => r.InteractionGrade).DefaultIfEmpty().Average(), 2);
         }
 
         private double calcAccessibility(ICollection<ProfessorReview> reviews)
         {
-            return Math.Round(reviews.Select(r => r.HelpfulnessGrade).Average(), 2);
+            if (reviews == null || reviews.Count == 0)
+            {
+                return 0;
+            }
+            return Math.Round(reviews.Select(r => r.HelpfulnessGrade).DefaultIfEmpty().Average(), 2);
         }
 
         // GET: Professor/Create

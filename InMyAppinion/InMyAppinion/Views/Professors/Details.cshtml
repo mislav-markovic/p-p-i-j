@@ -30,7 +30,10 @@
         <dd>
             @foreach (var item in Model.Subjects)
             {
-                <a asp-action="Details" asp-controller="Subject" asp-route-Id="@item.ID">@item.Name</a>@: |
+                <a asp-action="Details" asp-controller="Subject" asp-route-Id="@item.ID">@item.Name</a> 
+                if (!item.Equals(Model.Subjects.Last())) {
+                    @Html.Raw("|")
+                };
 
             }
         </dd>
