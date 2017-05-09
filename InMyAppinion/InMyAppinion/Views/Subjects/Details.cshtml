@@ -109,6 +109,8 @@
     <a asp-action="Index">Back to List</a>
 </div>
 
+<div id="chart1" style="height:200px;width:500px; "></div>
+
 @section Scripts {
     <script type="text/javascript">
         $(function () {
@@ -119,6 +121,12 @@
     <script>
         $(function () {
             SetDeleteAjax(".deleteajax", '@Url.Action("DeleteSubjectTagSet")', 'tagid', 'subjectid');
+        });
+    </script>
+
+    <script>
+        $(function () {
+            GraphByYear("chart1", '@Url.Action("GradeByYear", "Rank", new { id=Model.ID, type="subject"})');
         });
     </script>
 }
