@@ -54,7 +54,7 @@
         <dd>
             @foreach (var item in Model.Subjects)
             {
-                <a asp-action="Details" asp-controller="Subject" asp-route-Id="@item.ID">@item.Name</a>@: |
+                <a asp-action="Details" asp-controller="Subjects" asp-route-Id="@item.ID">@item.Name</a>@: |
 
             }
         </dd>
