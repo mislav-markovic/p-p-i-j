@@ -67,8 +67,8 @@ namespace InMyAppinion.Controllers
             var model2 = new SearchViewModel();
             model2.subservmod = new SubjectSearchViewModel();
             model2.profservmod = new ProfessorSearchViewModel();
-            model2.profservmod.professors = _context.Professor.ToList();
-            model2.subservmod.subjects = _context.Subject.ToList();
+            model2.profservmod.professors = _context.Professor.Where(o=>o.Validated).ToList();
+            model2.subservmod.subjects = _context.Subject.Where(o=>o.Validated).ToList();
             //model2.subtagset = _context.SubjectTagSet.ToList();
             model2.query = query;
             return View(model2);
