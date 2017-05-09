@@ -39,19 +39,6 @@
             @Html.DisplayNameFor(model => model.Subjects)
         </dt>
         <dd>
-            <ul>
-                @foreach (var item in Model.Subjects)
-                {
-                    <li>
-                        @item.Name
-                    </li>
-                }
-            </ul>
-        </dd>
-        <dt>
-            Predaje na predmetima
-        </dt>
-        <dd>
             @foreach (var item in Model.Subjects)
             {
                 <a asp-action="Details" asp-controller="Subjects" asp-route-Id="@item.ID">@item.Name</a>@: |
