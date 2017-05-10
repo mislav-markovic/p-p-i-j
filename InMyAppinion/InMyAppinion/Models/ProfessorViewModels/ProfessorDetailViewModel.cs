@@ -32,5 +32,22 @@ namespace InMyAppinion.Models.ProfessorViewModels
         public ICollection<Subject> Subjects { get; set; }
         [Display(Name = "Kritike")]
         public ICollection<ProfessorReview> Reviews { get; set; }
+        [Display(Name = "Sveučilišta")]
+        public ICollection<University> Universities { get; set; }
+        [Display(Name = "Fakulteti")]
+        public ICollection<Faculty> Faculties { get; set; }
+        [Display(Name = "Interesi")]
+        public ICollection<SubjectTag> Interests { get; set; }
+
+        public IDictionary<string, GradeProperty> Grades { get; set; } 
+
+        public class GradeProperty
+        {
+            public int Percentage { get; set; }
+            // succes, warning, danger
+            public string Status { get; set; }
+
+            public double Grade { get; set; }
+        }
     }
 }

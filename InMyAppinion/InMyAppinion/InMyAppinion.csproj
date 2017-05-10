@@ -11,6 +11,10 @@
   <PropertyGroup>
     <UserSecretsId>aspnet-InMyAppinion-88a8cd05-1ead-432b-a8a3-192be7e89138</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\css\professorProfile.css" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
