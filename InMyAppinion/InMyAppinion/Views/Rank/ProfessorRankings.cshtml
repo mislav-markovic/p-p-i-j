@@ -1,0 +1,57 @@
+﻿@using InMyAppinion.ViewModels
+@model ProfessorRankingViewModel
+@{
+    ViewData["Title"] = "Rankings";
+}
+
+<h2>Rankings</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            @{
+                string[] columns = { "Profesor", "Pristupačnost", "Interaktivnost", "Mentorstvo", "Kvaliteta", "Ukupno" };
+            }
+
+            @for (int i = 0; i < columns.Length; i++)
+            {
+                <th>
+                    @if(i > 0){
+                        <a asp-route-sort="@i">@columns[i]</a>
+                    }
+                    else
+                    {
+                        @columns[i]
+                    }
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.Professors)
+        {
+            <tr>
+                <td>
+                    @item.FullName
+                </td>
+                <td>
+                    @item.AvgAccessibility
+                </td>
+                <td>
+                    @item.AvgInteractivity
+                </td>
+                <td>
+                    @item.AvgMentoring
+                </td>
+                <td>
+                    @item.AvgQuality
+                </td>
+                <td>
+                    @item.AvgTotal
+                </td>
+            </tr>
+
+        }
+    </tbody>
+
+</table>
