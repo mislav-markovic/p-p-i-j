@@ -9,6 +9,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
+            <th></th>
             @{
                 string[] columns = { "Profesor", "Pristupačnost", "Interaktivnost", "Mentorstvo", "Kvaliteta", "Ukupno" };
             }
@@ -16,7 +17,7 @@
             @for (int i = 0; i < columns.Length; i++)
             {
                 <th>
-                    @if(i > 0){
+                    @if (i > 0) {
                         <a asp-route-sort="@i">@columns[i]</a>
                     }
                     else
@@ -28,9 +29,16 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var item in Model.Professors)
-        {
+        
+        @{
+            int counter = 0;
+            foreach (var item in Model.Professors)
+            {
+                counter++;
             <tr>
+                <td>
+                    @counter.
+                </td>
                 <td>
                     @item.FullName
                 </td>
@@ -51,6 +59,7 @@
                 </td>
             </tr>
 
+            }
         }
     </tbody>
 
