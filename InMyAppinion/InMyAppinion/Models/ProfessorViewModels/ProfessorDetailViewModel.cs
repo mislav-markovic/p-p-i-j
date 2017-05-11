@@ -38,16 +38,6 @@ namespace InMyAppinion.Models.ProfessorViewModels
         public ICollection<Faculty> Faculties { get; set; }
         [Display(Name = "Interesi")]
         public ICollection<SubjectTag> Interests { get; set; }
-
-        public IDictionary<string, GradeProperty> Grades { get; set; } 
-
-        public class GradeProperty
-        {
-            public int Percentage { get; set; }
-            // succes, warning, danger
-            public string Status { get; set; }
-
-            public double Grade { get; set; }
-        }
+        public IDictionary<string, GradeInfo> Grades { get; set; } 
     }
 }

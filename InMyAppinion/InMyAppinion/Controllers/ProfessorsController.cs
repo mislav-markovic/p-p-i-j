@@ -65,56 +65,32 @@ namespace InMyAppinion.Controllers
             var faculties = professor.Subjects.Select(s => s.Subject).Select(s => s.Faculty).Distinct();
             var subjects = professor.Subjects.Select(set => set.Subject);
 
-            var gradesDict = new Dictionary<string, ProfessorDetailViewModel.GradeProperty>();
+            var gradesDict = new Dictionary<string, GradeInfo>();
 
             var AvgAccessibility = calcAccessibility(professor.Reviews);
             gradesDict.Add(
                 "Pristupaènost",
-                new ProfessorDetailViewModel.GradeProperty {
-                    Grade = AvgAccessibility,
-                    Percentage = (int) ((AvgAccessibility / 5) * 100),
-                    Status = calcStatus(AvgAccessibility / 5)
-                }
+                new GradeInfo{Grade = AvgAccessibility}
             );
             var AvgInteractivity = calcInteractivity(professor.Reviews);
             gradesDict.Add(
                 "Angažiranost",
-                new ProfessorDetailViewModel.GradeProperty
-                {
-                    Grade = AvgInteractivity,
-                    Percentage = (int) ((AvgInteractivity / 5) * 100),
-                    Status = calcStatus(AvgInteractivity / 5)
-                }
+                new GradeInfo{Grade = AvgInteractivity}
             );
             var AvgMentoring = calcMentoring(professor.Reviews);
             gradesDict.Add(
                 "Mentorstvo",
-                new ProfessorDetailViewModel.GradeProperty
-                {
-                    Grade = AvgMentoring,
-                    Percentage = (int) ((AvgMentoring / 5) * 100),
-                    Status = calcStatus(AvgMentoring / 5)
-                }
+                new GradeInfo{Grade = AvgMentoring}
             );
             var AvgQuality = calcQuality(professor.Reviews);
             gradesDict.Add(
                 "Kvaliteta",
-                new ProfessorDetailViewModel.GradeProperty
-                {
-                    Grade = AvgQuality,
-                    Percentage = (int) ((AvgQuality / 5) * 100),
-                    Status = calcStatus(AvgQuality / 5)
-                }
+                new GradeInfo{Grade = AvgQuality}
             );
             var AvgTotal = calcTotalGrade(professor.Reviews);
             gradesDict.Add(
                 "Ukupna ocjena",
-                new ProfessorDetailViewModel.GradeProperty
-                {
-                    Grade = AvgTotal,
-                    Percentage = (int) ((AvgTotal / 5) * 100),
-                    Status = calcStatus(AvgTotal / 5)
-                }
+                new GradeInfo{Grade = AvgTotal}
             );
             var model = new ProfessorDetailViewModel
             {
@@ -137,22 +113,6 @@ namespace InMyAppinion.Controllers
             };
 
             return View(model);
-        }
-
-        // danger, warning, success
-        private string calcStatus(double percentage)
-        {
-            percentage *= 100;
-            if (percentage <= 20.0)
-            {
-                return "danger";
-            } else if (percentage >= 80.0)
-            {
-                return "success";
-            } else
-            {
-                return "warning";
-            }
         }
 
         private double calcQuality(ICollection<ProfessorReview> reviews)
