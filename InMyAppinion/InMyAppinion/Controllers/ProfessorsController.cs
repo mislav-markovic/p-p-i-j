@@ -41,9 +41,16 @@ namespace InMyAppinion.Controllers
 
             var professor = await _context.Professor
                 .Include(p => p.Reviews)
+                    .ThenInclude(r => r.Author)
+                .Include(p => p.Reviews)
+                    .ThenInclude(r => r.ProfessorReviewTagSet)
+                        .ThenInclude(set => set.ProfessorReviewTag)
+                .Include(p => p.Reviews)
+                    .ThenInclude(r => r.Comments)
                 .Include(s => s.Subjects)
                     .ThenInclude(s => s.Subject)
                         .ThenInclude(s => s.SubjectTagSet)
+                            .ThenInclude(s => s.SubjectTag)
                 .Include(s => s.Subjects)
                     .ThenInclude(s => s.Subject)
                         .ThenInclude(s => s.Faculty)
@@ -57,15 +64,6 @@ namespace InMyAppinion.Controllers
 
             var faculties = professor.Subjects.Select(s => s.Subject).Select(s => s.Faculty).Distinct();
             var subjects = professor.Subjects.Select(set => set.Subject);
-
-            // previse sam se upetljo sa then include-ovima
-            var tagIds = subjects.SelectMany(s => s.SubjectTagSet).Select(s => s.SubjectTagID);
-            var interests = new List<SubjectTag>();
-            foreach (int tagID in tagIds)
-            {
-                interests.Add(_context.SubjectTag.Find(tagID));
-            }
-            interests = interests.Distinct().ToList();
 
             var gradesDict = new Dictionary<string, ProfessorDetailViewModel.GradeProperty>();
 
@@ -123,7 +121,7 @@ namespace InMyAppinion.Controllers
                 ID = professor.ID,
                 FirstName = professor.FirstName,
                 LastName = professor.LastName,
-                Reviews = professor.Reviews,
+                Reviews = professor.Reviews.OrderBy(r => r.Points).Take(2).ToList(),
                 Subjects = subjects.ToList(),
                 Biography = professor.Biography,
                 Validated = professor.Validated,
@@ -134,7 +132,7 @@ namespace InMyAppinion.Controllers
                 AvgQuality = AvgQuality,
                 Faculties = faculties.ToList(),
                 Universities = faculties.Select(f => f.University).Distinct().ToList(),
-                Interests = interests,
+                Interests = subjects.SelectMany(s => s.SubjectTagSet).Select(s => s.SubjectTag).Distinct().ToList(),
                 Grades = gradesDict
             };
 
