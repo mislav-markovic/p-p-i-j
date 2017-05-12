@@ -94,7 +94,7 @@ namespace InMyAppinion.Controllers
             var query = _context.Professor
                 .Include(p => p.Reviews)
                 .Include(s => s.Subjects).ThenInclude(s => s.Subject)
-                .AsNoTracking().ToList();
+                .AsNoTracking().Where(p => p.Reviews.Count > 0).ToList();
             List<ProfessorDetailViewModel> profList = new List<ProfessorDetailViewModel>();
 
             foreach(var professor in query)
@@ -147,7 +147,7 @@ namespace InMyAppinion.Controllers
             return View(new ProfessorRankingViewModel { Professors = sorted});
         }
 
-        public IActionResult SubjectRankings(int sort = 4)
+        public IActionResult SubjectRankings(int sort = 4, int tag = -1)
         {
             var query = _context.Subject
                 .Include(s => s.Professors)
@@ -164,11 +164,19 @@ namespace InMyAppinion.Controllers
                .Include(s => s.Faculty)
                    .ThenInclude(f => f.University)
                        .ThenInclude(u => u.City)
-                .AsNoTracking().ToList();
+                .AsNoTracking().Where(s => s.Reviews.Count > 0).ToList();
+
             List<SubjectDetailViewModel> subjectList = new List<SubjectDetailViewModel>();
 
             foreach (var subject in query)
             {
+                var tagList = subject.SubjectTagSet.Select(set => set.SubjectTagID).ToList();
+
+                if(tag != -1 && !tagList.Contains(tag))
+                {
+                    continue;
+                }
+
                 var model = new SubjectDetailViewModel
                 {
                     ID = subject.ID,
@@ -213,7 +221,8 @@ namespace InMyAppinion.Controllers
             var q = subjectList.AsQueryable();
             var sorted = q.OrderByDescending(orderSelector).Take(10).ToList();
 
-            return View(new SubjectRankingViewModel { Subjects = sorted });
+            ViewData["SubjectTag"] = new SelectList(_context.SubjectTag, "ID", "Name");
+            return View(new SubjectRankingViewModel { Subjects = sorted, tag = tag, sort = sort });
         }
 
         private double calcQuality(ICollection<ProfessorReview> reviews)

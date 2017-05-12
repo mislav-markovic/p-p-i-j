@@ -6,6 +6,13 @@
 
 <h2>Rankings</h2>
 
+<form asp-action="SubjectRankings" method="get">
+    <p>
+        <select name="tag" asp-items="ViewBag.SubjectTag" selected="Model.tag" asp-route-sort="Model.sort"><option value="-1"></option></select>
+        <input type="submit" value="Filtriraj po tagu" class="btn btn-default" />
+    </p>
+</form>
+
 <table class="table table-striped">
     <thead>
         <tr>
@@ -19,7 +26,7 @@
                 <th>
                     @if (i > 0)
                     {
-                        <a asp-route-sort="@i">@columns[i]</a>
+                        <a asp-route-tag="@Model.tag" asp-route-sort="@i">@columns[i]</a>
                     }
                     else
                     {
