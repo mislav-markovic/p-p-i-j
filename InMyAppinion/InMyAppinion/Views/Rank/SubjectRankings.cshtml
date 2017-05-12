@@ -11,7 +11,7 @@
         <tr>
             <th></th>
             @{
-                string[] columns = { "Predmet", "Teûina", "Zanimljivost", "Korisnost", "Ukupno" };
+                string[] columns = { "Predmet", "Te≈æina", "Zanimljivost", "Korisnost", "Ukupno" };
             }
 
             @for (int i = 0; i < columns.Length; i++)
@@ -44,13 +44,13 @@
                         @item.Name
                     </td>
                     <td align="center">
-                        @item.AvgDifficulty
+                        @item.AvgDifficultyGrade
                     </td>
                     <td align="center">
-                        @item.AvgInterest
+                        @item.AvgInterestGrade
                     </td>
                     <td align="center">
-                        @item.AvgUsefulness
+                        @item.AvgUsefulnessGrade
                     <td align="center">
                         @item.AvgTotal
                     </td>

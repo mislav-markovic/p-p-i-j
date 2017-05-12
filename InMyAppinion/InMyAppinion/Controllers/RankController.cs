@@ -150,9 +150,20 @@ namespace InMyAppinion.Controllers
         public IActionResult SubjectRankings(int sort = 4)
         {
             var query = _context.Subject
-                .Include(s => s.Reviews)
                 .Include(s => s.Professors)
-                .Include(s => s.Faculty)
+                    .ThenInclude(set => set.Professor)
+               .Include(s => s.Reviews)
+                   .ThenInclude(r => r.Author)
+               .Include(s => s.Reviews)
+                   .ThenInclude(r => r.SubjectReviewTagSet)
+                       .ThenInclude(set => set.SubjectReviewTag)
+               .Include(s => s.Reviews)
+                   .ThenInclude(r => r.Comments)
+               .Include(s => s.SubjectTagSet)
+                   .ThenInclude(s => s.SubjectTag)
+               .Include(s => s.Faculty)
+                   .ThenInclude(f => f.University)
+                       .ThenInclude(u => u.City)
                 .AsNoTracking().ToList();
             List<SubjectDetailViewModel> subjectList = new List<SubjectDetailViewModel>();
 
