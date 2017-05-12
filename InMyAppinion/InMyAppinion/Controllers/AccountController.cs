@@ -12,6 +12,8 @@ using Microsoft.Extensions.Options;
 using InMyAppinion.Models;
 using InMyAppinion.Models.AccountViewModels;
 using InMyAppinion.Services;
+using InMyAppinion.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace InMyAppinion.Controllers
 {
@@ -20,6 +22,7 @@ namespace InMyAppinion.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
@@ -31,7 +34,8 @@ namespace InMyAppinion.Controllers
             IOptions<IdentityCookieOptions> identityCookieOptions,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -39,6 +43,7 @@ namespace InMyAppinion.Controllers
             _emailSender = emailSender;
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<AccountController>();
+            _context = context;
         }
 
         //
@@ -112,7 +117,11 @@ namespace InMyAppinion.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
+                var user = new ApplicationUser {
+                    UserName = model.Username,
+                    Email = model.Email,
+                    DateRegistered = DateTime.Now
+                };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 await _userManager.AddToRoleAsync(user, "Korisnik");
@@ -451,6 +460,19 @@ namespace InMyAppinion.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Profile(string username)
+        {
+            var user = _context.User.Where(u => u.UserName == username).SingleOrDefault();
+
+            var roles = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.Id));
+            if (roles.Contains("Administrator")) ViewData["role"] = "Administrator";
+            else if(roles.Contains("Moderator")) ViewData["role"] = "Moderator";
+            else if (roles.Contains("Korisnik")) ViewData["role"] = "Korisnik";
+            ViewData["username"] = username;
+            return View(user);
         }
 
         #region Helpers
