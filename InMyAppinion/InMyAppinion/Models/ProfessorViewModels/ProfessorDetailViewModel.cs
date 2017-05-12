@@ -33,6 +33,14 @@ namespace InMyAppinion.Models.ProfessorViewModels
         [Display(Name = "Kritike")]
         public ICollection<ProfessorReview> Reviews { get; set; }
 
+        [Display(Name = "Sveučilišta")]
+        public ICollection<University> Universities { get; set; }
+        [Display(Name = "Fakulteti")]
+        public ICollection<Faculty> Faculties { get; set; }
+        [Display(Name = "Interesi")]
+        public ICollection<SubjectTag> Interests { get; set; }
+        public IDictionary<string, GradeInfo> Grades { get; set; }
+
         public string FullName
         {
             get
@@ -40,12 +48,5 @@ namespace InMyAppinion.Models.ProfessorViewModels
                 return FirstName + " " + LastName;
             }
         }
-        [Display(Name = "Sveučilišta")]
-        public ICollection<University> Universities { get; set; }
-        [Display(Name = "Fakulteti")]
-        public ICollection<Faculty> Faculties { get; set; }
-        [Display(Name = "Interesi")]
-        public ICollection<SubjectTag> Interests { get; set; }
-        public IDictionary<string, GradeInfo> Grades { get; set; } 
     }
 }

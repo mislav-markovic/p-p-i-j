@@ -23,7 +23,7 @@ namespace InMyAppinion.Models.SubjectViewModels
 
         [Display(Name = "Korisnost")]
         public double AvgUsefulnessGrade { get; set; }
-        [Display(Name = "Predavači")]
+        [Display(Name = "Zanimljivost")]
         public double AvgInterestGrade { get; set; }
         [Display(Name = "Težina")]
         public double AvgDifficultyGrade { get; set; }

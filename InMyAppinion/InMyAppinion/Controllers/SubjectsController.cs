@@ -62,7 +62,7 @@ namespace InMyAppinion.Controllers
                 return NotFound();
             }
             var diff = calcDifficulty(subject.Reviews);
-            var interes = calcInteres(subject.Reviews);
+            var interes = calcInterest(subject.Reviews);
             var usefulness = calcUsefulness(subject.Reviews);
             var total = calcTotalGrade(subject.Reviews);
 
@@ -115,7 +115,7 @@ namespace InMyAppinion.Controllers
             return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.DifficultyGrade).Average(), 2) : 0;
         }
 
-        private double calcInteres(ICollection<SubjectReview> reviews)
+        private double calcInterest(ICollection<SubjectReview> reviews)
         {
             return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.InterestGrade).Average(), 2) : 0;
         }

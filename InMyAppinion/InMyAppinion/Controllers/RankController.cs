@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using InMyAppinion.Models.ProfessorViewModels;
+using InMyAppinion.Models.SubjectViewModels;
 using InMyAppinion.ViewModels;
 
 namespace InMyAppinion.Controllers
@@ -146,6 +147,64 @@ namespace InMyAppinion.Controllers
             return View(new ProfessorRankingViewModel { Professors = sorted});
         }
 
+        public IActionResult SubjectRankings(int sort = 4)
+        {
+            var query = _context.Subject
+                .Include(s => s.Reviews)
+                .Include(s => s.Professors)
+                .Include(s => s.Faculty)
+                .AsNoTracking().ToList();
+            List<SubjectDetailViewModel> subjectList = new List<SubjectDetailViewModel>();
+
+            foreach (var subject in query)
+            {
+                var model = new SubjectDetailViewModel
+                {
+                    ID = subject.ID,
+                    Name = subject.Name,
+                    ShortName = subject.ShortName,
+                    Faculty = subject.Faculty,
+                    Reviews = subject.Reviews.OrderBy(r => r.Points).Take(2).ToList(),
+                    Description = subject.Description,
+                    Professors = subject.Professors.Select(p => p.Professor).ToList(),
+                    SubjectTags = subject.SubjectTagSet.Select(set => set.SubjectTag).ToList(),
+                    Validated = subject.Validated,
+                    AvgDifficultyGrade = calcDifficulty(subject.Reviews),
+                    AvgInterestGrade = calcInterest(subject.Reviews),
+                    AvgUsefulnessGrade = calcUsefulness(subject.Reviews),
+                    AvgTotal = calcTotalGrade(subject.Reviews),
+                    Grades = new Dictionary<string, GradeInfo>()
+                };
+
+                subjectList.Add(model);
+            }
+
+            System.Linq.Expressions.Expression<Func<SubjectDetailViewModel, object>> orderSelector = null;
+            switch (sort)
+            {
+                case 1:
+                    orderSelector = d => d.AvgDifficultyGrade;
+                    break;
+                case 2:
+                    orderSelector = d => d.AvgInterestGrade;
+                    break;
+                case 3:
+                    orderSelector = d => d.AvgUsefulnessGrade;
+                    break;
+                case 4:
+                    orderSelector = d => d.AvgTotal;
+                    break;
+                default:
+                    orderSelector = d => d.AvgTotal;
+                    break;
+            }
+
+            var q = subjectList.AsQueryable();
+            var sorted = q.OrderByDescending(orderSelector).Take(10).ToList();
+
+            return View(new SubjectRankingViewModel { Subjects = sorted });
+        }
+
         private double calcQuality(ICollection<ProfessorReview> reviews)
         {
             return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.QualityGrade).Average(), 2) : 0;
@@ -179,6 +238,27 @@ namespace InMyAppinion.Controllers
         private double calcAccessibility(ICollection<ProfessorReview> reviews)
         {
             return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.HelpfulnessGrade).Average(), 2) : 0;
+        }
+
+        private double calcDifficulty(ICollection<SubjectReview> reviews)
+        {
+            return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.DifficultyGrade).Average(), 2) : 0;
+        }
+
+        private double calcInterest(ICollection<SubjectReview> reviews)
+        {
+            return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.InterestGrade).Average(), 2) : 0;
+        }
+
+        private double calcUsefulness(ICollection<SubjectReview> reviews)
+        {
+            return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.UsefulnessGrade).Average(), 2) : 0;
+        }
+
+
+        private double calcTotalGrade(ICollection<SubjectReview> reviews)
+        {
+            return reviews.Count() != 0 ? Math.Round((double)reviews.Select(r => r.TotalGrade).Average(), 2) : 0;
         }
     }
 }
