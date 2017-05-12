@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using InMyAppinion.Data;
 using InMyAppinion.Models;
 using InMyAppinion.Services;
+using System.Globalization;
 
 namespace InMyAppinion
 {
@@ -117,6 +118,12 @@ namespace InMyAppinion
             app.UseIdentity();
 
             app.UseSession();
+
+            var cultureInfo = new CultureInfo("hr-HR");
+            cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
