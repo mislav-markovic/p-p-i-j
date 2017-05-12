@@ -164,8 +164,8 @@ function SetDeleteAjax(selector, url, paramname1, paramname2) {
 
 function GraphByYear(chartid, url) {
     $(document).ready(function () {
-        console.log(url);
-        console.log(chartid);
+        //console.log(url);
+        //console.log(chartid);
 
         $.ajax({
             url: url,
@@ -184,7 +184,10 @@ function GraphByYear(chartid, url) {
                     //grades.push([value, parseInt(key)]);
                     grades.push([parseInt(key), value]);
                 });
-                console.log(grades);
+                if (tickArray.length <= 1) {
+                    var elem = $("#" + chartid).toggle();
+                }
+                //console.log(grades);
                 var plot = $.jqplot(chartid, [grades], {
                     // Turns on animatino for all series in this plot.
                     animate: true,

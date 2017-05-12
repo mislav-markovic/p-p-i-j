@@ -32,6 +32,14 @@ namespace InMyAppinion.Models.ProfessorViewModels
         public ICollection<Subject> Subjects { get; set; }
         [Display(Name = "Kritike")]
         public ICollection<ProfessorReview> Reviews { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + LastName;
+            }
+        }
         [Display(Name = "Sveučilišta")]
         public ICollection<University> Universities { get; set; }
         [Display(Name = "Fakulteti")]
