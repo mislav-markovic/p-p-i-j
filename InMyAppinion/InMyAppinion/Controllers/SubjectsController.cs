@@ -9,6 +9,7 @@ using InMyAppinion.Data;
 using InMyAppinion.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using InMyAppinion.Models.SubjectViewModels;
 
 namespace InMyAppinion.Controllers
 {
@@ -39,17 +40,95 @@ namespace InMyAppinion.Controllers
             }
 
             var subject = await _context.Subject
-                .Include(s => s.Faculty)
-                .Include(s => s.Reviews)
-                .Include(s => s.Professors).ThenInclude(p => p.Professor)
-                .Include(s => s.SubjectTagSet).ThenInclude(s => s.SubjectTag)
-                .SingleOrDefaultAsync(m => m.ID == id);
+                .Include(s => s.Professors)
+                    .ThenInclude(set => set.Professor)
+               .Include(s => s.Reviews)
+                   .ThenInclude(r => r.Author)
+               .Include(s => s.Reviews)
+                   .ThenInclude(r => r.SubjectReviewTagSet)
+                       .ThenInclude(set => set.SubjectReviewTag)
+               .Include(s => s.Reviews)
+                   .ThenInclude(r => r.Comments)
+               .Include(s => s.SubjectTagSet)
+                   .ThenInclude(s => s.SubjectTag)
+               .Include(s => s.Faculty)
+                   .ThenInclude(f => f.University)
+                       .ThenInclude(u => u.City)
+                           
+               .SingleOrDefaultAsync(m => m.ID == id);
+
             if (subject == null)
             {
                 return NotFound();
             }
+            var diff = calcDifficulty(subject.Reviews);
+            var interes = calcInteres(subject.Reviews);
+            var usefulness = calcUsefulness(subject.Reviews);
+            var total = calcTotalGrade(subject.Reviews);
 
-            return View(subject);
+            var gradesDict = new Dictionary<string, GradeInfo>();
+
+            gradesDict.Add(
+               "Težina",
+               new GradeInfo { Grade = diff }
+            );
+
+            gradesDict.Add(
+               "Predavaèi",
+               new GradeInfo { Grade = interes }
+            );
+
+            gradesDict.Add(
+              "Korisnost",
+              new GradeInfo { Grade = usefulness }
+            );
+
+            gradesDict.Add(
+              "Ukupno",
+              new GradeInfo { Grade = total }
+            );
+
+
+            var model = new SubjectDetailViewModel
+            {
+                ID = subject.ID,
+                Name = subject.Name,
+                ShortName = subject.ShortName,
+                Faculty = subject.Faculty,
+                Reviews = subject.Reviews.OrderBy(r => r.Points).Take(2).ToList(),
+                Description = subject.Description,
+                Professors = subject.Professors.Select(p => p.Professor).ToList(),
+                SubjectTags = subject.SubjectTagSet.Select(set => set.SubjectTag).ToList(),
+                Validated = subject.Validated,
+                AvgDifficultyGrade = diff,
+                AvgInterestGrade = interes,
+                AvgUsefulnessGrade = usefulness,
+                AvgTotal = total,
+                Grades = gradesDict
+            };
+
+            return View(model);
+        }
+
+        private double calcDifficulty(ICollection<SubjectReview> reviews)
+        {
+            return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.DifficultyGrade).Average(), 2) : 0;
+        }
+
+        private double calcInteres(ICollection<SubjectReview> reviews)
+        {
+            return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.InterestGrade).Average(), 2) : 0;
+        }
+
+        private double calcUsefulness(ICollection<SubjectReview> reviews)
+        {
+            return reviews.Count() != 0 ? Math.Round(reviews.Select(r => r.UsefulnessGrade).Average(), 2) : 0;
+        }
+
+
+        private double calcTotalGrade(ICollection<SubjectReview> reviews)
+        {
+            return reviews.Count() != 0 ? Math.Round((double)reviews.Select(r => r.TotalGrade).Average(), 2) : 0;
         }
 
         // GET: Subjects/Create
