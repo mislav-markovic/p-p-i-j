@@ -75,3 +75,13 @@ ul.nav li.dropdown:hover ul.dropdown-menu {
 .margins {
     margin-top: 17px;
 }
+
+#positive {
+    color: green;
+    padding: 0;
+}
+
+#negative {
+    color: red;
+    padding: 0;
+}

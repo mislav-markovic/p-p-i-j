@@ -14,6 +14,7 @@ using InMyAppinion.Models.AccountViewModels;
 using InMyAppinion.Services;
 using InMyAppinion.Data;
 using Microsoft.EntityFrameworkCore;
+using InMyAppinion.ViewModels;
 
 namespace InMyAppinion.Controllers
 {
@@ -466,13 +467,59 @@ namespace InMyAppinion.Controllers
         public async Task<IActionResult> Profile(string username)
         {
             var user = _context.User.Where(u => u.UserName == username).SingleOrDefault();
-
             var roles = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.Id));
-            if (roles.Contains("Administrator")) ViewData["role"] = "Administrator";
-            else if(roles.Contains("Moderator")) ViewData["role"] = "Moderator";
-            else if (roles.Contains("Korisnik")) ViewData["role"] = "Korisnik";
-            ViewData["username"] = username;
-            return View(user);
+
+            var vm = new UserViewModel();
+
+            if (roles.Contains("Administrator")) vm.Role = "Administrator";
+            else if(roles.Contains("Moderator")) vm.Role = "Moderator";
+            else if (roles.Contains("Korisnik")) vm.Role = "Korisnik";
+            vm.User = user;
+
+            var profReviews = _context.ProfessorReview.Where(u => u.AuthorID == user.Id).Include(r => r.Votes);
+            foreach(var review in profReviews)
+            {
+                foreach(var vote in review.Votes)
+                {
+                    if (vote.Vote) vm.PositiveVotesProfessorReviews += 1;
+                    else vm.NegativeVotesProfessorReviews += 1;
+                }
+            }
+            var subjectReviews = _context.SubjectReview.Where(u => u.AuthorID == user.Id).Include(r => r.Votes);
+            foreach (var review in subjectReviews)
+            {
+                foreach (var vote in review.Votes)
+                {
+                    if (vote.Vote) vm.PositiveVotesSubjectReviews += 1;
+                    else vm.NegativeVotesSubjectReviews += 1;
+                }
+            }
+            var commentVote = _context.Comment.Where(u => u.AuthorID == user.Id).Include(r => r.Votes);
+            foreach (var comment in commentVote)
+            {
+                foreach (var vote in comment.Votes)
+                {
+                    if (vote.Vote) vm.PositiveVotesComments += 1;
+                    else vm.NegativeVotesComments += 1;
+                }
+            }
+            vm.ProfReviews = _context.ProfessorReview
+                             .Where(r => r.AuthorID == user.Id)
+                             .Include(r => r.ProfessorReviewTagSet)
+                             .ThenInclude(t => t.ProfessorReviewTag)
+                             .Include(r => r.Comments)
+                             .Include(r => r.Professor)
+                             .ToList();
+            vm.SubjectReviews = _context.SubjectReview
+                                .Where(r => r.AuthorID == user.Id)
+                                .Include(r => r.SubjectReviewTagSet)
+                                .ThenInclude(t => t.SubjectReviewTag)
+                                .Include(r => r.Comments)
+                                .Include(r => r.Subject)
+                                .ToList();
+            vm.Comments = _context.Comment.Where(c => c.AuthorID == user.Id).ToList();
+
+            return View(vm);
         }
 
         #region Helpers
