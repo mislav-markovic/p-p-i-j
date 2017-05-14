@@ -242,3 +242,109 @@ function GraphByYear(chartid, url) {
         });
     });
 }
+
+$(function () {
+
+    $('a[href="#toggle-search"], .navbar-bootsnipp .bootsnipp-search .input-group-btn > .btn[type="reset"]').on('click', function (event) {
+        event.preventDefault();
+        $('.navbar-bootsnipp .bootsnipp-search .input-group > input').val('');
+        $('.navbar-bootsnipp .bootsnipp-search').toggleClass('open');
+        $('a[href="#toggle-search"]').closest('li').toggleClass('active');
+
+        if ($('.navbar-bootsnipp .bootsnipp-search').hasClass('open')) {
+            /* I think .focus dosen't like css animations, set timeout to make sure input gets focus */
+            setTimeout(function () {
+                $('.navbar-bootsnipp .bootsnipp-search .form-control').focus();
+            }, 100);
+        }
+    });
+
+    $(document).on('keyup', function (event) {
+        if (event.which == 27 && $('.navbar-bootsnipp .bootsnipp-search').hasClass('open')) {
+            $('a[href="#toggle-search"]').trigger('click');
+        }
+    });
+
+});
+
+/* user profile */
+//tab js//
+$(document).ready(function (e) {
+
+
+    $('.form').find('input, textarea').on('keyup blur focus', function (e) {
+
+        var $this = $(this),
+            label = $this.prev('label');
+
+        if (e.type === 'keyup') {
+            if ($this.val() === '') {
+                label.removeClass('active highlight');
+            } else {
+                label.addClass('active highlight');
+            }
+        } else if (e.type === 'blur') {
+            if ($this.val() === '') {
+                label.removeClass('active highlight');
+            } else {
+                label.removeClass('highlight');
+            }
+        } else if (e.type === 'focus') {
+
+            if ($this.val() === '') {
+                label.removeClass('highlight');
+            }
+            else if ($this.val() !== '') {
+                label.addClass('highlight');
+            }
+        }
+
+    });
+
+    $('.tab a').on('click', function (e) {
+
+        e.preventDefault();
+
+        $(this).parent().addClass('active');
+        $(this).parent().siblings().removeClass('active');
+        target = $(this).attr('href');
+
+        $('.tab-content > div').not(target).hide();
+
+        $(target).fadeIn(600);
+
+    });
+    //canvas off js//
+    $('#menu_icon').click(function () {
+        if ($("#content_details").hasClass('drop_menu')) {
+            $("#content_details").addClass('drop_menu1').removeClass('drop_menu');
+        }
+        else {
+            $("#content_details").addClass('drop_menu').removeClass('drop_menu1');
+        }
+
+
+    });
+
+    //search box js//
+
+
+    $("#flip").click(function () {
+        $("#panel").slideToggle("5000");
+    });
+
+    // sticky js//
+
+    $(window).scroll(function () {
+        if ($(window).scrollTop() >= 500) {
+            $('nav').addClass('stick');
+        }
+        else {
+            $('nav').removeClass('stick');
+        }
+    });
+
+
+
+
+});

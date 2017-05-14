@@ -13,7 +13,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="wwwroot\css\profile.css" />
+    <Content Include="wwwroot\css\navbar.css" />
+    <Content Include="wwwroot\css\professorProfile.css" />
+    <Content Include="wwwroot\css\registration.css" />
+    <Content Include="wwwroot\css\userProfile.css" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
@@ -39,6 +42,8 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="wwwroot\images\avatars\" />
+    <Folder Include="wwwroot\images\avatars\" />
     <Folder Include="wwwroot\lib\bootstrap\dist\css\" />
     <Folder Include="wwwroot\lib\bootstrap\dist\fonts\" />
     <Folder Include="wwwroot\lib\bootstrap\dist\js\" />

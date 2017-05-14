@@ -8,9 +8,10 @@ using InMyAppinion.Data;
 namespace InMyAppinion.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170513234520_Avatar")]
+    partial class Avatar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -150,7 +151,8 @@ namespace InMyAppinion.Data.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Biography");
+                    b.Property<string>("Biography")
+                        .HasMaxLength(2000);
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -250,7 +252,8 @@ namespace InMyAppinion.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(500);
 
                     b.Property<int>("FacultyID");
 

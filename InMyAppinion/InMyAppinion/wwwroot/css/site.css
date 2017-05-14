@@ -1,6 +1,11 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif;
 }
 
 /* Wrapping element */
@@ -53,9 +58,6 @@ ul.nav li.dropdown:hover ul.dropdown-menu {
     display: block;
 }
 
-
-
-
 .nav > li > a:hover{
     border: inherit;
     background-color:inherit;
@@ -72,4 +74,14 @@ ul.nav li.dropdown:hover ul.dropdown-menu {
 
 .margins {
     margin-top: 17px;
+}
+
+#positive {
+    color: green;
+    padding: 0;
+}
+
+#negative {
+    color: red;
+    padding: 0;
 }
