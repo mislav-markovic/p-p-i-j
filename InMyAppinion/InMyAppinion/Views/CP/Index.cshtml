@@ -34,7 +34,9 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(model => item.UserName)
+                <a asp-controller="Account" asp-action="Profile" asp-route-username="@item.UserName">
+                    @Html.DisplayFor(model => item.UserName)
+                </a>
             </td>
             <td>
                 @Html.DisplayFor(model => item.Email)

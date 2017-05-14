@@ -525,13 +525,24 @@ namespace InMyAppinion.Controllers
                                 .Include(r => r.Comments)
                                 .Include(r => r.Subject)
                                 .ToList();
-            vm.Comments = _context.Comment.Where(c => c.AuthorID == user.Id).ToList();
+            vm.Comments = _context.Comment
+                          .Where(c => c.AuthorID == user.Id)
+                          .Include(c => c.SubjectReview)
+                          .ThenInclude(c => c.Subject)
+                          .Include(c => c.ProfessorReview)
+                          .ThenInclude(c => c.Professor)
+                          .ToList();
+
+            vm.PositiveVotesGiven = _context.VoteComment.Where(v => v.Voter.UserName == user.UserName).Count() +
+                                    _context.VoteProfessorReview.Where(v => v.Voter.UserName == user.UserName).Count() +
+                                    _context.VoteSubjectReview.Where(v => v.Voter.UserName == user.UserName).Count();
 
             return View(vm);
         }
 
+        [Authorize]
         [HttpPost("UploadFiles")]
-        public async Task<IActionResult> Upload(IFormFile file, string username)
+        public async Task<IActionResult> Upload(IFormFile file)
         {
             TelemetryClient telemetryClient = new TelemetryClient();
             try {
@@ -542,7 +553,7 @@ namespace InMyAppinion.Controllers
                     await file.CopyToAsync(stream);
                 }
 
-                var user = _context.User.SingleOrDefault(u => u.UserName == username);
+                var user = _context.User.SingleOrDefault(u => u.UserName == User.Identity.Name);
                 user.Avatar = filePath;
                 _context.Update(user);
                 await _context.SaveChangesAsync();

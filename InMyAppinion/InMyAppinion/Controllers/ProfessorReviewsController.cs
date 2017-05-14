@@ -28,12 +28,19 @@ namespace InMyAppinion.Controllers
         }
 
         // GET: ProfessorReviews
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string username)
         {
             var applicationDbContext = _context.ProfessorReview
                 .Include(p => p.Author)
                 .Include(p => p.Professor);
-            return View(await applicationDbContext.ToListAsync());
+            if (username == null)
+            {
+                return View(await applicationDbContext.ToListAsync());
+            }
+            else
+            {
+                return View(await applicationDbContext.Where(s => s.Author.UserName == username).ToListAsync());
+            }
         }
 
         // GET: ProfessorReviews/Details/5

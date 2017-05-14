@@ -28,10 +28,17 @@ namespace InMyAppinion.Controllers
         }
 
         // GET: SubjectReviews
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string username)
         {
             var applicationDbContext = _context.SubjectReview.Include(s => s.Author).Include(s => s.Subject);
-            return View(await applicationDbContext.ToListAsync());
+            if (username == null)
+            {
+                return View(await applicationDbContext.ToListAsync());
+            }
+            else
+            {
+                return View(await applicationDbContext.Where(s => s.Author.UserName == username).ToListAsync());
+            }
         }
 
         // GET: SubjectReviews/Details/5

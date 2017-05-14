@@ -24,15 +24,6 @@
                 <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" class="img-circle img-responsive" alt="profilePic" />
             }
             <h6>@Model.User.UserName</h6>
-            <div class="container" style="margin-left: 95px;">
-                <form method="post" enctype="multipart/form-data" asp-controller="Account" asp-action="Upload">
-                    <div class="form-group">
-                        <input type="file" name="file" accept=".jpg, .gif, .png" style="margin-top: 10px;" />
-                        <input type="hidden" name="username" value="@Model.User.UserName" />
-                        <input class="btn btn-default" type="submit" value="Upload" />
-                    </div>
-                </form>
-            </div>
         </div>
         <!--col-md-4 col-sm-4 col-xs-12 close-->
         <div class="col-md-5 col-sm-5 col-xs-12">
@@ -81,9 +72,12 @@
                         <table class="table bio-table">
                             <tbody>
                                 <tr>
-                                    <td>Broj kritika:</td>
                                     <td>
-                                        @(Model.ProfReviews.Count)
+                                        <strong>
+                                            <a asp-controller="ProfessorReviews" asp-action="Index" asp-route-username="@Model.User.UserName">
+                                                Sve kritike ovog korisnika: @Model.ProfReviews.Count
+                                            </a>
+                                        </strong>
                                     </td>
                                 </tr>
                                 <tr>
@@ -189,9 +183,12 @@
                         <table class="table bio-table">
                             <tbody>
                                 <tr>
-                                    <td>Broj kritika:</td>
                                     <td>
-                                        @(Model.SubjectReviews.Count)
+                                        <strong>
+                                            <a asp-controller="SubjectReviews" asp-action="Index" asp-route-username="@Model.User.UserName">
+                                                Sve kritike ovog korisnika: @Model.SubjectReviews.Count
+                                            </a>
+                                        </strong>
                                     </td>
                                 </tr>
                                 <tr>
@@ -286,301 +283,88 @@
                             </ul>
                         </div>
                     </div>
-
                     <div class="tab-pane" id="tab_default_3">
                         <div class="well well-sm">
                             <h4>KOMENTARI</h4>
                         </div>
-                        <p align="right">
-                            <button type="button" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-edit"></span> Edit
-                            </button>
-                        </p>
                         <table class="table bio-table">
                             <tbody>
                                 <tr>
-                                    <td>Date</td>
-                                    <td>: </td>
+                                    <td>Broj ostavljenih komentara:</td>
+                                    <td>@Model.Comments.Count</td>
                                 </tr>
                                 <tr>
-                                    <td>Position</td>
-                                    <td>: </td>
+                                    <td>Pozitivnih glasova za komentare:</td>
+                                    <td>
+                                        <span class="glyphicon glyphicon-thumbs-up" style="color: green;"></span>
+                                        @Model.PositiveVotesComments
+                                    </td>
                                 </tr>
                                 <tr>
-                                    <td>Principle Activites</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Employer</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Type of Activites</td>
-                                    <td>: </td>
+                                    <td>Negativnih glasova za komentare:</td>
+                                    <td>
+                                        <span class="glyphicon glyphicon-thumbs-down" style="color: red;"></span>
+                                        @Model.NegativeVotesComments
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
-
-                        <br />
-
-                        <table class="table bio-table">
-                            <tbody>
-                                <tr>
-                                    <td>Date</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Position</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Principle Activites</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Employer</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Type of Activites</td>
-                                    <td>: </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <br />
-
-                        <table class="table bio-table">
-                            <tbody>
-                                <tr>
-                                    <td>Date</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Position</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Principle Activites</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Employer</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Type of Activites</td>
-                                    <td>: </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    @*<div class="tab-pane" id="tab_default_4">
-                        <div class="well well-sm">
-                            <h4>OFFICIAL AND PERSONAL CONTACTS</h4>
-                        </div>
-                        <p align="right">
-                            <button type="button" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-edit"></span> Edit
-                            </button>
-                        </p>
-                        <table class="table bio-table">
-                            <tbody>
-                                <tr>
-                                    <td>Office Telephone Number</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Office Mobile Phone</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Official Email Address</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Personal Mobile Phone</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Personal Email Address </td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Home Phone</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Facebook Account</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Twitter Account</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>Skype Account</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>LinkedIn Account</td>
-                                    <td>: </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div class="tab-pane" id="tab_default_5">
-                        <div class="well well-sm">
-                            <h4>ADDRESS DETAILS</h4>
-                        </div>
-                        <p align="right">
-                            <button type="button" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-edit"></span> Edit
-                            </button>
-                        </p>
-                        <table class="table bio-table">
-                            <thead>
-                                <tr>
-                                    <th colspan="2">Present Residential Address</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>   Line 1</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>   Line 2</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>   City</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>   State</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>   Country</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>   Pin code</td>
-                                    <td>: </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                        <br />
-                        <table class="table bio-table">
-                            <thead>
-                                <tr>
-                                    <th colspan="2">Permanent Residential Address</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>   Plot No / Door No / Part No / Block No</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>   Street Name</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>   City</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>   State</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>   Country</td>
-                                    <td>: </td>
-                                </tr>
-                                <tr>
-                                    <td>   Pin code</td>
-                                    <td>: </td>
-                                </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
-
-                    <div class="tab-pane" id="tab_default_6">
-                        <div class="well well-sm">
-                            <h4>ADDRESS DETAILS</h4>
-                        </div>
-                        <p align="right">
-                            <button type="button" class="btn btn-default btn-sm">
-                                <span class="glyphicon glyphicon-edit"></span> Edit
-                            </button>
-                        </p>
-                        <div class="row">
-                            <div class="col-md-4 col-md-offset-4">
-                                <form class="form-horizontal" role="form">
-                                    <fieldset>
-                                        <!-- Form Name -->
-                                        <legend>Address Details</legend>
-                                        <!-- Text input-->
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="textinput">Line 1</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" placeholder="Address Line 1" class="form-control">
-                                            </div>
-                                        </div>
-                                        <!-- Text input-->
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="textinput">Line 2</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" placeholder="Address Line 2" class="form-control">
-                                            </div>
-                                        </div>
-                                        <!-- Text input-->
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="textinput">City</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" placeholder="City" class="form-control">
-                                            </div>
-                                        </div>
-                                        <!-- Text input-->
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="textinput">State</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" placeholder="State" class="form-control">
-                                            </div>
-                                            <label class="col-sm-2 control-label" for="textinput">Postcode</label>
-                                            <div class="col-sm-4">
-                                                <input type="text" placeholder="Post Code" class="form-control">
-                                            </div>
-                                        </div>
-                                        <!-- Text input-->
-                                        <div class="form-group">
-                                            <label class="col-sm-2 control-label" for="textinput">Country</label>
-                                            <div class="col-sm-10">
-                                                <input type="text" placeholder="Country" class="form-control">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-2 col-sm-10">
-                                                <div class="pull-right">
-                                                    <button type="submit" class="btn btn-default">Cancel</button>
-                                                    <button type="submit" class="btn btn-primary">Save</button>
+                        <div class="bs-callout bs-callout-danger">
+                            <h4>Najbolje ocijenjeni komentari</h4>
+                            <ul class="list-group list-unstyled">
+                                @foreach (var comment in Model.Comments.OrderByDescending(c => c.Points).Take(3))
+                                {
+                                    <li>
+                                        <div class="well">
+                                            <div class="media">
+                                                <div class="media-body">
+                                                    <h4 class="media-heading">
+                                                    @if (comment.ProfessorReviewID != 0)
+                                                    {
+                                                        <a asp-controller="ProfessorReviews" asp-action="Details" asp-route-id="@comment.ProfessorReviewID">
+                                                            @comment.ProfessorReview.Professor.FullName
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a asp-controller="SubjectReviews" asp-action="Details" asp-route-id="@comment.SubjectReviewID">
+                                                            @comment.SubjectReview.Subject.Name
+                                                        </a>
+                                                    }
+                                                    </h4>
+                                                    <p>@comment.Text</p>
+                                                    <ul class="list-inline list-unstyled">
+                                                        <li><span><i class="glyphicon glyphicon-calendar"></i> @comment.Timestamp.ToString("d")</span></li>
+                                                        <li>|</li>
+                                                        <li title="Bodovi">
+                                                            <div>
+                                                                @if (comment.Points > 0)
+                                                                {
+                                                                    <small style="color: green">
+                                                                        <span class="glyphicon glyphicon-thumbs-up"></span> @comment.Points
+                                                                    </small>
+                                                                }
+                                                                else if (comment.Points < 0)
+                                                                {
+                                                                    <small style="color: red">
+                                                                        <span class="glyphicon glyphicon-thumbs-down"></span> @comment.Points
+                                                                    </small>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <small>@comment.Points</small>
+                                                                }
+                                                            </div>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             </div>
                                         </div>
-
-                                    </fieldset>
-                                </form>
-                            </div><!-- /.col-lg-12 -->
-                        </div><!-- /.row -->
-
-                    </div>*@
-
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -588,32 +372,35 @@
 
     <div class="col-sm-4">
         <div class="panel panel-default">
-            <div class="menu_title">
-                <b>Employee Info</b>
-                <p>RSI Content Solutions India Pvt. Ltd</p>
+            <div class="menu_title text-center">
+                <b>Statistika</b>
             </div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="form-group">
-                            <label for="email">Name:</label>
-                            <p>Vijayan K. </p>
+                            <label>Ukupni broj kritika:</label>
+                            <p>@(Model.ProfReviews.Count+Model.SubjectReviews.Count)</p>
                         </div>
                         <div class="form-group">
-                            <label for="email">Emp ID:</label>
-                            <p>1020</p>
+                            <label>Ukupni broj komentara:</label>
+                            <p>@Model.Comments.Count</p>
                         </div>
                         <div class="form-group">
-                            <label for="email">Data of Joining:</label>
-                            <p>09-05-2016</p>
+                            <label>Ukupno danih pozitivnih glasova:</label>
+                            <p>@Model.PositiveVotesGiven</p>
                         </div>
                         <div class="form-group">
-                            <label for="email">Blood Group:</label>
-                            <p>O+ve</p>
+                            <label>Ukupno danih pozitivnih glasova:</label>
+                            <p>@Model.NegativeVotesGiven</p>
                         </div>
                         <div class="form-group">
-                            <label for="email">In Case of emergency please contact:</label>
-                            <p>9500028421</p>
+                            <label>Ukupni broj primljenih pozitivnih glasova:</label>
+                            <p>@(Model.PositiveVotesComments+Model.PositiveVotesProfessorReviews+Model.PositiveVotesSubjectReviews)</p>
+                        </div>
+                        <div class="form-group">
+                            <label>Ukupni broj primljenih negativnih glasova:</label>
+                            <p>@(Model.NegativeVotesComments + Model.NegativeVotesProfessorReviews + Model.NegativeVotesSubjectReviews)</p>
                         </div>
                     </div>
                 </div>

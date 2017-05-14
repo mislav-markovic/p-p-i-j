@@ -10,6 +10,15 @@
     <h4>Change your account settings</h4>
     <hr />
     <dl class="dl-horizontal">
+        <dt>Profilna slika: </dt>
+        <dd>
+            <form method="post" enctype="multipart/form-data" asp-controller="Account" asp-action="Upload">
+                <div class="form-group">
+                    <input type="file" name="file" accept=".jpg, .gif, .png" style="margin-top: 10px;" />
+                    <input class="btn btn-default" type="submit" value="Upload" />
+                </div>
+            </form>
+        </dd>
         <dt>Password:</dt>
         <dd>
             @if (Model.HasPassword)

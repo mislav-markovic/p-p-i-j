@@ -16,6 +16,8 @@ namespace InMyAppinion.ViewModels
         public int NegativeVotesSubjectReviews { get; set; }
         public int PositiveVotesComments { get; set; }
         public int NegativeVotesComments { get; set; }
+        public int PositiveVotesGiven { get; set; }
+        public int NegativeVotesGiven { get; set; }
         public List<ProfessorReview> ProfReviews { get; set; }
         public List<SubjectReview> SubjectReviews { get; set; }
         public List<Comment> Comments { get; set; }
