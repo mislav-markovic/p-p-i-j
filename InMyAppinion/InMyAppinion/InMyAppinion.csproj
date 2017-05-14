@@ -15,6 +15,7 @@
   <ItemGroup>
     <Content Include="wwwroot\css\navbar.css" />
     <Content Include="wwwroot\css\professorProfile.css" />
+    <Content Include="wwwroot\css\registration.css" />
     <Content Include="wwwroot\css\userProfile.css" />
   </ItemGroup>
   <ItemGroup>

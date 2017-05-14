@@ -105,15 +105,16 @@
                                         <div class="well">
                                             <div class="media">
                                                 <div class="media-body">
+                                                    <span class="pull-right">
+                                                        <a asp-controller="ProfessorReviews" asp-action="Details" asp-route-id="@review.ID">
+                                                            <span class="glyphicon glyphicon-link"></span> Pogledajte kritiku
+                                                        </a>
+                                                    </span>
                                                     <h4 class="media-heading">
                                                         <a asp-controller="Professors" asp-action="Details" asp-route-id="@review.ProfessorID">
                                                             @review.Professor.FullName
                                                         </a>
                                                     </h4>
-                                                    <p class="text-right"></p>
-                                                    <p>
-                                                        @review.Text
-                                                    </p>
                                                     <hr />
                                                     <small>Pristupa&#269nost</small>
                                                     <div class="circle" id="circles-helpfulness-@review.ID" style="display: inline"></div>
@@ -136,7 +137,7 @@
                                                             <span>
                                                                 <i class="glyphicon glyphicon-comment"></i>
                                                                 <a asp-controller="ProfessorReviews" asp-action="Details" asp-route-id="@review.ID">
-                                                                     @review.Comments.Count comments
+                                                                     @review.Comments.Count komentari
                                                                 </a>
                                                             </span>
                                                         </li>
@@ -146,22 +147,22 @@
                                                         </li>
                                                         <li>|</li>
                                                         <li title="Bodovi">
-                                                            <div>
+                                                            <div>Bodovi: 
                                                                 @if(review.Points > 0)
                                                                 {
-                                                                    <small style="color: green">
+                                                                    <span style="color: green">
                                                                         <span class="glyphicon glyphicon-thumbs-up"></span> @review.Points
-                                                                    </small>
+                                                                    </span>
                                                                 }
                                                                 else if (review.Points < 0)
                                                                 {
-                                                                    <small style="color: red">
+                                                                    <span style="color: red">
                                                                         <span class="glyphicon glyphicon-thumbs-down"></span> @review.Points
-                                                                    </small>
+                                                                    </span>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <small>@review.Points</small>
+                                                                    <span>@review.Points</span>
                                                                 }
                                                             </div>
                                                         </li>
@@ -216,15 +217,17 @@
                                         <div class="well">
                                             <div class="media">
                                                 <div class="media-body">
+                                                    <span class="pull-right">
+                                                        <a asp-controller="SubjectReviews" asp-action="Details" asp-route-id="@review.ID">
+                                                            <span class="glyphicon glyphicon-link"></span> Pogledajte kritiku
+                                                        </a>
+                                                    </span>
                                                     <h4 class="media-heading">
                                                         <a asp-controller="Subjects" asp-action="Details" asp-route-id="@review.SubjectID">
                                                             @review.Subject.Name
                                                         </a>
                                                     </h4>
                                                     <p class="text-right"></p>
-                                                    <p>
-                                                        @review.Text
-                                                    </p>
                                                     <hr />
                                                     <small>Težina </small>
                                                     <div class="circle" id="circles-difficulty-@review.ID" style="display: inline"></div>
@@ -245,7 +248,7 @@
                                                             <span>
                                                                 <i class="glyphicon glyphicon-comment"></i>
                                                                 <a asp-controller="SubjectReviews" asp-action="Details" asp-route-id="@review.ID">
-                                                                    @review.Comments.Count comments
+                                                                    @review.Comments.Count komenatari
                                                                 </a>
                                                             </span>
                                                         </li>
@@ -255,22 +258,22 @@
                                                         </li>
                                                         <li>|</li>
                                                         <li title="Bodovi">
-                                                            <div>
+                                                            <div>Bodovi: 
                                                                 @if (review.Points > 0)
                                                                 {
-                                                                    <small style="color: green">
+                                                                    <span style="color: green">
                                                                         <span class="glyphicon glyphicon-thumbs-up"></span> @review.Points
-                                                                    </small>
+                                                                    </span>
                                                                 }
                                                                 else if (review.Points < 0)
                                                                 {
-                                                                    <small style="color: red">
+                                                                    <span style="color: red">
                                                                         <span class="glyphicon glyphicon-thumbs-down"></span> @review.Points
-                                                                    </small>
+                                                                    </span>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <small>@review.Points</small>
+                                                                    <span>@review.Points</span>
                                                                 }
                                                             </div>
                                                         </li>
@@ -391,7 +394,7 @@
                             <p>@Model.PositiveVotesGiven</p>
                         </div>
                         <div class="form-group">
-                            <label>Ukupno danih pozitivnih glasova:</label>
+                            <label>Ukupno danih negativnih glasova:</label>
                             <p>@Model.NegativeVotesGiven</p>
                         </div>
                         <div class="form-group">

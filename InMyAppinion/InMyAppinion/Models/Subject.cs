@@ -19,7 +19,6 @@ namespace InMyAppinion.Models
         public string ShortName { get; set; }
         [Display(Name = "Opis")]
         [Required(ErrorMessage = "{0} je obavezan", AllowEmptyStrings = false)]
-        [StringLength(500, MinimumLength = 3, ErrorMessage = "{0} mora biti između 3 i 500 znakova")]
         public string Description { get; set; }
         [Display(Name = "Potvrđen?")]
         public bool Validated { get; set; }
