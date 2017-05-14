@@ -15,12 +15,23 @@
     <div class="profile-head">
         <!--col-md-4 col-sm-4 col-xs-12 close-->
         <div class="col-md-4 col-sm-4 col-xs-12">
-            <img src="http://www.zarias.com/wp-content/uploads/2015/12/61-cute-puppies.jpg" alt="profilePic" class="img-circle img-responsive" />
+            @if (Model.User.Avatar != null)
+            {
+                <img src="@Model.User.Avatar" alt="profilePic" class="img-circle img-responsive" />
+            }
+            else
+            {
+                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" class="img-circle img-responsive" alt="profilePic" />
+            }
             <h6>@Model.User.UserName</h6>
             <div class="container" style="margin-left: 95px;">
-                <span class="btn btn-default uplod-file">
-                    Upload Photo <input type="file" />
-                </span>
+                <form method="post" enctype="multipart/form-data" asp-controller="Account" asp-action="Upload">
+                    <div class="form-group">
+                        <input type="file" name="file" accept=".jpg, .gif, .png" style="margin-top: 10px;" />
+                        <input type="hidden" name="username" value="@Model.User.UserName" />
+                        <input class="btn btn-default" type="submit" value="Upload" />
+                    </div>
+                </form>
             </div>
         </div>
         <!--col-md-4 col-sm-4 col-xs-12 close-->

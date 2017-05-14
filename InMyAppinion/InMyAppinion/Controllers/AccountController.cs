@@ -15,12 +15,18 @@ using InMyAppinion.Services;
 using InMyAppinion.Data;
 using Microsoft.EntityFrameworkCore;
 using InMyAppinion.ViewModels;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights;
 
 namespace InMyAppinion.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _context;
@@ -36,7 +42,8 @@ namespace InMyAppinion.Controllers
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILoggerFactory loggerFactory,
-            ApplicationDbContext context)
+            ApplicationDbContext context,
+            IHostingEnvironment hostingEnvironment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -45,6 +52,7 @@ namespace InMyAppinion.Controllers
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<AccountController>();
             _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         //
@@ -520,6 +528,30 @@ namespace InMyAppinion.Controllers
             vm.Comments = _context.Comment.Where(c => c.AuthorID == user.Id).ToList();
 
             return View(vm);
+        }
+
+        [HttpPost("UploadFiles")]
+        public async Task<IActionResult> Upload(IFormFile file, string username)
+        {
+            TelemetryClient telemetryClient = new TelemetryClient();
+            try {
+                var extension = file.FileName.Split('.').Last();
+                var filePath = "\\images\\avatars\\" + User.Identity.Name + "." + extension;
+                using (var stream = new FileStream(_hostingEnvironment.WebRootPath + filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                var user = _context.User.SingleOrDefault(u => u.UserName == username);
+                user.Avatar = filePath;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex) { 
+	            telemetryClient.TrackException(ex); 
+            }
+
+            return RedirectToAction("Profile", "Account", new { username = User.Identity.Name });
         }
 
         #region Helpers
