@@ -333,7 +333,7 @@ namespace InMyAppinion.Controllers
             return null;
         }
 
-        public async Task<IActionResult> UpdateAllPoints()
+        public IActionResult UpdateAllPoints()
         {
             var users = _context.User.ToList();
             foreach(var user in users)

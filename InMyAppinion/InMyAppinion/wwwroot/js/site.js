@@ -47,12 +47,18 @@ function SetEditAjax(selector, url, paramname) {
 function DeleteCommentAjax(selector, url, paramname) {
     $(document).on('click', selector, function (event) {
         event.preventDefault();
+        $("#tempmessage").removeClass("alert-success");
+        $("#tempmessage").removeClass("alert-danger");
+        $("#tempmessage").html('');
         var paramval = $(this).data(paramname);
         console.log(paramval);
         $.post(url, { id: paramval }, function (data) {
+            $("#tempmessage").addClass(data.success ? "alert-success" : "alert-danger");
             if (data.success) {
                 $('#' + paramval).remove();
             }
+            $("#tempmessage").addClass("panel-body");
+            $("#tempmessage").html(data.message);
         });
     });
 }

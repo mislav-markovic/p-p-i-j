@@ -236,7 +236,20 @@ namespace InMyAppinion.Controllers
             var subjectReview = await _context.SubjectReview.SingleOrDefaultAsync(m => m.ID == id);
             try
             {
+                var comments = _context.Comment.Where(c => c.SubjectReviewID == id);
+                ApplicationUser user = null;
+                foreach (var comment in comments)
+                {
+                    user = await _context.User.SingleOrDefaultAsync(u => u.Id == comment.AuthorID);
+                    user.Points -= comment.Points;
+                    _context.User.Update(user);
+                }
                 _context.SubjectReview.Remove(subjectReview);
+
+                user = await _context.User.SingleOrDefaultAsync(u => u.Id == subjectReview.AuthorID);
+                user.Points -= subjectReview.Points;
+                _context.User.Update(user);
+
                 await _context.SaveChangesAsync();
 
                 TempData[Constants.Message] = $"Recenzija uspješno obrisana.";
