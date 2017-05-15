@@ -6,6 +6,10 @@
 
 <h2>Create</h2>
 
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.css" rel="stylesheet">
+
+
+
 <form asp-action="Create">
     <div class="form-horizontal">
         <h4>SubjectReview</h4>
@@ -21,7 +25,7 @@
         <div class="form-group">
             <label asp-for="Text" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                @Html.TextAreaFor(m => m.Text, new { @class="form-control" })
+                @Html.TextAreaFor(m => m.Text, new { @class="form-control",@id="summernote" })
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
         </div>
@@ -80,10 +84,19 @@
 </div>
 
 @section Scripts{
+    
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.js"></script>
+
     <script>
         $(document).ready(function () {
             $(".chosen-select").chosen();
         });
+    </script>
+
+    <script>
+         $(document).ready(function () {
+             $('#summernote').summernote();
+         });
     </script>
 
     <script>

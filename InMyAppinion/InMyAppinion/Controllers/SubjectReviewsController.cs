@@ -112,7 +112,7 @@ namespace InMyAppinion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Text,UsefulnessGrade,InterestGrade,DifficultyGrade,Points,AuthorID,SubjectID")] SubjectReview subjectReview, List<int> tags)
+        public async Task<IActionResult> Create([Bind("Title,Text,UsefulnessGrade,InterestGrade,DifficultyGrade,Points,AuthorID,SubjectID")] SubjectReview subjectReview, List<int> tags)
         {
             subjectReview.TotalGrade = calculateTotalGrade(subjectReview);
             subjectReview.Timestamp = DateTime.Now;
@@ -176,7 +176,7 @@ namespace InMyAppinion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Text,UsefulnessGrade,InterestGrade,DifficultyGrade,TotalGrade,Points,Timestamp,AuthorID,SubjectID")] SubjectReview subjectReview)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Text,UsefulnessGrade,InterestGrade,DifficultyGrade,TotalGrade,Points,Timestamp,AuthorID,SubjectID")] SubjectReview subjectReview)
         {
             if (id != subjectReview.ID)
             {
