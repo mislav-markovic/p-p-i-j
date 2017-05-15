@@ -8,9 +8,10 @@ using InMyAppinion.Data;
 namespace InMyAppinion.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170515161808_ReviewTitleAdd3")]
+    partial class ReviewTitleAdd3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -194,7 +195,6 @@ namespace InMyAppinion.Data.Migrations
                     b.Property<DateTime>("Timestamp");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasMaxLength(30);
 
                     b.Property<decimal>("TotalGrade");
