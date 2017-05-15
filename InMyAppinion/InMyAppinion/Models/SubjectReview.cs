@@ -9,9 +9,16 @@ namespace InMyAppinion.Models
     public class SubjectReview
     {
         public int ID { get; set; }
+        
+        [Display(Name = "Naslov recenzije")]
+        [Required(ErrorMessage = "Unos naslova recenzije je obavezan", AllowEmptyStrings = false)]
+        [StringLength(30, ErrorMessage = "Maksimalna duljina naslova recenzije je 30 znakova")]
+        public string Title { get; set; }
+
         [Display(Name = "Recenzija")]
         [Required(ErrorMessage = "Unos recenzije je obavezan", AllowEmptyStrings = false)]
         [StringLength(4000, ErrorMessage = "Maksimalna duljina recenzije je 4000 znakova")]
+
         public string Text { get; set; }
         [Display(Name = "Korisnost predmeta")]
         [Required(ErrorMessage = "Obavezna ocjena")]
