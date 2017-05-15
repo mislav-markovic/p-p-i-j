@@ -74,6 +74,9 @@
             </div>
         </div>
     </nav>*@
+    @{ 
+        var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+    }
     <nav class="[ navbar navbar-fixed-top ][ navbar-bootsnipp ]" role="navigation">
         <div class="[ container ]">
             <!-- Brand and toggle get grouped for better mobile display -->
@@ -102,15 +105,28 @@
                             </div>
                         </form>
                     </li>
-                    <li class="[ hidden-xs ]"><a href="#toggle-search"><span class="[ glyphicon glyphicon-search ]"></span></a></li>
-                    <li class="[ dropdown ]">
-                        <a href="#" class="[ dropdown ]">Kategorije <span class="[ caret ]"></span></a>
+                    <li class="[ hidden-xs ] @(controllerName == "Search" ? "active" : "" )">
+                        <a href="#toggle-search"><span class="[ glyphicon glyphicon-search ]"></span></a>
+                    </li>
+                    <li class="[ dropdown ] @(controllerName == "Professors" || controllerName == "Subjects" || controllerName == "Faculties" || controllerName == "Cities" || controllerName == "Universities" ? "active" : "" )">
+                        <a href="#" class="[ dropdown ]"> Kategorije <span class="[ caret ]"></span>
+                        </a>
                         <ul class="[ dropdown-menu ]" role="menu">
-                            <li><a asp-action="Index" asp-controller="Professors">Profesori</a></li>
-                            <li><a asp-action="Index" asp-controller="Subjects">Kolegiji</a></li>
-                            <li><a asp-action="Index" asp-controller="Faculties">Fakulteti</a></li>
-                            <li><a asp-action="Index" asp-controller="Cities">Gradovi</a></li>
-                            <li><a asp-action="Index" asp-controller="Universities">Sveučilišta</a></li>
+                            <li class="@(controllerName == "Professors" ? "active" : "" )">
+                                <a asp-action="Index" asp-controller="Professors">Profesori</a>
+                            </li>
+                            <li class="@(controllerName == "Subjects" ? "active" : "" )">
+                                <a asp-action="Index" asp-controller="Subjects">Kolegiji</a>
+                            </li>
+                            <li class="@(controllerName == "Faculties" ? "active" : "" )">
+                                <a asp-action="Index" asp-controller="Faculties">Fakulteti</a>
+                            </li>
+                            <li class="@(controllerName == "Cities" ? "active" : "" )">
+                                <a asp-action="Index" asp-controller="Cities">Gradovi</a>
+                            </li>
+                            <li class="@(controllerName == "Universities" ? "active" : "" )">
+                                <a asp-action="Index" asp-controller="Universities">Sveučilišta</a>
+                            </li>
                         </ul>
                     </li>
                     <li>

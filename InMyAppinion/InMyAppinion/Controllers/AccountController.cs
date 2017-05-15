@@ -472,6 +472,7 @@ namespace InMyAppinion.Controllers
         }
 
         [AllowAnonymous]
+        [Route("Account/Profile/{username}")]
         public async Task<IActionResult> Profile(string username)
         {
             var user = _context.User.Where(u => u.UserName == username).SingleOrDefault();

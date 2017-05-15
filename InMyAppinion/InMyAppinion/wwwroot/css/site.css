@@ -2,6 +2,7 @@
     padding-top: 50px;
     padding-bottom: 20px;
     font-family: 'Open Sans', sans-serif;
+    background-image: url("../images/concrete_seamless.png");
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -13,6 +14,7 @@ h1, h2, h3, h4, h5, h6 {
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    background-color: white;
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
