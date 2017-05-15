@@ -103,6 +103,7 @@ namespace InMyAppinion.Controllers
 
             ViewData["AuthorID"] = userId;
             ViewData["SubjectID"] = Id;
+            ViewData["SubjectName"] = _context.Subject.Where(s => s.ID == Id).Select(s=>s.Name).First();
             ViewData["SubjectTags"] = new SelectList(_context.SubjectReviewTag, "ID", "Name");
             return View();
         }
@@ -135,6 +136,7 @@ namespace InMyAppinion.Controllers
             }
             ViewData["AuthorID"] = subjectReview.AuthorID;
             ViewData["SubjectID"] = subjectReview.SubjectID;
+            ViewData["SubjectName"] = _context.Subject.Where(s => s.ID == subjectReview.SubjectID).Select(s=>s.Name).First();
             ViewData["SubjectTags"] = new SelectList(_context.SubjectReviewTag, "ID", "Name");
             return View();
         }
