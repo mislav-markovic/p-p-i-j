@@ -18,25 +18,7 @@
                         <div class="panel-heading resume-heading">
                             <div class="row">
                                 <div class="col-lg-12">
-                                    <div class="col-xs-12 col-sm-4">
-                                        Ovdje trebam sliku profe(mozda)
-                                        <figure>
-                                            <img class="img-circle img-responsive" alt="" src="http://www.bonbon.hr/datastore/imagestore/original/1379147250lilbub.jpg?v=0">
-                                        </figure>
-
-                                        <div class="row">
-                                            <div class="col-xs-12 social-btns">
-                                                Ovdje trebam link na osobnu stranicu
-                                                <div class="col-xs-3 col-md-1 col-lg-1 social-btn-holder">
-                                                    <a href="#" class="btn btn-social btn-block btn-linkedin">
-                                                        <i class="fa fa-linkedin"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="col-xs-12 col-sm-8">
+                                    <div class="col-xs-12">
                                         <ul class="list-group" >
                                             <li class="list-group-item">@Model.FirstName @Model.LastName</li>
                                             <li class="list-group-item">
@@ -45,6 +27,10 @@
                                                     @foreach (var faculty in Model.Faculties)
                                                     {
                                                         <div>@faculty.Name (@faculty.ShortName)</div>
+                                                        @if (!Model.Faculties.Last().Equals(faculty))
+                                                        {
+                                                            @Html.Raw(", ")
+                                                        }
                                                     }
                                                 }
                                                 else
@@ -58,6 +44,10 @@
                                                     @foreach (var uni in Model.Universities)
                                                     {
                                                         <div>@uni.Name, @uni.City.Name (@uni.ShortName)</div>
+                                                        @if (!Model.Universities.Last().Equals(uni))
+                                                        {
+                                                            @Html.Raw(", ")
+                                                        }
                                                     }
                                                 }
                                                 else
@@ -66,8 +56,6 @@
 
                                                 }
                                             </li>
-                                            <!-- Bilo bi dost dobro da ima mail-->
-                                            <li class="list-group-item"><i class="fa fa-envelope"></i> (ovdje trebam email??)john@example.com</li>
                                         </ul>
                                     </div>
                                 </div>
