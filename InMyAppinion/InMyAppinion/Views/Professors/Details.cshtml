@@ -71,7 +71,11 @@
                     {
                         @foreach (var interes in Model.Interests)
                         {
-                            <div>@interes.Name</div>
+                            <div>
+                                <a asp-action="Search" asp-controller="Search" asp-route-query="@interes.Name">
+                                    @interes.Name
+                                </a>
+                            </div>
                             if (!Model.Interests.Last().Equals(interes))
                             {
                                 @Html.Raw(", ")
