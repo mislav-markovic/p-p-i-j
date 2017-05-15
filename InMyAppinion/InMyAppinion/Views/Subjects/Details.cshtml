@@ -3,10 +3,8 @@
 @inject IAuthorizationService AuthorizationService
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = @Model.Name;
 }
-
-<h2>Details</h2>
 
 <div>
     <div class="container">
@@ -107,13 +105,15 @@
                                     <li>
                                         <div class="well">
                                             <div class="media">
-                                                <a class="pull-left" href="#">
-                                                    slika korisnika?
-                                                    <img class="media-object" src="#">
-                                                </a>
+                                                <span class="pull-left" href="#">
+                                                    <img style="max-width:100px;"class="img-circle img-responsive" src="@review.Author.Avatar">
+                                                    <a asp-action="Profile" asp-controller="Account" asp-route-username="@review.Author.UserName">
+                                                        <p class="text-center">@review.Author.UserName</p>
+                                                    </a>
+                                                </span>
                                                 <div class="media-body">
                                                     <h4 class="media-heading">@review.Title</h4>
-                                                    <p class="text-right">@review.Author.UserName</p>
+                                                    
                                                     <p>
                                                         @Html.Raw(review.Text)
                                                     </p>

@@ -49,7 +49,7 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Text)
+                @Html.Raw(item.Text)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.UsefulnessGrade)
