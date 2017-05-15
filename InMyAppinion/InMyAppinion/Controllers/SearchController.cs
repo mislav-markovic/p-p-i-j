@@ -6,6 +6,7 @@ using InMyAppinion.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using InMyAppinion.Data;
 using Microsoft.EntityFrameworkCore;
+using InMyAppinion.ViewModels.Filters;
 
 namespace InMyAppinion.Controllers
 {
@@ -73,5 +74,20 @@ namespace InMyAppinion.Controllers
             model2.query = query;
             return View(model2);
         }
+
+        public IActionResult Advanced(string filter) {
+            var sfilter = SearchFilter.FromString(filter);
+            if (!sfilter.IsEmpty())
+            {
+                sfilter.Initialize(_context);
+                sfilter.ApplyFilter();
+                return View(sfilter);
+            }
+            else {
+                return RedirectToAction("Search");
+            }
+        }
+
+
     }
 }
