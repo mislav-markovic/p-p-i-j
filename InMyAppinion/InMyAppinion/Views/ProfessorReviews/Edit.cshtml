@@ -1,85 +1,86 @@
-@model InMyAppinion.Models.ProfessorReview
+﻿@model InMyAppinion.Models.ProfessorReview
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
+<h2>Uredi kritiku za @Model.Professor.FullName, autor: <a asp-route-username="@Model.Author.UserName" asp-action="Profile" asp-controller="Account">@Model.Author.UserName</a></h2>
+
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.css" rel="stylesheet">
 
 <form asp-action="Edit">
     <div class="form-horizontal">
-        <h4>ProfessorReview</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="ID" />
         <div class="form-group">
-            <label asp-for="Text" class="col-md-2 control-label"></label>
+            <label asp-for="Title" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Text" class="form-control" />
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Text" class="col-md-2 control-label"></label>
+            <div class="col-md-10" style="width:40%">
+                @Html.TextAreaFor(m => m.Text, new { @class = "form-control", @id = "summernote" })
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="QualityGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="QualityGrade" class="form-control" />
+                <input asp-for="QualityGrade" class="form-control slider-tick-qua" value="@Model.QualityGrade"/>
                 <span asp-validation-for="QualityGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="InteractionGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="InteractionGrade" class="form-control" />
+                <input asp-for="InteractionGrade" class="form-control slider-tick-int" value="@Model.InteractionGrade"/>
                 <span asp-validation-for="InteractionGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="HelpfulnessGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="HelpfulnessGrade" class="form-control" />
+                <input asp-for="HelpfulnessGrade" class="form-control slider-tick-help" value="@Model.HelpfulnessGrade"/>
                 <span asp-validation-for="HelpfulnessGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="MentorGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="MentorGrade" class="form-control" />
+                <input asp-for="MentorGrade" class="form-control slider-tick-mentor" value="@Model.MentorGrade"/>
                 <span asp-validation-for="MentorGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="TotalGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="TotalGrade" class="form-control" />
+                <input asp-for="TotalGrade" type="hidden" class="form-control" />
                 <span asp-validation-for="TotalGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Points" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Points" class="form-control" />
+                <input asp-for="Points" type="hidden" value="0" class="form-control" />
                 <span asp-validation-for="Points" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Timestamp" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Timestamp" class="form-control" />
+                <input asp-for="Timestamp" class="form-control" value="@Model.Timestamp" type="hidden"/>
                 <span asp-validation-for="Timestamp" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="AuthorID" class="control-label col-md-2"></label>
             <div class="col-md-10">
-                <select asp-for="AuthorID" class="form-control" asp-items="ViewBag.AuthorID"></select>
-                <span asp-validation-for="AuthorID" class="text-danger"></span>
+                <input asp-for="AuthorID" type="hidden" value="@Model.AuthorID" class ="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ProfessorID" class="control-label col-md-2"></label>
             <div class="col-md-10">
-                <select asp-for="ProfessorID" class="form-control" asp-items="ViewBag.ProfessorID"></select>
-                <span asp-validation-for="ProfessorID" class="text-danger"></span>
+                <input asp-for="ProfessorID" type="hidden" value="@Model.ProfessorID" class ="form-control" />
             </div>
         </div>
         <div class="form-group">
@@ -96,4 +97,93 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".chosen-select").chosen();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#summernote').summernote();
+        });
+    </script>
+
+    <script>
+        $(".slider-tick-qua").slider(
+            {
+            ticks: [1, 2, 3, 4, 5],
+            ticks_labels: ["1", "2", "3", "4", "5"],
+            value: @Model.QualityGrade,
+            formatter: function (value) {
+                switch (value) {
+                    case 1: return "Loš";
+                    case 2: return "Meh";
+                    case 3: return "OK";
+                    case 4: return "Dobar";
+                    case 5: return "Super";
+                };
+            }
+        });
+    </script>
+
+    <script>
+            $(".slider-tick-help").slider(
+                {
+                ticks: [1, 2, 3, 4, 5],
+                ticks_labels: ["1", "2", "3", "4", "5"],
+                value: @Model.HelpfulnessGrade,
+                formatter: function (value) {
+                    switch (value) {
+                        case 1: return "Loš";
+                        case 2: return "Meh";
+                        case 3: return "OK";
+                        case 4: return "Dobar";
+                        case 5: return "Super";
+                    };
+                }
+            });
+    </script>
+
+    <script>
+            $(".slider-tick-int").slider(
+                {
+                ticks: [1, 2, 3, 4, 5],
+                ticks_labels: ["1", "2", "3", "4", "5"],
+                value: @Model.InteractionGrade,
+                formatter: function (value) {
+                    switch (value) {
+                        case 1: return "Loš";
+                        case 2: return "Meh";
+                        case 3: return "OK";
+                        case 4: return "Dobar";
+                        case 5: return "Super";
+                    };
+                }
+            });
+    </script>
+
+    <script>
+                $(".slider-tick-mentor").slider({
+                    ticks: [0, 1, 2, 3, 4, 5],
+                    ticks_labels: ["", "1", "2", "3", "4", "5"],
+                    value: @Model.MentorGrade,
+                    formatter: function (value) {
+                        switch (value) {
+                            case 0: return "Nije mentor";
+                            case 1: return "Loš";
+                            case 2: return "Meh";
+                            case 3: return "OK";
+                            case 4: return "Dobar";
+                            case 5: return "Super";
+                        };
+                    }
+                });
+    </script>
+
+
+
 }
