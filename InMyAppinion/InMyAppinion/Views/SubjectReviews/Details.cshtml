@@ -10,7 +10,8 @@
 }
 
 <div class=row>
-    <div class="col-md-6">
+    <div class="col-md-6 bs-callout-danger">
+        <a asp-for="Details" asp-controller="Subjects" asp-route-id="@Model.SubjectID"></a>
         <h2>@Model.Subject.Name</h2>
     </div>
     @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
@@ -22,7 +23,15 @@
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
             </form>
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info pull-right"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
         </div>
+    }
+    else if(User.Identity.Name == Model.Author.UserName)
+    {
+        <div class="col-md-2 margins">
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info pull-right"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
+        </div>
+
     }
 </div>
 
@@ -78,6 +87,7 @@
             <button class="btn btn-lg btn-danger voteajax" id="votedown" data-vote="false"><span class="glyphicon glyphicon-thumbs-down"></span></button>
         }
         <input hidden id="voted" value="@ViewBag.voted" />
+        <a asp-action="Index" class="btn btn-danger btn-sm pull-right" asp-route-id="@Model.SubjectID">Povratak na kritike predmeta</a>
         <hr />
         @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
         {

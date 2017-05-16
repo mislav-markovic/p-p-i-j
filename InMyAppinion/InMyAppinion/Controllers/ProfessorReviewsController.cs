@@ -37,7 +37,7 @@ namespace InMyAppinion.Controllers
             {
                 if(id != -1)
                 {
-                    return View(await _context.ProfessorReview.Where(r => r.ProfessorID == id).ToListAsync());
+                    return View(await applicationDbContext.Where(r => r.ProfessorID == id).ToListAsync());
                 }
                 else
                 { 
@@ -182,7 +182,12 @@ namespace InMyAppinion.Controllers
                 return NotFound();
             }
 
-            var professorReview = await _context.ProfessorReview.Include(p=>p.Professor).Include(a=>a.Author).SingleOrDefaultAsync(m => m.ID == id);
+            var professorReview = await _context.ProfessorReview
+                .Include(p => p.Author)
+                .Include(p => p.Professor)
+                .Include(p => p.ProfessorReviewTagSet).ThenInclude(p => p.ProfessorReviewTag)
+                .Include(p => p.Comments).ThenInclude(p => p.Author)
+                .SingleOrDefaultAsync(m => m.ID == id);
             if (professorReview == null)
             {
                 return NotFound();

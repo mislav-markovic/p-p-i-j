@@ -49,6 +49,7 @@ namespace InMyAppinion.Models
         public ApplicationUser Author { get; set; }
         [Display(Name = "Recenzija o profesoru")]
         public int ProfessorID { get; set; }
+        [Display(Name ="Profesor")]
         public Professor Professor { get; set; }
 
         public ICollection<ProfessorReviewTagSet> ProfessorReviewTagSet { get; set; }

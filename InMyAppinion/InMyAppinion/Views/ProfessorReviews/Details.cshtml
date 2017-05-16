@@ -10,8 +10,10 @@
 }
 
 <div class=row>
-    <div class="col-md-6">
-        <h2>@Model.Professor.FullName</h2>
+    <div class="col-md-6 bs-callout-danger">
+        <a asp-for="Details" asp-controller="Professors" asp-route-id="@Model.ProfessorID">
+            <h2>@Model.Professor.FullName</h2>
+        </a>
     </div>
     @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
     {
@@ -22,7 +24,15 @@
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
             </form>
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info pull-right"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
         </div>
+    }
+    else if(User.Identity.Name == Model.Author.UserName)
+    {
+        <div class="clo-md-2 margins">
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info pull-right"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
+        </div>
+
     }
 </div>
 
@@ -73,6 +83,7 @@
                         <button class="btn btn-lg btn-danger voteajax" id="votedown" data-vote="false"><span class="glyphicon glyphicon-thumbs-down"></span></button>
                     }
                     <input hidden id="voted" value="@ViewBag.voted" />
+                    <a class="btn btn-danger btn-sm pull-right" asp-action="Index" asp-route-id="@Model.ProfessorID">Povratak na kritike profesora</a>
                     <hr />
                     @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
                     {
@@ -91,7 +102,7 @@
                     {
                         <div id="@c.ID">
                             @if (SignInManager.IsSignedIn(User) && (User.Identity.Name == c.Author.UserName ||
-        await AuthorizationService.AuthorizeAsync(User, "CanModerate")))
+                                await AuthorizationService.AuthorizeAsync(User, "CanModerate")))
                             {
                                 <button data-commentid="@c.ID" data-userid="@c.AuthorID" class="pull-right btn btn-danger btn-xs deleteajax" title="Izbriši komentar">
                                     <span class="glyphicon glyphicon-remove"></span>

@@ -37,7 +37,7 @@ namespace InMyAppinion.Controllers
             {
                 if (id != -1)
                 {
-                    return View(await _context.SubjectReview.Where(r => r.SubjectID == id).ToListAsync());
+                    return View(await applicationDbContext.Where(r => r.SubjectID == id).ToListAsync());
                 }
                 else
                 {
@@ -172,7 +172,12 @@ namespace InMyAppinion.Controllers
                 return NotFound();
             }
 
-            var subjectReview = await _context.SubjectReview.Include(s=>s.Subject).SingleOrDefaultAsync(m => m.ID == id);
+            var subjectReview = await _context.SubjectReview
+                .Include(s => s.Author)
+                .Include(s => s.Subject)
+                .Include(s => s.SubjectReviewTagSet).ThenInclude(s => s.SubjectReviewTag)
+                .Include(s => s.Comments).ThenInclude(s => s.Author)
+                .SingleOrDefaultAsync(m => m.ID == id);
             if (subjectReview == null)
             {
                 return NotFound();
