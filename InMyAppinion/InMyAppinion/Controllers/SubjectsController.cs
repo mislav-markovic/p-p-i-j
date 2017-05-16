@@ -67,6 +67,12 @@ namespace InMyAppinion.Controllers
             {
                 return NotFound();
             }
+
+            if (!subject.Validated && !await _authorizationService.AuthorizeAsync(User, "CanModerate"))
+            {
+                return NotFound();
+            }
+
             var diff = calcDifficulty(subject.Reviews);
             var interes = calcInterest(subject.Reviews);
             var usefulness = calcUsefulness(subject.Reviews);

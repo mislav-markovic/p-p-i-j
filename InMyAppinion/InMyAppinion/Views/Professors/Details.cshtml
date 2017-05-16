@@ -140,11 +140,13 @@
                                                 <p class="text-center">@review.Author.UserName</p>
                                             </a>
                                             <div class="media-body">
-                                                <h4 class="media-heading">@review.Title</h4>
-                                                <p class="text-right">@review.Author.UserName</p>
-                                                <p>
-                                                    @Html.Raw(review.Text)
-                                                </p>
+                                                <a asp-action="Details" asp-controller="ProfessorReviews" asp-route-id="@review.ID">
+                                                    <h4 class="media-heading">@review.Title</h4>
+                                                </a>
+                                                @*<p>
+        @Html.Raw(review.Text)
+    </p>
+                                                *@
                                                 <hr />
                                                 <small>Pristupa&#269nost</small>
                                                 <div class="circle" id="circles-helpfulness-@review.ID" style="display: inline"></div>
@@ -198,13 +200,16 @@
                         <tbody>
                             @foreach (var sub in Model.Subjects)
                             {
-                                <tr>
-                                    <td>
-                                        <a asp-controller="Subjects" asp-action="Details" asp-route-id="@sub.ID">@sub.Name</a>
-                                    </td>
-                                    <td>@sub.Faculty.University.Name</td>
-                                    <td>@sub.Faculty.Name</td>
-                                </tr>
+                                @if (sub.Validated)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a asp-controller="Subjects" asp-action="Details" asp-route-id="@sub.ID">@sub.Name</a>
+                                        </td>
+                                        <td>@sub.Faculty.University.Name</td>
+                                        <td>@sub.Faculty.Name</td>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>
@@ -216,11 +221,11 @@
                                 <td class="pull-left">
                                     @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
                                     {
-                                        <a class="btn btn-danger pull-left" asp-action="Create" asp-controller="SubjectReviews" asp-route-id="@Model.ID">Dodaj kritiku</a>
+                                        <a class="btn btn-danger pull-left" asp-action="Create" asp-controller="ProfessorReviews" asp-route-id="@Model.ID">Dodaj kritiku</a>
                                     }
                                 </td>
                                 <td class="pull-right">
-                                    <a class="btn btn-danger pull-right" asp-action="Index">Povratak na listu predmeta</a>
+                                    <a class="btn btn-danger pull-right" asp-action="Index">Povratak na listu profesora</a>
                                 </td>
                             </tr>
                             <tr>

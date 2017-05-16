@@ -28,12 +28,21 @@ namespace InMyAppinion.Controllers
         }
 
         // GET: SubjectReviews
-        public async Task<IActionResult> Index(string username)
+        public async Task<IActionResult> Index(string username, int id = -1)
         {
-            var applicationDbContext = _context.SubjectReview.Include(s => s.Author).Include(s => s.Subject);
+            var applicationDbContext = _context.SubjectReview
+                .Include(s => s.Author)
+                .Include(s => s.Subject);
             if (username == null)
             {
-                return View(await applicationDbContext.ToListAsync());
+                if (id != -1)
+                {
+                    return View(await applicationDbContext.Where(r => r.SubjectID == id).ToListAsync());
+                }
+                else
+                {
+                    return View(await applicationDbContext.ToListAsync());
+                }                
             }
             else
             {
@@ -163,7 +172,12 @@ namespace InMyAppinion.Controllers
                 return NotFound();
             }
 
-            var subjectReview = await _context.SubjectReview.Include(s=>s.Subject).SingleOrDefaultAsync(m => m.ID == id);
+            var subjectReview = await _context.SubjectReview
+                .Include(s => s.Author)
+                .Include(s => s.Subject)
+                .Include(s => s.SubjectReviewTagSet).ThenInclude(s => s.SubjectReviewTag)
+                .Include(s => s.Comments).ThenInclude(s => s.Author)
+                .SingleOrDefaultAsync(m => m.ID == id);
             if (subjectReview == null)
             {
                 return NotFound();

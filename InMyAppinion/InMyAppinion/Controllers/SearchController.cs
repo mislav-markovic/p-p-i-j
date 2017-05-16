@@ -6,6 +6,8 @@ using InMyAppinion.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using InMyAppinion.Data;
 using Microsoft.EntityFrameworkCore;
+using InMyAppinion.ViewModels.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace InMyAppinion.Controllers
 {
@@ -33,7 +35,7 @@ namespace InMyAppinion.Controllers
                     // subject part
                     model.subservmod.tags = _context.SubjectTag.Where(o => o.Name.ToLower().Contains(query.ToLower())).ToList();
                     var tmp = new HashSet<Models.Subject>();
-                    var subjects = _context.Subject.ToList();
+                    var subjects = _context.Subject.Include(s => s.Faculty).ToList();
                     model.query = query;
                     foreach (var tag in model.subservmod.tags)
                     {
@@ -73,5 +75,28 @@ namespace InMyAppinion.Controllers
             model2.query = query;
             return View(model2);
         }
+
+        public IActionResult Advanced(string[] array) {
+            string filter = string.Join("|", array);
+            var sfilter = SearchFilter.FromString(filter);
+            if (!sfilter.IsEmpty())
+            {
+                sfilter.Initialize(_context);
+                sfilter.ApplyFilter();
+                return View(sfilter);
+            }
+            else {
+                return RedirectToAction("Search");
+            }
+        }
+
+        public IActionResult AdvancedSearchForm()
+        {
+            ViewData["cities"] = new SelectList(_context.City.OrderBy(c => c.Name).ToList(), "Name", "Name");
+            ViewData["faculties"] = new SelectList(_context.Faculty.OrderBy(f => f.Name).ToList(), "Name", "Name");
+            ViewData["professors"] = new SelectList(_context.Professor.Where(p => p.Validated).OrderBy(p => p.FullName).ToList(), "FullName", "FullName");
+            return View();
+        }
+
     }
 }

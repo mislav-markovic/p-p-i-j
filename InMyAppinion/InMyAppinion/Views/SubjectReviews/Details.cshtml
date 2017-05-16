@@ -10,104 +10,82 @@
 }
 
 <div class=row>
-    <div class="col-md-6">
+    <div class="col-md-6 bs-callout-danger">
+        <a asp-for="Details" asp-controller="Subjects" asp-route-id="@Model.SubjectID"></a>
         <h2>@Model.Subject.Name</h2>
     </div>
+    <div class="col-md-2 margins">
     @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
     {
-        <div class="col-md-2 margins">
-            <form asp-action="Delete">
-                <input type="hidden" name="id" value="@Model.ID" />
-                <button type="submit" class="btn btn-danger del" title="Obriši recenziju">
-                    <span class="glyphicon glyphicon-trash"></span>
-                </button>
-            </form>
-        </div>
+
+        <form asp-action="Delete">
+            <input type="hidden" name="id" value="@Model.ID" />
+            <button type="submit" class="btn btn-danger del" title="Obriši recenziju">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </form>
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
     }
+    else if (User.Identity.Name == Model.Author.UserName)
+    {
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
+    }
+    </div>
 </div>
 
 <div>
     <hr />
-    <div class="col-lg-6">
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Text)
-            </dt>
-            <dd>
-                @Html.Raw(Model.Text)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.UsefulnessGrade)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.UsefulnessGrade)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.InterestGrade)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.InterestGrade)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.DifficultyGrade)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.DifficultyGrade)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.TotalGrade)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.TotalGrade)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Points)
-            </dt>
-            <dd id="points">
-                @Html.DisplayFor(model => model.Points)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Timestamp)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Timestamp)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Author)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Author.UserName)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Subject)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Subject.Name)
-            </dd>
-            <dt>
-                Tagovi
-            </dt>
-            <dd>
-                @foreach (var tag in Model.SubjectReviewTagSet)
-                {
-                    <b class="btn btn-xs btn-info">@tag.SubjectReviewTag.Name</b>
+    <div class="well">
+        <div class="media">
+            <a class="pull-left" asp-action="Profile" asp-controller="Account" asp-route-id="@Model.Author.UserName">
 
+
+                <img style="width:100px;height:100px" class="media-object img-responsive img-circle img-thumbnail" src="@Model.Author.Avatar" alt="profilePic">
+
+                <p class="text-center">@Model.Author.UserName</p>
+            </a>
+            <div class="media-body">
+                <h3 class="media-heading text-center">@Model.Title</h3> <br />
+                <p>
+                    @Html.Raw(Model.Text)
+                </p>
+                <hr />
+                <small>@Html.DisplayNameFor(model=>model.UsefulnessGrade)</small>
+                <div class="circle" id="circles-usefulness" style="display: inline"></div>
+                <small>@Html.DisplayNameFor(model => model.DifficultyGrade)</small>
+                <div class="circle" id="circles-difficulty" style="display: inline"></div>
+                <small>@Html.DisplayNameFor(model => model.InterestGrade)</small>
+                <div class="circle" id="circles-interest" style="display: inline"></div>
+                <hr />
+                Tagovi:
+                @foreach (var tag in Model.SubjectReviewTagSet.Select(s => s.SubjectReviewTag))
+                {
+                    <b class="btn btn-xs btn-info">@tag.Name </b>
+                                                    @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+                                                    {
+                                                        <button class="btn btn-default btn-xs deleteajax" data-tagid="@tag.ID" data-subjectid="@Model.ID" title="Obriši tag">
+                                                            <span class="glyphicon glyphicon-minus"></span>
+                                                        </button>
+                                                    }
                 }
-            </dd>
-        </dl>
-        <hr />
+                <ul class="list-inline list-unstyled">
+                    <li><span><i class="glyphicon glyphicon-calendar"></i>@Model.Timestamp</span></li>
+                    <li>|</li>
+                    <li>
+                        <div id="stars"><small>@Model.TotalGrade</small></div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
         @if ((await AuthorizationService.AuthorizeAsync(User, "CanReview") && (User.Identity.Name != Model.Author.UserName)))
         {
             <button class="btn btn-lg btn-success voteajax" id="voteup" data-vote="true"><span class="glyphicon glyphicon-thumbs-up"></span></button>
             <button class="btn btn-lg btn-danger voteajax" id="votedown" data-vote="false"><span class="glyphicon glyphicon-thumbs-down"></span></button>
         }
         <input hidden id="voted" value="@ViewBag.voted" />
+        <a asp-action="Index" class="btn btn-danger btn-sm pull-right" asp-route-id="@Model.SubjectID">Povratak na kritike predmeta</a>
         <hr />
         @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
         {
@@ -144,11 +122,10 @@
             </div>
         }
     </div>
-</div>
 <div class="clear">
     <br />
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    @*<a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+    <a asp-action="Index">Back to List</a>*@
 </div>
 
 @section Scripts {
@@ -215,4 +192,65 @@
             });
     </script>
 
+<script src="@Url.Content("~/lib/raty/lib/jquery.raty.js")"></script>
+
+<script>
+
+        @{
+           @: $("#stars").raty({
+           @:         starType: 'i',
+           @: halfShow: true,
+           @: readOnly: true,
+           @: size: 5,
+           @: targetFormat: '{score}',
+           @: score: @Model.TotalGrade,
+           @: hints: ['Lose', 'Dovoljno', 'Dobro', 'Vrlo dobro', 'Odlicno']
+           @: });
+        }
+
+</script>
+
+<script src="@Url.Content("~/lib/circles/circles.min.js")"></script>
+<script>
+        
+            @{
+              @:   Circles.create({
+              @:     id: 'circles-usefulness',
+              @:     radius: 30,
+              @:     value: @Model.UsefulnessGrade,
+              @:     maxValue: 5,
+              @:     text: (value) => value,
+              @:     colors: ['#D3B6C6', '#4B253A'],
+              @:     duration: 1000,
+              @:   });
+
+              @:   Circles.create({
+              @:     id: 'circles-difficulty',
+              @:     radius: 30,
+              @:     value: @Model.DifficultyGrade,
+              @:     maxValue: 5,
+              @:     text: (value) => value,
+              @:     colors: ['#D3B6C6', '#4B253A'],
+              @:     duration: 1000,
+              @:   });
+
+              @:   Circles.create({
+              @:     id: 'circles-interest',
+              @:     radius: 30,
+              @:     value: @Model.InterestGrade,
+              @:     maxValue: 5,
+              @:     text: (value) => value,
+              @:     colors: ['#D3B6C6', '#4B253A'],
+              @:     duration: 1000,
+              @:   });
+            }
+</script>
+
 }
+
+@section Styles {
+    <link href="@Url.Content("~/css/profile.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/lib/raty/lib/jquery.raty.css")" rel="stylesheet" />
+}
+
+

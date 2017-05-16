@@ -48,6 +48,7 @@ namespace InMyAppinion.Models
 
         [Display(Name = "Autor recenzije")]
         public ApplicationUser Author { get; set; }
+        [Display(Name = "Kolegij")]
         public Subject Subject { get; set; }
         
         public ICollection<SubjectReviewTagSet> SubjectReviewTagSet { get; set; }
