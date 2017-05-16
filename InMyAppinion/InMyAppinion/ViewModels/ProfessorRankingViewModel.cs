@@ -9,5 +9,7 @@ namespace InMyAppinion.ViewModels
     public class ProfessorRankingViewModel
     {
         public ICollection<ProfessorDetailViewModel> Professors { get; set; }
+        public int tag { get; set; }
+        public int sort { get; set; }
     }
 }

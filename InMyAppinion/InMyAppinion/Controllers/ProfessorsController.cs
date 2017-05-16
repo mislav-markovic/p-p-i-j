@@ -18,17 +18,23 @@ namespace InMyAppinion.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAuthorizationService _authorizationService;
 
-        public ProfessorsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public ProfessorsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IAuthorizationService authorizationService)
         {
             _context = context;
             _userManager = userManager;
+            _authorizationService = authorizationService;
         }
 
         // GET: Professor
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Professor.ToListAsync());
+            if (await _authorizationService.AuthorizeAsync(User, "CanModerate"))
+            {
+                return View(await _context.Professor.ToListAsync());
+            }
+            return View(await _context.Professor.Where(s => s.Validated).ToListAsync());
         }
 
         // GET: Professor/Details/5

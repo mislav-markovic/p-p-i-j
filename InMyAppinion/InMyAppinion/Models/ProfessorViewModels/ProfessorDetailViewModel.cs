@@ -15,6 +15,7 @@ namespace InMyAppinion.Models.ProfessorViewModels
         public string LastName { get; set; }
         [Display(Name = "Biografija")]
         public string Biography { get; set; }
+        [Display(Name ="Potvrđen")]
         public bool Validated { get; set; }
 
         [Display(Name = "Kvaliteta")]

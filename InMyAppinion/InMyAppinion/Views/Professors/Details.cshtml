@@ -71,7 +71,11 @@
                     {
                         @foreach (var interes in Model.Interests)
                         {
-                            <div>@interes.Name</div>
+                            <div>
+                                <a asp-action="Search" asp-controller="Search" asp-route-query="@interes.Name">
+                                    @interes.Name
+                                </a>
+                            </div>
                             if (!Model.Interests.Last().Equals(interes))
                             {
                                 @Html.Raw(", ")
@@ -131,9 +135,12 @@
                                 <li>
                                     <div class="well">
                                         <div class="media">
-                                            <a class="pull-left" href="#">
-                                                slika korisnika?
-                                                <img class="media-object" src="#">
+                                            <a class="pull-left" asp-action="Profile" asp-controller="Account" asp-route-id="@review.Author.UserName">
+                                                @review.Author.UserName
+                                                @if (review.Author.Avatar != null)
+                                                {
+                                                    <img class="media-object img-responsive img-circle img-thumbnail" src="@review.Author.Avatar" alt="profilePic">
+                                                }
                                             </a>
                                             <div class="media-body">
                                                 <h4 class="media-heading">@review.Title</h4>
@@ -205,31 +212,45 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="bs-callout bs-callout-danger">
+                    <table class="table table-responsive table-borderless">
+                        <tbody>
+                            <tr>
+                                <td class="pull-left">
+                                    @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
+                                    {
+                                        <a class="btn btn-danger pull-left" asp-action="Create" asp-controller="SubjectReviews" asp-route-id="@Model.ID">Dodaj kritiku</a>
+                                    }
+                                </td>
+                                <td class="pull-right">
+                                    <a class="btn btn-danger pull-right" asp-action="Index">Povratak na listu predmeta</a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="pull-left">
+                                    @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+                                    {
+                                        <br />
+                                        <a class="btn btn-danger pull-left" asp-action="Edit" asp-route-id="@Model.ID">Uredi</a>
+                                    }
+                                </td>
+                                <td class="pull-right">
+                                    @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+                                    {
+                                        <form asp-action="Validate" method="post" class="pull-right">
+                                            <br />
+                                            <label asp-for="@Model.Validated"></label>
+                                            <input asp-for="@Model.Validated" data-subjectid="@Model.ID" class="editajax" />
+                                        </form>
+                                    }
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<div>
-    @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
-    {
-        <div>
-            @Html.DisplayNameFor(model => model.Validated)
-        </div>
-            <div>
-                <form asp-action="Validate" method="post">
-                    <input asp-for="@Model.Validated" data-professorid="@Model.ID" class="editajax" />
-                </form>
-            </div>
-    }
-
-    @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
-    {
-        <a asp-action="Create" asp-controller="ProfessorReviews" asp-route-Id="@Model.ID">Dodaj kritiku</a>@: |
-    }
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-
-
 </div>
 
 
@@ -315,5 +336,16 @@
 @section Styles {
     <link href="@Url.Content("~/css/profile.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/lib/raty/lib/jquery.raty.css")" rel="stylesheet" />
+
+<style>
+    .table-borderless > tbody > tr > td,
+    .table-borderless > tbody > tr > th,
+    .table-borderless > tfoot > tr > td,
+    .table-borderless > tfoot > tr > th,
+    .table-borderless > thead > tr > td,
+    .table-borderless > thead > tr > th {
+        border: none;
+    }
+</style>
 }
 
