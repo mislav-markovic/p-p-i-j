@@ -200,13 +200,16 @@
                         <tbody>
                             @foreach (var sub in Model.Subjects)
                             {
-                                <tr>
-                                    <td>
-                                        <a asp-controller="Subjects" asp-action="Details" asp-route-id="@sub.ID">@sub.Name</a>
-                                    </td>
-                                    <td>@sub.Faculty.University.Name</td>
-                                    <td>@sub.Faculty.Name</td>
-                                </tr>
+                                @if (sub.Validated)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a asp-controller="Subjects" asp-action="Details" asp-route-id="@sub.ID">@sub.Name</a>
+                                        </td>
+                                        <td>@sub.Faculty.University.Name</td>
+                                        <td>@sub.Faculty.Name</td>
+                                    </tr>
+                                }
                             }
                         </tbody>
                     </table>

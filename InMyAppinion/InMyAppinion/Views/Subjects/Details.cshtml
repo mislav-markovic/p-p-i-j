@@ -173,15 +173,10 @@
                             {
                                 <tr>
                                     <td>
-                                        @if (@prof.Validated) 
+                                        @if (prof.Validated) 
                                         {
                                             <a asp-controller="Professors" asp-action="Details" asp-route-id="@prof.ID">@prof.FullName</a>
-                                        } 
-                                        else 
-                                        {
-                                            @prof.FullName
-                                        }
-                                                
+                                        }                                                
                                     </td>
                                 </tr>
                             }
