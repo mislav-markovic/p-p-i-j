@@ -322,7 +322,7 @@
                                             <div class="media">
                                                 <div class="media-body">
                                                     <h4 class="media-heading">
-                                                    @if (comment.ProfessorReviewID != 0)
+                                                    @if (comment.ProfessorReviewID != null)
                                                     {
                                                         <a asp-controller="ProfessorReviews" asp-action="Details" asp-route-id="@comment.ProfessorReviewID">
                                                             @comment.ProfessorReview.Professor.FullName
