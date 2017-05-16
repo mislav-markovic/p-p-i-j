@@ -1,4 +1,6 @@
 @model IEnumerable<InMyAppinion.Models.ProfessorReview>
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = "Index";
@@ -6,14 +8,11 @@
 
 <h2>Index</h2>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
                 <th>
                     @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Text)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.QualityGrade)
@@ -52,9 +51,6 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.QualityGrade)
             </td>
             <td>
@@ -79,15 +75,22 @@
                 @Html.DisplayFor(modelItem => item.Author.UserName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Professor.FirstName)
-                 
-                @Html.DisplayFor(modelItem => item.Professor.LastName)
+                @Html.DisplayFor(modelItem => item.Professor.FullName)
             </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
+                @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+                {
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+                }
+                else
+                {
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.ID">Detalji</a>
+                    </td>
+                }
         </tr>
 }
     </tbody>

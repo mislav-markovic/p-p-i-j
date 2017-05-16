@@ -28,14 +28,21 @@ namespace InMyAppinion.Controllers
         }
 
         // GET: ProfessorReviews
-        public async Task<IActionResult> Index(string username)
+        public async Task<IActionResult> Index(string username, int id = -1)
         {
             var applicationDbContext = _context.ProfessorReview
                 .Include(p => p.Author)
                 .Include(p => p.Professor);
             if (username == null)
             {
-                return View(await applicationDbContext.ToListAsync());
+                if(id != -1)
+                {
+                    return View(await _context.ProfessorReview.Where(r => r.ProfessorID == id).ToListAsync());
+                }
+                else
+                { 
+                    return View(await applicationDbContext.ToListAsync());
+                }
             }
             else
             {

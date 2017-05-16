@@ -140,11 +140,13 @@
                                                 <p class="text-center">@review.Author.UserName</p>
                                             </a>
                                             <div class="media-body">
-                                                <h4 class="media-heading">@review.Title</h4>
-                                                <p class="text-right">@review.Author.UserName</p>
-                                                <p>
-                                                    @Html.Raw(review.Text)
-                                                </p>
+                                                <a asp-action="Details" asp-controller="ProfessorReviews" asp-route-id="@review.ID">
+                                                    <h4 class="media-heading">@review.Title</h4>
+                                                </a>
+                                                @*<p>
+        @Html.Raw(review.Text)
+    </p>
+                                                *@
                                                 <hr />
                                                 <small>Pristupa&#269nost</small>
                                                 <div class="circle" id="circles-helpfulness-@review.ID" style="display: inline"></div>
