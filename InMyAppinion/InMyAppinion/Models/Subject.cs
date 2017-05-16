@@ -25,6 +25,7 @@ namespace InMyAppinion.Models
         [Required(ErrorMessage = "Obaveno je pridružiti fakultet predmetu")]
         public int FacultyID { get; set; }
 
+        [Display(Name = "Fakultet")]
         public Faculty Faculty { get; set; }
         [Display(Name = "Područja")]
         public ICollection<SubjectTagSet> SubjectTagSet { get; set; }

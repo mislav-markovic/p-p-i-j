@@ -1,4 +1,4 @@
-@model IEnumerable<InMyAppinion.Models.Subject>
+﻿@model IEnumerable<InMyAppinion.Models.Subject>
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 
@@ -6,12 +6,17 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Svi predmeti</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+@if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+{
+    <p>
+        <a class="btn btn-primary" asp-action="Create">
+            <span class="glyphicon glyphicon-plus"></span>  Dodaj novi predmet
+        </a>
+    </p>
+}
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -21,29 +26,24 @@
                 @Html.DisplayNameFor(model => model.ShortName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Faculty)
             </th>
             @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
             {
                 <th>@Html.DisplayNameFor(model => model.Validated)</th>
             }
-            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                <a asp-action="Details" asp-route-id="@item.ID">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ShortName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
                 @item.Faculty.ShortName
@@ -51,12 +51,11 @@
             @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
             {
                 <td>@(item.Validated ? "Da" : "Ne")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Uredi</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Obriši</a>
+                </td>
             }
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
         </tr>
 }
     </tbody>

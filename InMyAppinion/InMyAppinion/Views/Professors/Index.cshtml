@@ -1,4 +1,4 @@
-@model IEnumerable<InMyAppinion.Models.Professor>
+﻿@model IEnumerable<InMyAppinion.Models.Professor>
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 
@@ -6,12 +6,17 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Index</h2>
+<h2>Svi profesori</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+@if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+{
+    <p>
+        <a class="btn btn-primary" asp-action="Create">
+            <span class="glyphicon glyphicon-plus"></span>  Dodaj novog profesora
+        </a>
+    </p>
+}
+<table class="table table-striped">
     <thead>
         <tr>
             <th>
@@ -40,11 +45,20 @@
             {
                 <td>@(item.Validated ? "Da" : "Ne")</td>
             }
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
+            @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+            {
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            }
+            else
+            {
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.ID">Detalji</a>
+                </td>
+            }
         </tr>
 }
     </tbody>

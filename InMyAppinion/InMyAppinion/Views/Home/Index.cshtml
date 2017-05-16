@@ -134,7 +134,7 @@
             <form asp-controller="Search" asp-action="Search" method="GET">
                 <div id="custom-search-input">
                     <div class="input-group col-md-12">
-                        <input type="text" class="form-control input-lg" placeholder="Želim znati..." />
+                        <input name="query" type="text" class="form-control input-lg" placeholder="Želim znati..." />
                         <span class="input-group-btn">
                             <button class="btn btn-info btn-lg" type="submit">
                                 <span class="glyphicon glyphicon-search"></span>
@@ -152,7 +152,7 @@
 
 <div class="main-center row">
     <h2>Područja</h2>
-    <div id="cloud"></div>
+    <div class="main-center" id="cloud"></div>
 </div>
 
 <br />
@@ -218,7 +218,7 @@
                 var values = data;
 
                 $('#cloud').jQCloud(values, {
-                    width: 800,
+                    width: 600,
                     height: 200
                 });
             });
