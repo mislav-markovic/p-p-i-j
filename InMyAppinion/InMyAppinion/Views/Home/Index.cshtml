@@ -1,4 +1,5 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -106,6 +107,8 @@
         </ul>
     </div>
 </div>*@
+
+@*
 <div>
     <a asp-action="Index" asp-controller="Professors">Professors</a> <br />
     <a asp-action="Index" asp-controller="Cities">Cities</a> <br />
@@ -117,7 +120,108 @@
     <a asp-action="Index" asp-controller="SubjectReviews">Review a subject</a> <br />
     <a asp-action="ProfessorRankings" asp-controller="Rank">Professor ranking</a> <br />
     <a asp-action="SubjectRankings" asp-controller="Rank">SUbject ranking</a> <br />
-    @*@Html.ActionLink("Professors","Index","Professors") <br />
+    @Html.ActionLink("Professors","Index","Professors") <br />
     @Html.ActionLink("Cities", "Index", "Cities") <br />
-    @Html.ActionLink("Universities", "Index", "Universities") <br />*@
+    @Html.ActionLink("Universities", "Index", "Universities") <br />
 </div>
+*@
+
+
+<div class="container">
+    <div class="row main-center">
+        <div>
+            <h3>Pretraži profesore, predmete i područja koja te zanimaju</h3>
+            <form asp-controller="Search" asp-action="Search" method="GET">
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control input-lg" placeholder="Želim znati..." />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-lg" type="submit">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<br />
+<hr />
+
+<div class="main-center row">
+    <h2>Područja</h2>
+    <div id="cloud"></div>
+</div>
+
+<br />
+<hr />
+
+<div class="main-center">
+    <a asp-action="SubjectRankings" asp-controller="Rank"><h3>Najbolji predmeti</h3></a>
+
+    <a asp-action="ProfessorRankings" asp-controller="Rank"><h3>Najbolji profesori</h3></a>
+
+    <a asp-action="Index" asp-controller="Subjects"><h3>Svi predmeti</h3></a>
+
+    <a asp-action="Index" asp-controller="Professors"><h3>Svi profesori</h3></a>
+</div>
+
+@section styles{
+    <style>
+        #custom-search-input {
+            padding: 3px;
+            border: solid 1px #E4E4E4;
+            border-radius: 6px;
+            background-color: #fff;
+        }
+
+            #custom-search-input input {
+                border: 0;
+                box-shadow: none;
+            }
+
+            #custom-search-input button {
+                margin: 2px 0 0 0;
+                background: none;
+                box-shadow: none;
+                border: 0;
+                color: #666666;
+                padding: 0 8px 0 10px;
+                border-left: solid 1px #ccc;
+            }
+
+                #custom-search-input button:hover {
+                    border: 0;
+                    box-shadow: none;
+                    border-left: solid 1px #ccc;
+                }
+
+            #custom-search-input .glyphicon-search {
+                font-size: 23px;
+            }
+
+        .main-center {
+            width: 75%;
+            margin: auto;
+            display: block;
+            text-align: center;
+        }
+    </style>
+}
+
+@section scripts {
+<script type="text/javascript">
+        $(document).ready(function ($) {
+            $.get('@Url.Action("GetCloud", "Subjects")', function (data) {
+                var values = data;
+
+                $('#cloud').jQCloud(values, {
+                    width: 800,
+                    height: 200
+                });
+            });
+        });
+</script>
+}
