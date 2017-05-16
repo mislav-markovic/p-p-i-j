@@ -1,0 +1,86 @@
+﻿    #custom-search-input {
+        padding: 3px;
+        border: solid 1px #E4E4E4;
+        border-radius: 6px;
+        background-color: #fff;
+    }
+
+    #custom-search-input input {
+        border: 0;
+        box-shadow: none;
+    }
+
+    #custom-search-input button {
+        margin: 2px 0 0 0;
+        background: none;
+        box-shadow: none;
+        border: 0;
+        color: #666666;
+        padding: 0 8px 0 10px;
+        border-left: solid 1px #ccc;
+    }
+
+        #custom-search-input button:hover {
+            border: 0;
+            box-shadow: none;
+            border-left: solid 1px #ccc;
+        }
+
+    #custom-search-input .glyphicon-search {
+        font-size: 23px;
+    }
+
+    .main-center {
+        width: 75%;
+        margin: auto;
+        display: block;
+        text-align: center;
+    }
+
+/*Slider*/
+
+
+#myCarousel .nav a small {
+    display: block;
+}
+
+#myCarousel .nav {
+    background: #eee;
+}
+
+.nav-justified > li > a {
+    border-radius: 0px;
+}
+
+.nav-pills > li[data-slide-to="0"].active a {
+    background-color: #16a085;
+}
+
+.nav-pills > li[data-slide-to="1"].active a {
+    background-color: #e67e22;
+}
+
+.nav-pills > li[data-slide-to="2"].active a {
+    background-color: #2980b9;
+}
+
+.nav-pills > li[data-slide-to="3"].active a {
+    background-color: #8e44ad;
+}
+
+/*Jumbotron*/
+
+.jumbotron {
+    margin-bottom: 20px;
+    margin-top: 20px;
+    position: center;
+}
+
+.pricing {
+    text-align: center;
+}
+
+/*Page Header*/
+.page-header {
+    text-align: center;
+}

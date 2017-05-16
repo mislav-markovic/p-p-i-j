@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Početna stranica";
 }
 
 @*<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
@@ -127,88 +127,164 @@
 *@
 
 
-<div class="container">
-    <div class="row main-center">
-        <div>
-            <h3>Pretraži profesore, predmete i područja koja te zanimaju</h3>
-            <form asp-controller="Search" asp-action="Search" method="GET">
-                <div id="custom-search-input">
-                    <div class="input-group col-md-12">
-                        <input name="query" type="text" class="form-control input-lg" placeholder="Želim znati..." />
-                        <span class="input-group-btn">
-                            <button class="btn btn-info btn-lg" type="submit">
-                                <span class="glyphicon glyphicon-search"></span>
-                            </button>
-                        </span>
+
+<!-------------------------------------------------------------------------------------------------->
+
+<div class="row">
+    <div class="container">
+        <div id="myCarousel" class="carousel slide" data-ride="carousel">
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="~/images/inmyappinion.png">
+                    <div class="carousel-caption">
+                        <h3>
+                            Znanje o znanju
+                        </h3>
+                        <p>
+                            Dobrodošli na InMyAppinion, mjesto gdje su vaša mišljenja i iskustva bitna!
+                            Studirali ste na nekom od hrvatskih fakulteta? Završili ste super tečaj i želite to podijeliti sa ostalima?
+                            Ostavite kritike i ocjene na kolegije i profesore i podijelite svoje mišljenje sa svijetom!
+                        </p>
                     </div>
                 </div>
-            </form>
+                <!-- End Item -->
+                <div class="item">
+                    <img src="~/images/pronadi.png">
+                    <div class="carousel-caption">
+                        <h3>
+                            Pronađi svoje područje
+                        </h3>
+                        <p>
+                            Zanima te programiranje? Ili možda fizika i kemija? Više vidiš sebe kao filozofa ili umjetnika? Bez obzira na
+                            tvoje interese kod nas možeš pretražiti područja svoje zanimacije i saznati što ti se nudi kako bi ostvario svoje snove!
+                        </p>
+                    </div>
+                </div>
+                <!-- End Item -->
+                <div class="item">
+                    <img src="~/images/ocijeni.png">
+                    <div class="carousel-caption">
+                        <h3>
+                            Zanimljivost, Korisnost, Kvaliteta
+                        </h3>
+                        <p>
+                            Ostavi ocjene na profesore i predmete i pomozi ostalima da prepoznaju kvalitetu u obrazovnom sustavu.
+                            Smatarš da kritike drugih korisnika nisu ispravne? Ocijeni i njih i pomozi kvaliteti i istini da bude viđena!
+                        </p>
+                    </div>
+                </div>
+                <!-- End Item -->
+            </div>
+            <!-- End Carousel Inner -->
+            <ul class="nav nav-pills nav-justified">
+                <li data-target="#myCarousel" data-slide-to="0" class="active">
+                    <a href="#">
+                        InMyAppinion<small>
+                            O nama
+                        </small>
+                    </a>
+                </li>
+                <li data-target="#myCarousel" data-slide-to="1">
+                    <a href="#">
+                        Pronađi<small>
+                            svoje područje
+                        </small>
+                    </a>
+                </li>
+                <li data-target="#myCarousel" data-slide-to="2">
+                    <a href="#">
+                        Ocijeni<small>
+                            profesore i kolegije
+                        </small>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- End Carousel -->
+    </div>
+</div>
+
+<div class="row">
+    <div class="container">
+        <div class="jumbotron">
+            <div class="row main-center">
+                <h1>Pretraži</h1>
+                <p>profesore, predmete i područja koja te zanimaju</p>
+                <div>
+                    <form asp-controller="Search" asp-action="Search" method="GET">
+                        <div id="custom-search-input">
+                            <div class="input-group col-md-12">
+                                <input name="query" type="text" class="form-control input-lg" placeholder="Želim znati..." />
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info btn-lg" type="submit">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                    </button>
+                                </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<br />
-<hr />
-
-<div class="main-center row">
-    <h2>Područja</h2>
-    <div class="main-center" id="cloud"></div>
+<div class="row">
+    <div class="container">
+        <div class="jumbotron">
+            <div class="row main-center">
+                <h1>Pregled</h1>
+                <p>svih dostupnih područja</p>
+                <div class="main-center" id="cloud"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<br />
-<hr />
-
-<div class="main-center">
-    <a asp-action="SubjectRankings" asp-controller="Rank"><h3>Najbolji predmeti</h3></a>
-
-    <a asp-action="ProfessorRankings" asp-controller="Rank"><h3>Najbolji profesori</h3></a>
-
-    <a asp-action="Index" asp-controller="Subjects"><h3>Svi predmeti</h3></a>
-
-    <a asp-action="Index" asp-controller="Professors"><h3>Svi profesori</h3></a>
+<div class="row">
+    <div class="page-header">
+        <h1>Kako sve to funkcionira</h1>
+    </div>
+    <div class="container">
+        <div class="row pricing">
+            <div class="col-md-6">
+                <div class="well">
+                    <h3><b>Zanima te profesor?</b></h3>
+                    <hr>
+                    <p><b>Zanimaju te najbolje ocijenjeni profesori?</b></p>
+                    <hr>
+                    <p><b>Pogledaj <a asp-action="ProfessorRankings" asp-controller="Rank">najbolje profesore</a></b></p>
+                    <hr>
+                    <p><b>Pogledaj pregled svih profesora <a asp-action="Index" asp-controller="Professors">ovdje</a></b></p>
+                    <hr>
+                    <p><b>Ne pronalaziš profesora koji te zanima?</b></p>
+                    <hr>
+                    <p><b><a class="btn btn-default btn-block" asp-action="Create" asp-controller="Professors">Predloži nam njegov unos!</a></b></p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="well">
+                    <h3><b>Zanima te predmet?</b></h3>
+                    <hr>
+                    <p><b>Zanimaju te najbolje ocijenjeni predmeti?</b></p>
+                    <hr>
+                    <p><b>Pogledaj <a asp-action="SubjectRankings" asp-controller="Rank">najbolje predmete</a></b></p>
+                    <hr>
+                    <p><b>Pogledaj pregled svih predmeta <a asp-action="Index" asp-controller="Subjects">ovdje</a></b></p>
+                    <hr>
+                    <p><b>Ne pronalaziš predmet koji te zanima?</b></p>
+                    <hr>
+                    <p><b><a class="btn btn-default btn-block" asp-action="Create" asp-controller="Subjects">Predloži nam njegov unos!</a></b></p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+    
 
 @section styles{
-    <style>
-        #custom-search-input {
-            padding: 3px;
-            border: solid 1px #E4E4E4;
-            border-radius: 6px;
-            background-color: #fff;
-        }
-
-            #custom-search-input input {
-                border: 0;
-                box-shadow: none;
-            }
-
-            #custom-search-input button {
-                margin: 2px 0 0 0;
-                background: none;
-                box-shadow: none;
-                border: 0;
-                color: #666666;
-                padding: 0 8px 0 10px;
-                border-left: solid 1px #ccc;
-            }
-
-                #custom-search-input button:hover {
-                    border: 0;
-                    box-shadow: none;
-                    border-left: solid 1px #ccc;
-                }
-
-            #custom-search-input .glyphicon-search {
-                font-size: 23px;
-            }
-
-        .main-center {
-            width: 75%;
-            margin: auto;
-            display: block;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="@Url.Content("~/css/home.css")" />
 }
 
 @section scripts {
@@ -224,4 +300,30 @@
             });
         });
 </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#myCarousel').carousel({
+                interval: 4000
+            });
+
+            var clickEvent = false;
+            $('#myCarousel').on('click', '.nav a', function () {
+                clickEvent = true;
+                $('.nav li').removeClass('active');
+                $(this).parent().addClass('active');
+            }).on('slid.bs.carousel', function (e) {
+                if (!clickEvent) {
+                    var count = $('.nav').children().length - 1;
+                    var current = $('.nav li.active');
+                    current.removeClass('active').next().addClass('active');
+                    var id = parseInt(current.data('slide-to'));
+                    if (count == id) {
+                        $('.nav li').first().addClass('active');
+                    }
+                }
+                clickEvent = false;
+            });
+        });
+    </script>
 }
