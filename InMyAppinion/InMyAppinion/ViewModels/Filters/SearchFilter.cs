@@ -72,19 +72,19 @@ namespace InMyAppinion.ViewModels.Filters
                 filter.CityName = arr[0];
                 filter.FacultyName = arr[1];
                 filter.ProfessorName = arr[2];
-                if (arr[3] != null) {
+                if (arr[3] != null && arr[3] != "") {
                     filter.MinReview =Convert.ToInt32(arr[3]);
                 }
                 else
                 {
-                    filter.MinReview = null;
+                    filter.MinReview = 0;
                 }
-                if (arr[4].Substring(1, 1) != null)
+                if (arr[4] != null && arr[4] != "")
                 {
                     filter.MaxReview = Convert.ToInt32(arr[4]);
                 }
                 else {
-                    filter.MinReview = null;
+                    filter.MaxReview = Int16.MaxValue;
                 }
             }
             catch { } //to do: log...
@@ -92,34 +92,58 @@ namespace InMyAppinion.ViewModels.Filters
         }
 
         public SearchFilter ApplyFilter() {
+            if(CityName == "" && FacultyName == "" && ProfessorName == "" && MinReview == 0 && MaxReview == Int16.MaxValue)
+            {
+                return this;
+            }
 
             if (CityName != "") {
                 Cities = Cities.Where(city=>city.Name.ToLower().Contains(CityName.ToLower()));
+                Faculties = Cities.SelectMany(c => c.Universities).SelectMany(u => u.Faculties);
+                Subjects = Subjects.Where(s => Faculties.Contains(s.Faculty));
+                var professors = Subjects.SelectMany(s => s.Professors).Select(s => s.Professor);
+                Professors = Professors.Where(p => professors.Contains(p));
             }
             if (FacultyName != "") {
                 Faculties = Faculties.Where(faculty => faculty.Name.ToLower().Contains(FacultyName.ToLower()));
+                Subjects = Subjects.Where(s => Faculties.Contains(s.Faculty));
+                var professors = Subjects.SelectMany(s => s.Professors).Select(s => s.Professor);
+                Professors = Professors.Where(p => professors.Contains(p));
             }
             if (ProfessorName != "") {
                 Professors = Professors.Where(professor => professor.FullName.ToLower().Contains(ProfessorName.ToLower()));
+                var subjects = Professors.SelectMany(p => p.Subjects).Select(p => p.Subject);
+                Subjects = Subjects.Where(s => subjects.Contains(s));
             }
             if (MinReview.HasValue) {
-                Professors = Professors.Where(professor => professor.Reviews.Count() > MinReview);
-                Subjects = Subjects.Where(subject => subject.Reviews.Count() > MinReview);
+                Professors = Professors.Where(professor => professor.Reviews.Count >= MinReview);
+                Subjects = Subjects.Where(subject => subject.Reviews.Count >= MinReview);
             }
             if (MaxReview.HasValue) {
-                Professors = Professors.Where(professor => professor.Reviews.Count() < MaxReview);
-                Subjects = Subjects.Where(subject => subject.Reviews.Count() < MaxReview);
+                Professors = Professors.Where(professor => professor.Reviews.Count <= MaxReview);
+                Subjects = Subjects.Where(subject => subject.Reviews.Count <= MaxReview);
             }
             return this;
         }
 
         public SearchFilter Initialize(ApplicationDbContext _context) {
-            Cities = _context.City.ToList();
+            Cities = _context.City
+                     .Include(c => c.Universities)
+                     .ThenInclude(c => c.Faculties)
+                     .ToList();
             Faculties = _context.Faculty.ToList();
             ProfessorReviews = _context.ProfessorReview.ToList();
             SubjectReviews = _context.SubjectReview.ToList();
-            Professors = _context.Professor.Where(p=>p.Validated).Include(p => p.Reviews).ToList();
-            Subjects = _context.Subject.Where(s=>s.Validated).Include(s => s.Reviews).ToList();
+            Professors = _context.Professor.Where(p=>p.Validated)
+                         .Include(p => p.Reviews)
+                         .Include(p => p.Subjects)
+                         .ThenInclude(p => p.Subject)
+                         .ToList();
+            Subjects = _context.Subject.Where(s=>s.Validated)
+                       .Include(s => s.Reviews)
+                       .Include(s => s.Professors)
+                       .ThenInclude(s => s.Professor)
+                       .ToList();
             return this;
         }
     }
