@@ -203,6 +203,7 @@ namespace InMyAppinion.Controllers
             {
                 try
                 {
+                    subjectReview.TotalGrade = calculateTotalGrade(subjectReview);
                     _context.Update(subjectReview);
                     await _context.SaveChangesAsync();
                 }
