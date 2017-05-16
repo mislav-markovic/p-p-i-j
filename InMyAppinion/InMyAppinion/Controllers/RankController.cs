@@ -97,7 +97,7 @@ namespace InMyAppinion.Controllers
                     .ThenInclude(s => s.Subject)
                         .ThenInclude(s => s.SubjectTagSet)
                             .ThenInclude(s => s.SubjectTag)
-                .AsNoTracking().Where(p => p.Reviews.Count > 0).ToList();
+                .AsNoTracking().Where(p => p.Reviews.Count > 0 && p.Validated).ToList();
             List<ProfessorDetailViewModel> profList = new List<ProfessorDetailViewModel>();
 
             foreach(var professor in query)
@@ -182,7 +182,7 @@ namespace InMyAppinion.Controllers
                .Include(s => s.Faculty)
                    .ThenInclude(f => f.University)
                        .ThenInclude(u => u.City)
-                .AsNoTracking().Where(s => s.Reviews.Count > 0).ToList();
+                .AsNoTracking().Where(s => s.Reviews.Count > 0 && s.Validated).ToList();
 
             List<SubjectDetailViewModel> subjectList = new List<SubjectDetailViewModel>();
 
