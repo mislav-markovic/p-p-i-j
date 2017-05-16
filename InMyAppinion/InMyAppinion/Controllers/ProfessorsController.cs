@@ -63,7 +63,13 @@ namespace InMyAppinion.Controllers
                             .ThenInclude(f => f.University)
                                 .ThenInclude(u => u.City)
                 .SingleOrDefaultAsync(m => m.ID == id);
+
             if (professor == null)
+            {
+                return NotFound();
+            }
+
+            if (!professor.Validated && !await _authorizationService.AuthorizeAsync(User, "CanModerate"))
             {
                 return NotFound();
             }
