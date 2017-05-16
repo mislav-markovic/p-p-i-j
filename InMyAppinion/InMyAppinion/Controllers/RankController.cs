@@ -89,25 +89,30 @@ namespace InMyAppinion.Controllers
             }
         }
 
-        public IActionResult ProfessorRankings(int sort = 5)
+        public IActionResult ProfessorRankings(int sort = 5, int tag = -1)
         {
             var query = _context.Professor
                 .Include(p => p.Reviews)
-                .Include(s => s.Subjects).ThenInclude(s => s.Subject)
+                .Include(s => s.Subjects)
+                    .ThenInclude(s => s.Subject)
+                        .ThenInclude(s => s.SubjectTagSet)
+                            .ThenInclude(s => s.SubjectTag)
                 .AsNoTracking().Where(p => p.Reviews.Count > 0).ToList();
             List<ProfessorDetailViewModel> profList = new List<ProfessorDetailViewModel>();
 
             foreach(var professor in query)
             {
+                var subjects = professor.Subjects.Select(p => p.Subject);
                 var model = new ProfessorDetailViewModel
                 {
                     ID = professor.ID,
                     FirstName = professor.FirstName,
                     LastName = professor.LastName,
                     Reviews = professor.Reviews,
-                    Subjects = professor.Subjects.Select(set => set.Subject).ToList(),
+                    Subjects = subjects.ToList(),
                     Biography = professor.Biography,
                     Validated = professor.Validated,
+                    Interests = subjects.SelectMany(s => s.SubjectTagSet).Select(s => s.SubjectTag).Distinct().ToList(),
                     AvgAccessibility = calcAccessibility(professor.Reviews),
                     AvgInteractivity = calcInteractivity(professor.Reviews),
                     AvgMentoring = calcMentoring(professor.Reviews),
@@ -116,6 +121,11 @@ namespace InMyAppinion.Controllers
                 };
 
                 profList.Add(model);
+            }
+
+            if(tag != -1)
+            {
+                profList = profList.Where(p => p.Interests.Any(i => i.ID == tag)).ToList();
             }
 
             System.Linq.Expressions.Expression<Func<ProfessorDetailViewModel, object>> orderSelector = null;
@@ -144,7 +154,15 @@ namespace InMyAppinion.Controllers
             var q = profList.AsQueryable();
             var sorted = q.OrderByDescending(orderSelector).Take(10).ToList();
 
-            return View(new ProfessorRankingViewModel { Professors = sorted});
+            var selectList = new SelectList(_context.SubjectTag, "ID", "Name");
+            if (tag != -1)
+            {
+                var selected = selectList.Where(i => i.Value.Equals(tag.ToString())).First();
+                selected.Selected = true;
+            }
+
+            ViewData["SubjectTag"] = selectList;
+            return View(new ProfessorRankingViewModel { Professors = sorted, sort = sort, tag = tag});
         }
 
         public IActionResult SubjectRankings(int sort = 4, int tag = -1)
@@ -221,9 +239,18 @@ namespace InMyAppinion.Controllers
             var q = subjectList.AsQueryable();
             var sorted = q.OrderByDescending(orderSelector).Take(10).ToList();
 
-            ViewData["SubjectTag"] = new SelectList(_context.SubjectTag, "ID", "Name");
+            var selectList = new SelectList(_context.SubjectTag, "ID", "Name");
+            if(tag != -1)
+            {
+                var selected = selectList.Where(i => i.Value.Equals(tag.ToString())).First();
+                selected.Selected = true;
+            }
+
+            ViewData["SubjectTag"] = selectList;
             return View(new SubjectRankingViewModel { Subjects = sorted, tag = tag, sort = sort });
         }
+
+#region gradeHelpers
 
         private double calcQuality(ICollection<ProfessorReview> reviews)
         {
@@ -280,5 +307,8 @@ namespace InMyAppinion.Controllers
         {
             return reviews.Count() != 0 ? Math.Round((double)reviews.Select(r => r.TotalGrade).Average(), 2) : 0;
         }
+
+#endregion gradeHelpers
+
     }
 }

@@ -1,15 +1,15 @@
 @using InMyAppinion.ViewModels
 @model SubjectRankingViewModel
 @{
-    ViewData["Title"] = "Rankings";
+    ViewData["Title"] = "Najbolji predmeti";
 }
 
-<h2>Rankings</h2>
+<h2>Kolegiji</h2>
 
 <form asp-action="SubjectRankings" method="get">
     <p>
         <select name="tag" asp-items="ViewBag.SubjectTag" selected="Model.tag" asp-route-sort="Model.sort"><option value="-1"></option></select>
-        <input type="submit" value="Filtriraj po tagu" class="btn btn-default" />
+        <input type="submit" value="Filtriraj područja" class="btn btn-info btn-xs" />
     </p>
 </form>
 
