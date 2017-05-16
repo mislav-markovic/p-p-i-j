@@ -14,25 +14,23 @@
         <a asp-for="Details" asp-controller="Subjects" asp-route-id="@Model.SubjectID"></a>
         <h2>@Model.Subject.Name</h2>
     </div>
+    <div class="col-md-2 margins">
     @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
     {
-        <div class="col-md-2 margins">
-            <form asp-action="Delete">
-                <input type="hidden" name="id" value="@Model.ID" />
-                <button type="submit" class="btn btn-danger del" title="Obriši recenziju">
-                    <span class="glyphicon glyphicon-trash"></span>
-                </button>
-            </form>
-            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info pull-right"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
-        </div>
-    }
-    else if(User.Identity.Name == Model.Author.UserName)
-    {
-        <div class="col-md-2 margins">
-            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info pull-right"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
-        </div>
 
+        <form asp-action="Delete">
+            <input type="hidden" name="id" value="@Model.ID" />
+            <button type="submit" class="btn btn-danger del" title="Obriši recenziju">
+                <span class="glyphicon glyphicon-trash"></span>
+            </button>
+        </form>
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
     }
+    else if (User.Identity.Name == Model.Author.UserName)
+    {
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
+    }
+    </div>
 </div>
 
 <div>

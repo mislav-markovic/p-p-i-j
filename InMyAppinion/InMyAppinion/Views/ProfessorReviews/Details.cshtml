@@ -15,27 +15,23 @@
             <h2>@Model.Professor.FullName</h2>
         </a>
     </div>
-    @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
-    {
-        <div class="col-md-2 margins">
+    <div class="col-md-2 margins">
+        @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+        {
             <form asp-action="Delete">
                 <input type="hidden" name="id" value="@Model.ID" />
                 <button type="submit" class="btn btn-danger del" title="Obriši recenziju">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
             </form>
-            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info pull-right"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
-        </div>
-    }
-    else if(User.Identity.Name == Model.Author.UserName)
-    {
-        <div class="clo-md-2 margins">
-            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info pull-right"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
-        </div>
-
-    }
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
+        }
+        else if (User.Identity.Name == Model.Author.UserName)
+        {
+            <a asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-info"><span class="glyphicon glyphicon-pencil">Uredi</span></a>
+        }
+    </div>
 </div>
-
 
 
 <div class="well">
@@ -108,10 +104,11 @@
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </button>
                             }
+                            
                             <h5><span>@await UserManager.FindByIdAsync(c.AuthorID)</span>, @c.Timestamp, <span id="points-comment-@c.ID">@c.Points</span></h5>
                             <p class="comment">@c.Text</p>
                             @if (await AuthorizationService.AuthorizeAsync(User, "CanReview") && (User.Identity.Name != c.Author.UserName))
-                {
+                            {
                                 <button class="btn btn-sm btn-success voteajax-comment glyphicon glyphicon-thumbs-up" id="voteup-comment-@c.ID" data-vote="true" data-commentid="@c.ID"></button>
                                 <button class="btn btn-sm btn-danger voteajax-comment glyphicon glyphicon-thumbs-down" id="votedown-comment-@c.ID" data-vote="false" data-commentid="@c.ID"></button>
                             }
