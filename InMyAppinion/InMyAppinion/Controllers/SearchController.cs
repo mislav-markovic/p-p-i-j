@@ -56,7 +56,7 @@ namespace InMyAppinion.Controllers
                     {
                         tmp.Add(subject);
                     }
-                    model.subservmod.subjects = tmp;
+                    model.subservmod.subjects = tmp.OrderBy(s => s.Name);
 
 
                     // professor part
@@ -64,7 +64,7 @@ namespace InMyAppinion.Controllers
                     var x = _context.Subject.Where(s => tmp.Contains(s)).SelectMany(s => s.Professors).Select(s => s.Professor).Where(p => p.Validated).ToList();
                     profs.AddRange(x);
 
-                    model.profservmod.professors = profs;
+                    model.profservmod.professors = profs.OrderBy(p => p.FullName);
                 }
                 //model.subjects = _context.Subject.ToList();
                 catch {

@@ -138,11 +138,13 @@ namespace InMyAppinion.ViewModels.Filters
                          .Include(p => p.Reviews)
                          .Include(p => p.Subjects)
                          .ThenInclude(p => p.Subject)
+                         .OrderBy(p => p.FullName)
                          .ToList();
             Subjects = _context.Subject.Where(s=>s.Validated)
                        .Include(s => s.Reviews)
                        .Include(s => s.Professors)
                        .ThenInclude(s => s.Professor)
+                       .OrderBy(s => s.Name)
                        .ToList();
             return this;
         }
