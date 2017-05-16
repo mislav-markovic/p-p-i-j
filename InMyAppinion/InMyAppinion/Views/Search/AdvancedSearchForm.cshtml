@@ -1,0 +1,47 @@
+﻿@model InMyAppinion.ViewModels.Filters.SearchFilter
+@{
+    ViewData["Title"] = "Napredno pretraživanje";
+}
+
+<h2>Napredno pretraživanje</h2>
+
+<form asp-action="Advanced" asp-controller="Search">
+    <div class="form-horizontal">
+        <hr />
+        <div class="form-group">
+            <label asp-for="CityName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select name="array[]" class="form-control" asp-items="@ViewBag.cities" ><option></option></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="FacultyName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select name="array[]" class="form-control" asp-items="@ViewBag.faculties" ><option></option></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ProfessorName" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select name="array[]" class="form-control" asp-items="@ViewBag.professors"><option></option></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MinReview" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input name="array[]" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MaxReview" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input name="array[]" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Pretraži" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
