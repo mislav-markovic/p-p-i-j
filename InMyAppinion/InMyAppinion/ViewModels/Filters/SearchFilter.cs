@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using InMyAppinion.Models;
 using System.ComponentModel;
 using InMyAppinion.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace InMyAppinion.ViewModels.Filters
 {
@@ -78,7 +79,7 @@ namespace InMyAppinion.ViewModels.Filters
                 {
                     filter.MinReview = null;
                 }
-                if (arr[4] != null)
+                if (arr[4].Substring(1, 1) != null)
                 {
                     filter.MaxReview = Convert.ToInt32(arr[4]);
                 }
@@ -103,11 +104,11 @@ namespace InMyAppinion.ViewModels.Filters
             }
             if (MinReview.HasValue) {
                 Professors = Professors.Where(professor => professor.Reviews.Count() > MinReview);
-                //Subjects = Subjects.Where(subject => subject.Reviews.Count() > MinReview);
+                Subjects = Subjects.Where(subject => subject.Reviews.Count() > MinReview);
             }
             if (MaxReview.HasValue) {
-                Professors = Professors.Where(professor => professor.Reviews.Count() > MaxReview);
-                //Subjects = Subjects.Where(subject => subject.Reviews.Count() > MaxReview);
+                Professors = Professors.Where(professor => professor.Reviews.Count() < MaxReview);
+                Subjects = Subjects.Where(subject => subject.Reviews.Count() < MaxReview);
             }
             return this;
         }
@@ -117,8 +118,8 @@ namespace InMyAppinion.ViewModels.Filters
             Faculties = _context.Faculty.ToList();
             ProfessorReviews = _context.ProfessorReview.ToList();
             SubjectReviews = _context.SubjectReview.ToList();
-            Professors = _context.Professor.Where(p=>p.Validated).ToList();
-            Subjects = _context.Subject.Where(s=>s.Validated).ToList();
+            Professors = _context.Professor.Where(p=>p.Validated).Include(p => p.Reviews).ToList();
+            Subjects = _context.Subject.Where(s=>s.Validated).Include(s => s.Reviews).ToList();
             return this;
         }
     }
