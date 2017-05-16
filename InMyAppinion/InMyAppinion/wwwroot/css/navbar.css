@@ -7,11 +7,14 @@
 }*/
 
 .navbar-bootsnipp {
-    background-color: rgb(255, 255, 255);
-    border-color: rgb(95, 176, 228);
+    background-color: darkgreen;
+    border-color: gray;
     border-radius: 0px;
     margin-bottom: 0px;
     z-index: 100;
+    -webkit-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.16);
+    -moz-box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.16);
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.16);
 }
 
     .navbar-bootsnipp:nth-of-type(2) {
@@ -35,14 +38,13 @@
     }
 
     .navbar-bootsnipp .navbar-brand {
-        color: rgb(95, 176, 228);
-        font-weight: 900;
+        color: white;
         letter-spacing: 2px;
     }
 
     .navbar-bootsnipp .navbar-nav > li > a {
-        border: 0px solid rgb(95, 176, 228);
-        color: rgb(120, 120, 120);
+        border: 0px solid white;
+        color: white;
         padding: 15px 14px;
     }
 
@@ -56,7 +58,7 @@
     .navbar-bootsnipp .navbar-nav > li:not(.disabled) > a:hover,
     .navbar-bootsnipp .navbar-nav > li:not(.disabled) > a:focus {
         border-left-width: 5px;
-        color: rgb(95, 176, 228);
+        color: rgb(255, 255, 255);
         padding-left: 10px;
     }
 
@@ -78,8 +80,8 @@
     }
 
     .navbar-bootsnipp .navbar-nav > li > .dropdown-menu > li > a {
-        border-left: 0px solid rgb(95, 176, 228);
-        color: rgb(120, 120, 120);
+        border-left: 0px solid darkgreen;
+        color: black;
         font-size: 16px;
         font-weight: 400;
         padding: 10px 20px;
@@ -89,7 +91,7 @@
         .navbar-bootsnipp .navbar-nav > li > .dropdown-menu > li.active > a,
         .navbar-bootsnipp .navbar-nav > li > .dropdown-menu > li > a:hover,
         .navbar-bootsnipp .navbar-nav > li > .dropdown-menu > li > a:focus {
-            background-color: rgb(245, 245, 245);
+            background-color: white;
             border-left-width: 5px;
             padding-left: 15px;
         }
@@ -231,4 +233,17 @@
     width: 100%;
     text-align: left;
     padding: 0;
+}
+
+.dropdown-menu {
+    background-color: whitesmoke;
+}
+
+.nav .open > a, .nav .open > a:hover, .nav .open > a:focus {
+    background-color: inherit;
+    border-color: inherit;
+}
+
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: darkgreen;
 }

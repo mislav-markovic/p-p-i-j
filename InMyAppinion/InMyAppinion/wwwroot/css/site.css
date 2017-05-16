@@ -15,6 +15,9 @@ h1, h2, h3, h4, h5, h6 {
     padding-left: 15px;
     padding-right: 15px;
     background-color: white;
+    -webkit-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.5);
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
