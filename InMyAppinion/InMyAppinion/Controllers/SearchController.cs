@@ -35,7 +35,7 @@ namespace InMyAppinion.Controllers
                     // subject part
                     model.subservmod.tags = _context.SubjectTag.Where(o => o.Name.ToLower().Contains(query.ToLower())).ToList();
                     var tmp = new HashSet<Models.Subject>();
-                    var subjects = _context.Subject.ToList();
+                    var subjects = _context.Subject.Include(s => s.Faculty).ToList();
                     model.query = query;
                     foreach (var tag in model.subservmod.tags)
                     {

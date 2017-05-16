@@ -35,7 +35,7 @@ else {
             foreach (var sts in Model.subservmod.subjects)
             {
                 //<span>beufcbwekjn</span> <br />
-                <a asp-action="Details" asp-controller="Subjects" asp-route-id="@sts.ID">@sts.Name </a>
+                <a asp-action="Details" asp-controller="Subjects" asp-route-id="@sts.ID">@sts.Name (@sts.Faculty.ShortName)</a>
                 <br />
             }
         }
