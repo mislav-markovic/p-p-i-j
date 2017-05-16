@@ -115,7 +115,7 @@ namespace InMyAppinion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,Points,AuthorID,ProfessorID")] ProfessorReview professorReview, ICollection<int> tags)
+        public async Task<IActionResult> Create([Bind("Title,Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,Points,AuthorID,ProfessorID")] ProfessorReview professorReview, ICollection<int> tags)
         {
             if (professorReview.MentorGrade == 0) professorReview.MentorGrade = null;
             professorReview.TotalGrade = calculateTotalGrade(professorReview);
@@ -175,7 +175,7 @@ namespace InMyAppinion.Controllers
                 return NotFound();
             }
 
-            var professorReview = await _context.ProfessorReview.SingleOrDefaultAsync(m => m.ID == id);
+            var professorReview = await _context.ProfessorReview.Include(p=>p.Professor).Include(a=>a.Author).SingleOrDefaultAsync(m => m.ID == id);
             if (professorReview == null)
             {
                 return NotFound();
@@ -190,7 +190,7 @@ namespace InMyAppinion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,TotalGrade,Points,Timestamp,AuthorID,ProfessorID")] ProfessorReview professorReview)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Text,QualityGrade,InteractionGrade,HelpfulnessGrade,MentorGrade,TotalGrade,Points,Timestamp,AuthorID,ProfessorID")] ProfessorReview professorReview)
         {
             if (id != professorReview.ID)
             {
@@ -201,6 +201,7 @@ namespace InMyAppinion.Controllers
             {
                 try
                 {
+                    professorReview.TotalGrade = calculateTotalGrade(professorReview);
                     _context.Update(professorReview);
                     await _context.SaveChangesAsync();
                 }

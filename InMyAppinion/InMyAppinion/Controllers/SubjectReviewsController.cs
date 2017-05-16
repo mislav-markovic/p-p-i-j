@@ -163,7 +163,7 @@ namespace InMyAppinion.Controllers
                 return NotFound();
             }
 
-            var subjectReview = await _context.SubjectReview.SingleOrDefaultAsync(m => m.ID == id);
+            var subjectReview = await _context.SubjectReview.Include(s=>s.Subject).SingleOrDefaultAsync(m => m.ID == id);
             if (subjectReview == null)
             {
                 return NotFound();
