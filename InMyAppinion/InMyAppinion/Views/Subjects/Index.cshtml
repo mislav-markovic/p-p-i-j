@@ -8,7 +8,7 @@
 
 <h2>Svi predmeti</h2>
 
-@if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+@if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
 {
     <p>
         <a class="btn btn-primary" asp-action="Create">
