@@ -218,8 +218,13 @@
                 var values = data;
 
                 $('#cloud').jQCloud(values, {
+                    colors: ["darkorange", "orangered", "red", "orange", "darkgoldenrod", "darkred", "chocolate", "brown", "firebrick"],
                     width: 600,
-                    height: 200
+                    height: 200,
+                    fontSize: {
+                        from: 0.1,
+                        to: 0.02
+                    }
                 });
             });
         });

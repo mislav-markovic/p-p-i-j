@@ -4,6 +4,14 @@
 }
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/resources/demos/style.css">
+
+<style>
+    .ui-tabs .ui-tabs-active {
+        background-color: green;
+        border-color: lightgreen;
+    }
+</style>
+
 @if (Model.query!= "" && Model.query!=null)
 {
     <h2> Rezultati pretrage za @Model.query </h2>
