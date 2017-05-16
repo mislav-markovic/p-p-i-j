@@ -103,6 +103,7 @@ namespace InMyAppinion.Controllers
 
             ViewData["AuthorID"] = userId;
             ViewData["SubjectID"] = Id;
+            ViewData["SubjectName"] = _context.Subject.Where(s => s.ID == Id).Select(s=>s.Name).First();
             ViewData["SubjectTags"] = new SelectList(_context.SubjectReviewTag, "ID", "Name");
             return View();
         }
@@ -112,7 +113,7 @@ namespace InMyAppinion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Text,UsefulnessGrade,InterestGrade,DifficultyGrade,Points,AuthorID,SubjectID")] SubjectReview subjectReview, List<int> tags)
+        public async Task<IActionResult> Create([Bind("Title,Text,UsefulnessGrade,InterestGrade,DifficultyGrade,Points,AuthorID,SubjectID")] SubjectReview subjectReview, List<int> tags)
         {
             subjectReview.TotalGrade = calculateTotalGrade(subjectReview);
             subjectReview.Timestamp = DateTime.Now;
@@ -135,6 +136,7 @@ namespace InMyAppinion.Controllers
             }
             ViewData["AuthorID"] = subjectReview.AuthorID;
             ViewData["SubjectID"] = subjectReview.SubjectID;
+            ViewData["SubjectName"] = _context.Subject.Where(s => s.ID == subjectReview.SubjectID).Select(s=>s.Name).First();
             ViewData["SubjectTags"] = new SelectList(_context.SubjectReviewTag, "ID", "Name");
             return View();
         }
@@ -161,7 +163,7 @@ namespace InMyAppinion.Controllers
                 return NotFound();
             }
 
-            var subjectReview = await _context.SubjectReview.SingleOrDefaultAsync(m => m.ID == id);
+            var subjectReview = await _context.SubjectReview.Include(s=>s.Subject).SingleOrDefaultAsync(m => m.ID == id);
             if (subjectReview == null)
             {
                 return NotFound();
@@ -176,7 +178,7 @@ namespace InMyAppinion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Text,UsefulnessGrade,InterestGrade,DifficultyGrade,TotalGrade,Points,Timestamp,AuthorID,SubjectID")] SubjectReview subjectReview)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Title,Text,UsefulnessGrade,InterestGrade,DifficultyGrade,TotalGrade,Points,Timestamp,AuthorID,SubjectID")] SubjectReview subjectReview)
         {
             if (id != subjectReview.ID)
             {

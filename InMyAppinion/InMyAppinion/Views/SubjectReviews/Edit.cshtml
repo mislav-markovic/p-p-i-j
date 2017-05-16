@@ -1,78 +1,79 @@
-@model InMyAppinion.Models.SubjectReview
+﻿@model InMyAppinion.Models.SubjectReview
 
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h2>Edit</h2>
+<h2>Uredi recenziju za @Model.Subject.Name, autor: <a asp-route-username="@Model.Author.UserName" asp-action="Profile" asp-controller="Account">@Model.Author.UserName</a></h2>
+
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.css" rel="stylesheet">
 
 <form asp-action="Edit">
     <div class="form-horizontal">
-        <h4>SubjectReview</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="ID" />
         <div class="form-group">
-            <label asp-for="Text" class="col-md-2 control-label"></label>
+            <label asp-for="Title" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Text" class="form-control" />
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Text" class="col-md-2 control-label"></label>
+            <div class="col-md-10" style="width:40%">
+                @Html.TextAreaFor(m => m.Text, new { @class = "form-control", @id = "summernote" })
                 <span asp-validation-for="Text" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="UsefulnessGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="UsefulnessGrade" class="form-control" />
+                <input asp-for="UsefulnessGrade" class="form-control slider-tick-use" />
                 <span asp-validation-for="UsefulnessGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="InterestGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="InterestGrade" class="form-control" />
+                <input asp-for="InterestGrade" class="form-control slider-tick-int" />
                 <span asp-validation-for="InterestGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
             <label asp-for="DifficultyGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="DifficultyGrade" class="form-control" />
+                <input asp-for="DifficultyGrade" class="form-control slider-tick-diff" />
                 <span asp-validation-for="DifficultyGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="TotalGrade" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="TotalGrade" class="form-control" />
+                <input asp-for="TotalGrade" class="form-control" type="hidden"/>
                 <span asp-validation-for="TotalGrade" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Points" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Points" class="form-control" />
+                <input asp-for="Points" class="form-control" type="hidden"/>
                 <span asp-validation-for="Points" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="Timestamp" class="col-md-2 control-label"></label>
             <div class="col-md-10">
-                <input asp-for="Timestamp" class="form-control" />
+                <input asp-for="Timestamp" class="form-control" value="@Model.Timestamp" type="hidden" />
                 <span asp-validation-for="Timestamp" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="AuthorID" class="control-label col-md-2"></label>
             <div class="col-md-10">
-                <select asp-for="AuthorID" class="form-control" asp-items="ViewBag.AuthorID"></select>
-                <span asp-validation-for="AuthorID" class="text-danger"></span>
+                <input asp-for="AuthorID" type="hidden" value="@Model.AuthorID" class="form-control" />
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="SubjectID" class="control-label col-md-2"></label>
             <div class="col-md-10">
-                <select asp-for="SubjectID" class="form-control" asp-items="ViewBag.SubjectID"></select>
-                <span asp-validation-for="SubjectID" class="text-danger"></span>
+                <input asp-for="SubjectID" type="hidden" value="@Model.SubjectID" class="form-control" />
             </div>
         </div>
         <div class="form-group">
@@ -89,4 +90,77 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.3/summernote.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".chosen-select").chosen();
+        });
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('#summernote').summernote();
+        });
+    </script>
+
+    <script>
+        $(".slider-tick-diff").slider(
+            {
+            ticks: [1, 2, 3, 4, 5],
+            ticks_labels: ["1", "2", "3", "4", "5"],
+            value: @Model.DifficultyGrade,
+            formatter: function (value) {
+                switch (value) {
+                    case 1: return "Loš";
+                    case 2: return "Meh";
+                    case 3: return "OK";
+                    case 4: return "Dobar";
+                    case 5: return "Super";
+                };
+            }
+        });
+    </script>
+
+    <script>
+            $(".slider-tick-use").slider(
+                {
+                ticks: [1, 2, 3, 4, 5],
+                ticks_labels: ["1", "2", "3", "4", "5"],
+                value: @Model.UsefulnessGrade,
+                formatter: function (value) {
+                    switch (value) {
+                        case 1: return "Loš";
+                        case 2: return "Meh";
+                        case 3: return "OK";
+                        case 4: return "Dobar";
+                        case 5: return "Super";
+                    };
+                }
+            });
+    </script>
+
+    <script>
+            $(".slider-tick-int").slider(
+                {
+                ticks: [1, 2, 3, 4, 5],
+                ticks_labels: ["1", "2", "3", "4", "5"],
+                value: @Model.InterestGrade,
+                formatter: function (value) {
+                    switch (value) {
+                        case 1: return "Loš";
+                        case 2: return "Meh";
+                        case 3: return "OK";
+                        case 4: return "Dobar";
+                        case 5: return "Super";
+                    };
+                }
+            });
+    </script>
+
+   
+
+
+
 }

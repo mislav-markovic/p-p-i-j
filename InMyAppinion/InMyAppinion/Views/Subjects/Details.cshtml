@@ -121,7 +121,7 @@
                                             <h4 class="media-heading">@review.Title</h4>
                                             <p class="text-right">@review.Author.UserName</p>
                                             <p>
-                                                @review.Text
+                                                @Html.Raw(review.Text)
                                             </p>
                                             <hr />
                                             <small>@Html.DisplayNameFor(model => model.AvgUsefulnessGrade)</small>
@@ -148,7 +148,7 @@
                                                 <li>
                                                     <span>
                                                         <i class="glyphicon glyphicon-comment"></i>
-                                                        <a asp-controller="ProfessorReviews" asp-action="Details" asp-route-id="@review.ID">
+                                                        <a asp-controller="SubjectReviews" asp-action="Details" asp-route-id="@review.ID">
                                                             @review.Comments.Count comments
                                                         </a>
                                                     </span>

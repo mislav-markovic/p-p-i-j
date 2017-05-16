@@ -27,7 +27,6 @@
 </div>
 
 <div>
-    <h4>SubjectReview</h4>
     <hr />
     <div class="col-lg-6">
         <dl class="dl-horizontal">
@@ -41,7 +40,7 @@
                 @Html.DisplayNameFor(model => model.Text)
             </dt>
             <dd>
-                @Html.DisplayFor(model => model.Text)
+                @Html.Raw(Model.Text)
             </dd>
             <dt>
                 @Html.DisplayNameFor(model => model.UsefulnessGrade)
@@ -97,8 +96,9 @@
             <dd>
                 @foreach (var tag in Model.SubjectReviewTagSet)
                 {
-                    @tag.SubjectReviewTag.Name@: |
-            }
+                    <b class="btn btn-xs btn-info">@tag.SubjectReviewTag.Name</b>
+
+                }
             </dd>
         </dl>
         <hr />
@@ -116,12 +116,12 @@
                 <input hidden data-reviewId="@Model.ID" />
                 <input hidden data-type="subject" />
                 <input id="username" hidden value="@User.Identity.Name" /><br />
-                <button class="btn btn-info addajax"><span class="glyphicon">Dodaj komentar</span></button>
+                <button class="btn btn-info addajax"><span class="glyphicon glyphicon-plus"></span>Dodaj komentar</button>
             </div>
         }
     </div>
     <h4>Komentari</h4>
-    <div id="comments" class="col-lg-6">
+    <div id="comments" class="col-lg-6" style="background-color:whitesmoke">
         @foreach (var c in Model.Comments)
         {
             <div id="@c.ID">
