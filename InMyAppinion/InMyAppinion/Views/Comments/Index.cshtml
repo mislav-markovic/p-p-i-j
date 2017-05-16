@@ -1,0 +1,66 @@
+@model IEnumerable<InMyAppinion.Models.Comment>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Tekst komentara
+            </th>
+            <th>
+                Bodovi
+            </th>
+            <th>
+                Datum
+            </th>
+            <th>
+                Autor
+            </th>
+            <th>
+                Kritika
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Text)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Points)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Timestamp)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author.UserName)
+            </td>
+            @if (item.ProfessorReviewID != null)
+            {
+                <td>
+                    <a asp-controller="ProfessorReviews" asp-action="Details" asp-route-id="@item.ProfessorReviewID">
+                        @Html.DisplayFor(modelItem => item.ProfessorReview.Title)
+                    </a>
+                </td>
+            }
+            else
+            {
+                <td>
+                    <a asp-controller="ProfessorReviews" asp-action="Details" asp-route-id="@item.SubjectReviewID">
+                        @Html.DisplayFor(modelItem => item.SubjectReview.Title)
+                    </a>
+                </td>
+            }
+        </tr>
+}
+    </tbody>
+</table>

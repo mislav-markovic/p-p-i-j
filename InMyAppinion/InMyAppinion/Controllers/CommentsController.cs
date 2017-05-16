@@ -22,9 +22,18 @@ namespace InMyAppinion.Controllers
             _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string username)
         {
-            return View();
+            var comments = _context.Comment
+                           .Include(c => c.Author)
+                           .Include(c => c.ProfessorReview)
+                           .Include(c => c.SubjectReview);
+
+            if (username == null) {
+                return View(comments.ToList());
+            }
+
+            return View(comments.Where(c => c.Author.UserName == username));
         }
 
         [HttpPost]

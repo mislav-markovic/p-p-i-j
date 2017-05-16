@@ -104,6 +104,11 @@
                                     <li>
                                         <div class="well">
                                             <div class="media">
+                                                <div class="media-heading text-center">
+                                                    <a asp-controller="ProfessorReviews" asp-action="Details" asp-route-id="@review.ID">
+                                                        <h4>@review.Title</h4>
+                                                    </a>
+                                                </div>
                                                 <div class="media-body">
                                                     <span class="pull-right">
                                                         <a asp-controller="ProfessorReviews" asp-action="Details" asp-route-id="@review.ID">
@@ -216,6 +221,11 @@
                                     <li>
                                         <div class="well">
                                             <div class="media">
+                                                <div class="media-heading text-center">
+                                                    <a asp-controller="SubjectReviews" asp-action="Details" asp-route-id="@review.ID">
+                                                        <h4>@review.Title</h4>
+                                                    </a>
+                                                </div>
                                                 <div class="media-body">
                                                     <span class="pull-right">
                                                         <a asp-controller="SubjectReviews" asp-action="Details" asp-route-id="@review.ID">
@@ -293,8 +303,11 @@
                         <table class="table bio-table">
                             <tbody>
                                 <tr>
-                                    <td>Broj ostavljenih komentara:</td>
-                                    <td>@Model.Comments.Count</td>
+                                    <td>
+                                        <a asp-controller="Comments" asp-action="Index" asp-route-username="@Model.User.UserName">
+                                            <strong>Svi komentari ovog korisnika: @Model.Comments.Count</strong>
+                                        </a>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>Pozitivnih glasova za komentare:</td>
@@ -321,26 +334,39 @@
                                         <div class="well">
                                             <div class="media">
                                                 <div class="media-body">
-                                                    <h4 class="media-heading">
+                                                    
                                                     @if (comment.ProfessorReviewID != null)
                                                     {
-                                                        <a asp-controller="ProfessorReviews" asp-action="Details" asp-route-id="@comment.ProfessorReviewID">
-                                                            @comment.ProfessorReview.Professor.FullName
-                                                        </a>
+                                                        <span class="pull-right">
+                                                            <a asp-controller="ProfessorReviews" asp-action="Details" asp-route-id="@comment.ProfessorReviewID">
+                                                                <span class="glyphicon glyphicon-link"></span> Pogledajte kritiku
+                                                            </a>
+                                                        </span>
+                                                        <h4 class="media-heading">
+                                                            <a asp-controller="Professors" asp-action="Details" asp-route-id="@comment.ProfessorReview.ProfessorID">
+                                                                @comment.ProfessorReview.Professor.FullName
+                                                            </a>
+                                                        </h4>
                                                     }
                                                     else
                                                     {
-                                                        <a asp-controller="SubjectReviews" asp-action="Details" asp-route-id="@comment.SubjectReviewID">
-                                                            @comment.SubjectReview.Subject.Name
-                                                        </a>
+                                                        <span class="pull-right">
+                                                            <a asp-controller="SubjectReviews" asp-action="Details" asp-route-id="@comment.SubjectReviewID">
+                                                                <span class="glyphicon glyphicon-link"></span> Pogledajte kritiku
+                                                            </a>
+                                                        </span>
+                                                        <h4 class="media-heading">
+                                                            <a asp-controller="Subjects" asp-action="Details" asp-route-id="@comment.SubjectReview.SubjectID">
+                                                                @comment.SubjectReview.Subject.Name
+                                                            </a>
+                                                        </h4>
                                                     }
-                                                    </h4>
                                                     <p>@comment.Text</p>
                                                     <ul class="list-inline list-unstyled">
                                                         <li><span><i class="glyphicon glyphicon-calendar"></i> @comment.Timestamp.ToString("d")</span></li>
                                                         <li>|</li>
                                                         <li title="Bodovi">
-                                                            <div>
+                                                            <div>Bodovi: 
                                                                 @if (comment.Points > 0)
                                                                 {
                                                                     <small style="color: green">

@@ -515,6 +515,10 @@ Licensed under MIT
     color: #d9534f;
 }
 
+.bs-callout-danger .media-heading > a {
+    text-decoration-color: #d9534f;
+}
+
 .bs-callout-danger a {
     color: inherit;
 }
