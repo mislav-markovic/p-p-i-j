@@ -39,7 +39,7 @@ namespace InMyAppinion.Controllers
                     model.query = query;
                     foreach (var tag in model.subservmod.tags)
                     {
-                        model.subservmod.subtagset = _context.SubjectTagSet.Where(o => o.SubjectTagID == tag.ID).ToList();
+                        model.subservmod.subtagset = _context.SubjectTagSet.Include(s=>s.Subject).ThenInclude(s=>s.Faculty).Where(o => o.SubjectTagID == tag.ID).ToList();
 
                         
                         foreach (var sts in model.subservmod.subtagset)
@@ -70,7 +70,7 @@ namespace InMyAppinion.Controllers
             model2.subservmod = new SubjectSearchViewModel();
             model2.profservmod = new ProfessorSearchViewModel();
             model2.profservmod.professors = _context.Professor.Where(o=>o.Validated).ToList();
-            model2.subservmod.subjects = _context.Subject.Where(o=>o.Validated).ToList();
+            model2.subservmod.subjects = _context.Subject.Include(s=>s.Faculty).Where(o=>o.Validated).ToList();
             //model2.subtagset = _context.SubjectTagSet.ToList();
             model2.query = query;
             return View(model2);
