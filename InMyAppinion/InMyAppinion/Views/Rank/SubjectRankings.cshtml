@@ -48,7 +48,9 @@
                         @counter.
                     </td>
                     <td>
-                        @item.Name
+                        <a asp-action="Details" asp-controller="Subjects" asp-route-id="@item.ID">
+                            @item.Name
+                        </a>
                     </td>
                     <td align="center">
                         @item.AvgDifficultyGrade
