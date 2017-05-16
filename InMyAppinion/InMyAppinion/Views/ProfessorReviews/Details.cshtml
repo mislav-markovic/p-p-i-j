@@ -13,7 +13,7 @@
     <div class="col-md-6">
         <h2>@Model.Professor.FullName</h2>
     </div>
-    @if(await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
+    @if (await AuthorizationService.AuthorizeAsync(User, "CanModerate"))
     {
         <div class="col-md-2 margins">
             <form asp-action="Delete">
@@ -26,200 +26,235 @@
     }
 </div>
 
-<div>
-    <hr />
-    <div class="col-lg-6">
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Title)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Text)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Text)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.QualityGrade)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.QualityGrade)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.InteractionGrade)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.InteractionGrade)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.HelpfulnessGrade)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.HelpfulnessGrade)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.MentorGrade)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.MentorGrade)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.TotalGrade)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.TotalGrade)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Points)
-            </dt>
-            <dd id="points">
-                @Html.DisplayFor(model => model.Points)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Timestamp)
-            </dt>
-            <dd>
-                @Model.Timestamp.Date.ToString("d")
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Author)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Author.UserName)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Professor)
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Professor.FirstName)
 
-                @Html.DisplayFor(model => model.Professor.LastName)
-            </dd>
-            <dt>
-                Tagovi
-            </dt>
-            <dd>
-                @foreach (var t in Model.ProfessorReviewTagSet)
+
+<div class="well">
+    <div class="media">
+        <a class="pull-left" asp-action="Profile" asp-controller="Account" asp-route-id="@Model.Author.UserName">
+                <img style="width:75px;height:75px" class="media-object img-responsive img-circle img-thumbnail" src="@Model.Author.Avatar" alt="profilePic">
+            <p class="text-center">@Model.Author.UserName</p>
+        </a>
+        <div class="media-body">
+            <h3 class="media-heading text-center">@Model.Title</h3> <br />
+            <p>
+                @Html.Raw(Model.Text)
+            </p>
+            <hr />
+            <small>Pristupa&#269nost</small>
+            <div class="circle" id="circles-helpfulness" style="display: inline"></div>
+            <small>Anga&#382iranost</small>
+            <div class="circle" id="circles-interaction" style="display: inline"></div>
+            <small>Mentorstvo</small>
+            <div class="circle" id="circles-mentoring" style="display: inline"></div>
+            <small>Kvaliteta</small>
+            <div class="circle" id="circles-quality" style="display: inline"></div>
+            <hr />
+            Tagovi:
+            @foreach (var tag in Model.ProfessorReviewTagSet.Select(s => s.ProfessorReviewTag))
             {
-                    <b class="btn btn-xs btn-info">@t.ProfessorReviewTag.Name</b>
-                    
+                <b class="btn btn-xs btn-info">@tag.Name </b>
             }
-            </dd>
-        </dl>
-        <hr />
-        @if ((await AuthorizationService.AuthorizeAsync(User, "CanReview") && (User.Identity.Name != Model.Author.UserName)))
-        {
-            <button class="btn btn-lg btn-success voteajax" id="voteup" data-vote="true"><span class="glyphicon glyphicon-thumbs-up"></span></button>
-            <button class="btn btn-lg btn-danger voteajax" id="votedown" data-vote="false"><span class="glyphicon glyphicon-thumbs-down"></span></button>
-        }
-        <input hidden id="voted" value="@ViewBag.voted" />
-        <hr />
-        @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
-        {
-            <div class="clear">
-                <textarea id="text" class="form-control" rows="3" data-text title="Unesite komentar"></textarea>
-                <input hidden data-reviewId="@Model.ID" />
-                <input hidden data-type="professor" />
-                <input id="username" hidden value="@User.Identity.Name" /><br />
-                <button class="btn btn-info addajax"><span class="glyphicon glyphicon-plus"></span>Dodaj komentar</button>
+            <ul class="list-inline list-unstyled">
+                <li><span><i class="glyphicon glyphicon-calendar"></i>@Model.Timestamp</span></li>
+                <li>|</li>
+                <li>
+                    <div id="stars"><small>@Model.TotalGrade</small></div>
+                </li>
+            </ul>
             </div>
-        }
-    </div>
-    <h4>Komentari</h4>
-    <div id="comments" class="col-lg-6" style="background-color:whitesmoke">
-        @foreach (var c in Model.Comments)
-        {
-            <div id="@c.ID">
-                @if (SignInManager.IsSignedIn(User) && (User.Identity.Name == c.Author.UserName ||
-                    await AuthorizationService.AuthorizeAsync(User, "CanModerate")))
-                {
-                    <button data-commentid="@c.ID" data-userid="@c.AuthorID" class="pull-right btn btn-danger btn-xs deleteajax" title="Izbriši komentar">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </button>
-                }
-                <h5><span>@await UserManager.FindByIdAsync(c.AuthorID)</span>, @c.Timestamp, <span id="points-comment-@c.ID">@c.Points</span></h5>
-                <p class="comment">@c.Text</p>
-                @if (await AuthorizationService.AuthorizeAsync(User, "CanReview") && (User.Identity.Name != c.Author.UserName))
-                {
-                    <button class="btn btn-sm btn-success voteajax-comment glyphicon glyphicon-thumbs-up" id="voteup-comment-@c.ID" data-vote="true" data-commentid="@c.ID"></button>
-                    <button class="btn btn-sm btn-danger voteajax-comment glyphicon glyphicon-thumbs-down" id="votedown-comment-@c.ID" data-vote="false" data-commentid="@c.ID"></button>
-                }
-                <input hidden id="comment-vote-@c.ID" class="comment-vote" data-commid="@c.ID" value="@ViewData[c.ID.ToString()]" />
+        </div>
+</div>
+            <div>
                 <hr />
+                
+                    @if ((await AuthorizationService.AuthorizeAsync(User, "CanReview") && (User.Identity.Name != Model.Author.UserName)))
+                    {
+                        <button class="btn btn-lg btn-success voteajax" id="voteup" data-vote="true"><span class="glyphicon glyphicon-thumbs-up"></span></button>
+                        <button class="btn btn-lg btn-danger voteajax" id="votedown" data-vote="false"><span class="glyphicon glyphicon-thumbs-down"></span></button>
+                    }
+                    <input hidden id="voted" value="@ViewBag.voted" />
+                    <hr />
+                    @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
+                    {
+                        <div class="clear">
+                            <textarea id="text" class="form-control" rows="3" data-text title="Unesite komentar"></textarea>
+                            <input hidden data-reviewId="@Model.ID" />
+                            <input hidden data-type="professor" />
+                            <input id="username" hidden value="@User.Identity.Name" /><br />
+                            <button class="btn btn-info addajax"><span class="glyphicon glyphicon-plus"></span>Dodaj komentar</button>
+                        </div>
+                    }
+                </div>
+                <h4>Komentari</h4>
+                <div id="comments" class="col-lg-6" style="background-color:whitesmoke">
+                    @foreach (var c in Model.Comments)
+                    {
+                        <div id="@c.ID">
+                            @if (SignInManager.IsSignedIn(User) && (User.Identity.Name == c.Author.UserName ||
+        await AuthorizationService.AuthorizeAsync(User, "CanModerate")))
+                            {
+                                <button data-commentid="@c.ID" data-userid="@c.AuthorID" class="pull-right btn btn-danger btn-xs deleteajax" title="Izbriši komentar">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            }
+                            <h5><span>@await UserManager.FindByIdAsync(c.AuthorID)</span>, @c.Timestamp, <span id="points-comment-@c.ID">@c.Points</span></h5>
+                            <p class="comment">@c.Text</p>
+                            @if (await AuthorizationService.AuthorizeAsync(User, "CanReview") && (User.Identity.Name != c.Author.UserName))
+                {
+                                <button class="btn btn-sm btn-success voteajax-comment glyphicon glyphicon-thumbs-up" id="voteup-comment-@c.ID" data-vote="true" data-commentid="@c.ID"></button>
+                                <button class="btn btn-sm btn-danger voteajax-comment glyphicon glyphicon-thumbs-down" id="votedown-comment-@c.ID" data-vote="false" data-commentid="@c.ID"></button>
+                            }
+                            <input hidden id="comment-vote-@c.ID" class="comment-vote" data-commid="@c.ID" value="@ViewData[c.ID.ToString()]" />
+                            <hr />
+                        </div>
+                    }
+                </div>
+            <div class="clear">
+                <br />
+                @*<a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
+                <a asp-action="Index">Back to List</a>*@
             </div>
-        }
-    </div>
-</div>
-<div class="clear">
-    <br />
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
 
-@section Scripts {
-    <script>
+ @section Scripts {
+
+
+
+
+
+                <script>
         $(function () {
             AddCommentAjax(".addajax", '@Url.Action("Create", "Comments", new { id=Model.ID, type="professor" })', 'text', 'username');
         });
-    </script>
+                </script>
 
-    <script>
+                <script>
         $(function () {
             DeleteCommentAjax(".deleteajax", '@Url.Action("Delete", "Comments", "")', 'commentid');
         });
-    </script>
+                </script>
 
-    <script>
+                <script>
         $(function () {
             VoteReview(".voteajax", '@Url.Action("VoteReview", "Votes", new { id=Model.ID, type="professor"})');
             VoteComment(".voteajax-comment", '@Url.Action("VoteComment", "Votes", "")', 'commentid');
         })
-    </script>
+                </script>
 
-    <script>
-        $(document).ready(function () {
-            var v = $("#voted").val();
-            if(v === 'True'){
-                $('#voteup').prop('disabled', true);
-                $('#voteup').hide();
+                <script>
+                    $(document).ready(function () {
+                        var v = $("#voted").val();
+                        if (v === 'True') {
+                            $('#voteup').prop('disabled', true);
+                            $('#voteup').hide();
+                        }
+                        else if (v === 'False') {
+                            $('#votedown').prop('disabled', true);
+                            $('#votedown').hide();
+                        }
+                        $("#voted").remove();
+                    });
+                </script>
+
+                <script>
+                    $(document).ready(function () {
+                        var x = document.getElementsByClassName("comment-vote");
+                        var i;
+                        for (i = 0; i < x.length; i++) {
+                            var id = x[i].dataset.commid;
+                            var vote = $("#comment-vote-" + id).val();
+
+                            if (vote === 'True') {
+                                $('#voteup-comment-' + id).prop('disabled', true);
+                                $('#voteup-comment-' + id).hide();
+                            } else if (vote === 'False') {
+                                $('#votedown-comment-' + id).prop('disabled', true);
+                                $('#votedown-comment-' + id).hide();
+                            }
+                        }
+                    });
+                </script>
+
+
+                <script src="@Url.Content("~/lib/circles/circles.min.js")"></script>
+
+<script>
+        @{ 
+              @:   Circles.create({
+              @:     id: 'circles-helpfulness',
+              @:     radius: 30,
+              @:     value: @Model.HelpfulnessGrade,
+              @:     maxValue: 5,
+              @:     text: (value) => value,
+              @:     colors: ['#D3B6C6', '#4B253A'],
+              @:     duration: 1000,
+              @:   });
+
+              @:   Circles.create({
+              @:     id: 'circles-interaction',
+              @:     radius: 30,
+              @:     value: @Model.InteractionGrade,
+              @:     maxValue: 5,
+              @:     text: (value) => value,
+              @:     colors: ['#D3B6C6', '#4B253A'],
+              @:     duration: 1000,
+              @:   });
+
+              @:   Circles.create({
+              @:     id: 'circles-quality',
+              @:     radius: 30,
+              @:     value: @Model.QualityGrade,
+              @:     maxValue: 5,
+              @:     text: (value) => value,
+              @:     colors: ['#D3B6C6', '#4B253A'],
+              @:     duration: 1000,
+              @:   });
+
+              @:   Circles.create({
+              @:     id: 'circles-mentoring',
+              @:     radius: 30,
+              @:     value: @(Model.MentorGrade == null ? 0 : Model.MentorGrade),
+              @:     maxValue: 5,
+              @:     text: (value) => value,
+              @:     colors: ['#D3B6C6', '#4B253A'],
+              @:     duration: 1000,
+              @:   });
+
             }
-            else if(v === 'False'){
-                $('#votedown').prop('disabled', true);
-                $('#votedown').hide();
+</script>
+
+                <script>
+                    $(document).ready(function () {
+                        $(".del").click(function () {
+                            if (!confirm("Jeste li sigurni?")) {
+                                return false;
+                            }
+                        });
+                    });
+                </script>
+
+
+                <script src="@Url.Content("~/lib/raty/lib/jquery.raty.js")"></script>
+
+                <script>
+        @{
+                @: $("#stars").raty({
+                   @:         starType: 'i',
+                   @: halfShow: true,
+                   @: readOnly: true,
+                   @: size: 5,
+                   @: targetFormat: '{score}',
+                   @: score: @Model.TotalGrade,
+                   @: hints: ['Lose', 'Dovoljno', 'Dobro', 'Vrlo dobro', 'Odlicno']
+                   @:})
+                   }
+
+
+                </script>
+
             }
-            $("#voted").remove();
-        });
-    </script>
 
-    <script>
-        $(document).ready(function () {
-            var x = document.getElementsByClassName("comment-vote");
-            var i;
-            for (i = 0; i < x.length; i++) {
-                var id = x[i].dataset.commid;
-                var vote = $("#comment-vote-" + id).val();
 
-                if (vote === 'True') {
-                    $('#voteup-comment-'+id).prop('disabled', true);
-                    $('#voteup-comment-' + id).hide();
-                } else if (vote === 'False') {
-                    $('#votedown-comment-' + id).prop('disabled', true);
-                    $('#votedown-comment-' + id).hide();
-                }
+            @section Styles {
+                <link href="@Url.Content("~/css/profile.css")" rel="stylesheet" type="text/css" />
+                <link href="@Url.Content("~/lib/raty/lib/jquery.raty.css")" rel="stylesheet" />
             }
-        });
-    </script>
-
-    <script>
-            $(document).ready(function () {
-                $(".del").click(function () {
-                    if (!confirm("Jeste li sigurni?")) {
-                        return false;
-                    }
-                });
-            });
-    </script>
-}
