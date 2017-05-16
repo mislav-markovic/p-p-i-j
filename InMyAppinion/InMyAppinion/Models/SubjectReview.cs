@@ -17,7 +17,7 @@ namespace InMyAppinion.Models
 
         [Display(Name = "Recenzija")]
         [Required(ErrorMessage = "Unos recenzije je obavezan", AllowEmptyStrings = false)]
-        [StringLength(4000, ErrorMessage = "Maksimalna duljina recenzije je 4000 znakova")]
+        //[StringLength(4000, ErrorMessage = "Maksimalna duljina recenzije je 4000 znakova")]
 
         public string Text { get; set; }
         [Display(Name = "Korisnost predmeta")]

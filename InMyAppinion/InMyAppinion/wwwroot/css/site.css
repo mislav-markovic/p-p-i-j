@@ -90,3 +90,11 @@ ul.nav li.dropdown:hover ul.dropdown-menu {
     color: red;
     padding: 0;
 }
+
+#cloud a:hover {
+    color: darkgreen;
+}
+
+.carousel > ul > li > a:hover, .carousel > ul > li > a:focus {
+    color: white;
+}

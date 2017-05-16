@@ -17,10 +17,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="wwwroot\css\home.css" />
     <Content Include="wwwroot\css\navbar.css" />
     <Content Include="wwwroot\css\professorProfile.css" />
     <Content Include="wwwroot\css\registration.css" />
     <Content Include="wwwroot\css\userProfile.css" />
+    <Content Include="wwwroot\images\inmyappinion.png" />
+    <Content Include="wwwroot\images\ocijeni.png" />
+    <Content Include="wwwroot\images\pronadi.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />

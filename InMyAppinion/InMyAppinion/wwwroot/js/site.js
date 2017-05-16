@@ -341,14 +341,14 @@ $(document).ready(function (e) {
 
     // sticky js//
 
-    $(window).scroll(function () {
-        if ($(window).scrollTop() >= 500) {
-            $('nav').addClass('stick');
-        }
-        else {
-            $('nav').removeClass('stick');
-        }
-    });
+    //$(window).scroll(function () {
+    //    if ($(window).scrollTop() >= 500) {
+    //        $('nav').addClass('stick');
+    //    }
+    //    else {
+    //        $('nav').removeClass('stick');
+    //    }
+    //});
 
 
 
