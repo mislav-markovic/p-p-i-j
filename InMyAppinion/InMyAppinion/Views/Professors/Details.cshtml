@@ -71,16 +71,11 @@
                     {
                         @foreach (var interes in Model.Interests)
                         {
-                            <div>
-                                <a asp-action="Search" asp-controller="Search" asp-route-query="@interes.Name">
-                                    @interes.Name
-                                </a>
-                            </div>
-                            if (!Model.Interests.Last().Equals(interes))
-                            {
-                                @Html.Raw(", ")
 
-                            }
+                                <a asp-action="Search" asp-controller="Search" asp-route-query="@interes.Name">
+                                    <b class="btn btn-xs btn-info">@interes.Name</b></a>
+
+
                         }
                     }
                     else
@@ -136,17 +131,19 @@
                                     <div class="well">
                                         <div class="media">
                                             <a class="pull-left" asp-action="Profile" asp-controller="Account" asp-route-id="@review.Author.UserName">
-                                                @review.Author.UserName
+
                                                 @if (review.Author.Avatar != null)
                                                 {
-                                                    <img class="media-object img-responsive img-circle img-thumbnail" src="@review.Author.Avatar" alt="profilePic">
+                                                    <img style="width:75px;height:75px" class="media-object img-responsive img-circle img-thumbnail" src="@review.Author.Avatar" alt="profilePic">
                                                 }
+
+                                                <p class="text-center">@review.Author.UserName</p>
                                             </a>
                                             <div class="media-body">
                                                 <h4 class="media-heading">@review.Title</h4>
                                                 <p class="text-right">@review.Author.UserName</p>
                                                 <p>
-                                                    @review.Text
+                                                    @Html.Raw(review.Text)
                                                 </p>
                                                 <hr />
                                                 <small>Pristupa&#269nost</small>
