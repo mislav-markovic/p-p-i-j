@@ -23,8 +23,12 @@ namespace InMyAppinion.Data.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("Avatar");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
+
+                    b.Property<DateTime>("DateRegistered");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -75,7 +79,9 @@ namespace InMyAppinion.Data.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
                     b.Property<int>("ZipCode");
 
@@ -92,8 +98,6 @@ namespace InMyAppinion.Data.Migrations
                     b.Property<string>("AuthorID");
 
                     b.Property<int?>("ParentCommentID");
-
-                    b.Property<int?>("ParentID");
 
                     b.Property<int>("Points");
 
@@ -123,11 +127,16 @@ namespace InMyAppinion.Data.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
-                    b.Property<string>("ShortName");
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
-                    b.Property<int?>("UniversityID");
+                    b.Property<int?>("UniversityID")
+                        .IsRequired();
 
                     b.HasKey("ID");
 
@@ -143,9 +152,13 @@ namespace InMyAppinion.Data.Migrations
 
                     b.Property<string>("Biography");
 
-                    b.Property<string>("FirstName");
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(60);
 
-                    b.Property<string>("LastName");
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(60);
 
                     b.Property<bool>("Validated");
 
@@ -159,7 +172,8 @@ namespace InMyAppinion.Data.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AuthorID");
+                    b.Property<string>("AuthorID")
+                        .IsRequired();
 
                     b.Property<int>("HelpfulnessGrade");
 
@@ -173,9 +187,15 @@ namespace InMyAppinion.Data.Migrations
 
                     b.Property<int>("QualityGrade");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(4000);
 
                     b.Property<DateTime>("Timestamp");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(30);
 
                     b.Property<decimal>("TotalGrade");
 
@@ -193,7 +213,9 @@ namespace InMyAppinion.Data.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.HasKey("ID");
 
@@ -231,13 +253,18 @@ namespace InMyAppinion.Data.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Description");
+                    b.Property<string>("Description")
+                        .IsRequired();
 
                     b.Property<int>("FacultyID");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(60);
 
-                    b.Property<string>("ShortName");
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(10);
 
                     b.Property<bool>("Validated");
 
@@ -253,7 +280,8 @@ namespace InMyAppinion.Data.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AuthorID");
+                    b.Property<string>("AuthorID")
+                        .IsRequired();
 
                     b.Property<int>("DifficultyGrade");
 
@@ -263,9 +291,15 @@ namespace InMyAppinion.Data.Migrations
 
                     b.Property<int>("SubjectID");
 
-                    b.Property<string>("Text");
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(4000);
 
                     b.Property<DateTime>("Timestamp");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(30);
 
                     b.Property<decimal>("TotalGrade");
 
@@ -285,7 +319,9 @@ namespace InMyAppinion.Data.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.HasKey("ID");
 
@@ -310,7 +346,9 @@ namespace InMyAppinion.Data.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.HasKey("ID");
 
@@ -339,9 +377,13 @@ namespace InMyAppinion.Data.Migrations
 
                     b.Property<int>("CityID");
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
 
-                    b.Property<string>("ShortName");
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.HasKey("ID");
 
@@ -556,14 +598,16 @@ namespace InMyAppinion.Data.Migrations
                 {
                     b.HasOne("InMyAppinion.Models.University", "University")
                         .WithMany("Faculties")
-                        .HasForeignKey("UniversityID");
+                        .HasForeignKey("UniversityID")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("InMyAppinion.Models.ProfessorReview", b =>
                 {
                     b.HasOne("InMyAppinion.Models.ApplicationUser", "Author")
                         .WithMany("ProfessorReviews")
-                        .HasForeignKey("AuthorID");
+                        .HasForeignKey("AuthorID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("InMyAppinion.Models.Professor", "Professor")
                         .WithMany("Reviews")
@@ -609,7 +653,8 @@ namespace InMyAppinion.Data.Migrations
                 {
                     b.HasOne("InMyAppinion.Models.ApplicationUser", "Author")
                         .WithMany("SubjectReviews")
-                        .HasForeignKey("AuthorID");
+                        .HasForeignKey("AuthorID")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("InMyAppinion.Models.Subject", "Subject")
                         .WithMany("Reviews")

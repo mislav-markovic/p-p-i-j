@@ -18,9 +18,8 @@ namespace InMyAppinion.Models
         [StringLength(60, MinimumLength = 3, ErrorMessage = "{0} mora biti između 3 i 60 znakova")]
         public string LastName { get; set; }
         [Display(Name = "Biografija")]
-        [Required(ErrorMessage = "{0} je obavezna", AllowEmptyStrings = false)]
-        [StringLength(2000, ErrorMessage = "{0} može imati najviše 2000 znakova")]
         public string Biography { get; set; }
+        [Display(Name = "Potvrđen?")]
         public bool Validated { get; set; }
 
         [Display(Name = "Predmeti")]

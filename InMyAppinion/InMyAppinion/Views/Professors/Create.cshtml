@@ -1,4 +1,4 @@
-@model InMyAppinion.Models.Professor
+@model InMyAppinion.ViewModels.ProfessorCreateViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -26,6 +26,24 @@
             </div>
         </div>
         <div class="form-group">
+            <label asp-for="Biography" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Biography" class="form-control" />
+                <span asp-validation-for="Biography" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SubjectIDs" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="SubjectIDs" asp-items="ViewBag.SubjectID" multiple class="form-control chosen-select"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10">
+                <input asp-for="isUser" type="hidden" value="@ViewBag.IsUser" class="form-control" />
+            </div>
+        </div>
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
             </div>
@@ -39,4 +57,10 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+<script>
+        $(document).ready(function () {
+            $(".chosen-select").chosen();
+        });
+</script>
 }

@@ -107,6 +107,11 @@ namespace InMyAppinion.Controllers
             try
             {
                 _context.Comment.Remove(comment);
+
+                var user = await _context.User.SingleOrDefaultAsync(u => u.Id == comment.AuthorID);
+                user.Points -= comment.Points;
+                _context.User.Update(user);
+
                 await _context.SaveChangesAsync();
 
                 var result = new

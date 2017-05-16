@@ -28,10 +28,17 @@ namespace InMyAppinion.Controllers
         }
 
         // GET: SubjectReviews
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string username)
         {
             var applicationDbContext = _context.SubjectReview.Include(s => s.Author).Include(s => s.Subject);
-            return View(await applicationDbContext.ToListAsync());
+            if (username == null)
+            {
+                return View(await applicationDbContext.ToListAsync());
+            }
+            else
+            {
+                return View(await applicationDbContext.Where(s => s.Author.UserName == username).ToListAsync());
+            }
         }
 
         // GET: SubjectReviews/Details/5
@@ -227,8 +234,34 @@ namespace InMyAppinion.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var subjectReview = await _context.SubjectReview.SingleOrDefaultAsync(m => m.ID == id);
-            _context.SubjectReview.Remove(subjectReview);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var comments = _context.Comment.Where(c => c.SubjectReviewID == id);
+                ApplicationUser user = null;
+                foreach (var comment in comments)
+                {
+                    user = await _context.User.SingleOrDefaultAsync(u => u.Id == comment.AuthorID);
+                    user.Points -= comment.Points;
+                    _context.User.Update(user);
+                }
+                _context.SubjectReview.Remove(subjectReview);
+
+                user = await _context.User.SingleOrDefaultAsync(u => u.Id == subjectReview.AuthorID);
+                user.Points -= subjectReview.Points;
+                _context.User.Update(user);
+
+                await _context.SaveChangesAsync();
+
+                TempData[Constants.Message] = $"Recenzija uspješno obrisana.";
+                TempData[Constants.ErrorOccurred] = false;
+            }
+            catch (Exception exc)
+            {
+                ModelState.AddModelError(string.Empty, exc.ToString());
+                TempData[Constants.Message] = "Pogreška u brisanju recenzije";
+                TempData[Constants.ErrorOccurred] = true;
+                return RedirectToAction("Details", new { id = id });
+            }
             return RedirectToAction("Index");
         }
 

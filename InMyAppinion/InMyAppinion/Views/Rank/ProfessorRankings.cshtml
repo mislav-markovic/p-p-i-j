@@ -1,0 +1,73 @@
+﻿@using InMyAppinion.ViewModels
+@model ProfessorRankingViewModel
+@{
+    ViewData["Title"] = "Najbolji profesori";
+}
+
+<h2>Profesori</h2>
+
+<form asp-action="ProfessorRankings" method="get">
+    <p>
+        <select name="tag" asp-items="ViewBag.SubjectTag" selected="Model.tag" asp-route-sort="Model.sort"><option value="-1"></option></select>
+        <input type="submit" value="Filtriraj područja" class="btn btn-info btn-xs" />
+    </p>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            @{
+                string[] columns = { "Profesor", "Pristupačnost", "Interaktivnost", "Mentorstvo", "Kvaliteta", "Ukupno" };
+            }
+
+            @for (int i = 0; i < columns.Length; i++)
+            {
+                <th>
+                    @if (i > 0) {
+                        <a asp-route-tag="@Model.tag" asp-route-sort="@i">@columns[i]</a>
+                    }
+                    else
+                    {
+                        @columns[i]
+                    }
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        
+        @{
+            int counter = 0;
+            foreach (var item in Model.Professors)
+            {
+                counter++;
+            <tr>
+                <td>
+                    @counter.
+                </td>
+                <td>
+                    @item.FullName
+                </td>
+                <td align="center">
+                    @item.AvgAccessibility
+                </td>
+                <td align="center">
+                    @item.AvgInteractivity
+                </td>
+                <td align="center">
+                    @item.AvgMentoring
+                </td>
+                <td align="center">
+                    @item.AvgQuality
+                </td>
+                <td align="center">
+                    @item.AvgTotal
+                </td>
+            </tr>
+
+            }
+        }
+    </tbody>
+
+</table>

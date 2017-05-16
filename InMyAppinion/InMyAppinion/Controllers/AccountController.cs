@@ -12,14 +12,24 @@ using Microsoft.Extensions.Options;
 using InMyAppinion.Models;
 using InMyAppinion.Models.AccountViewModels;
 using InMyAppinion.Services;
+using InMyAppinion.Data;
+using Microsoft.EntityFrameworkCore;
+using InMyAppinion.ViewModels;
+using System.IO;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.ApplicationInsights.Channel;
+using Microsoft.ApplicationInsights;
 
 namespace InMyAppinion.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
@@ -31,7 +41,9 @@ namespace InMyAppinion.Controllers
             IOptions<IdentityCookieOptions> identityCookieOptions,
             IEmailSender emailSender,
             ISmsSender smsSender,
-            ILoggerFactory loggerFactory)
+            ILoggerFactory loggerFactory,
+            ApplicationDbContext context,
+            IHostingEnvironment hostingEnvironment)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -39,6 +51,8 @@ namespace InMyAppinion.Controllers
             _emailSender = emailSender;
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<AccountController>();
+            _context = context;
+            _hostingEnvironment = hostingEnvironment;
         }
 
         //
@@ -112,7 +126,11 @@ namespace InMyAppinion.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
+                var user = new ApplicationUser {
+                    UserName = model.Username,
+                    Email = model.Email,
+                    DateRegistered = DateTime.Now
+                };
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 await _userManager.AddToRoleAsync(user, "Korisnik");
@@ -451,6 +469,101 @@ namespace InMyAppinion.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        [AllowAnonymous]
+        [Route("Account/Profile/{username}")]
+        public async Task<IActionResult> Profile(string username)
+        {
+            var user = _context.User.Where(u => u.UserName == username).SingleOrDefault();
+            var roles = await _userManager.GetRolesAsync(await _userManager.FindByIdAsync(user.Id));
+
+            var vm = new UserViewModel();
+
+            if (roles.Contains("Administrator")) vm.Role = "Administrator";
+            else if(roles.Contains("Moderator")) vm.Role = "Moderator";
+            else if (roles.Contains("Korisnik")) vm.Role = "Korisnik";
+            vm.User = user;
+
+            var profReviews = _context.ProfessorReview.Where(u => u.AuthorID == user.Id).Include(r => r.Votes);
+            foreach(var review in profReviews)
+            {
+                foreach(var vote in review.Votes)
+                {
+                    if (vote.Vote) vm.PositiveVotesProfessorReviews += 1;
+                    else vm.NegativeVotesProfessorReviews += 1;
+                }
+            }
+            var subjectReviews = _context.SubjectReview.Where(u => u.AuthorID == user.Id).Include(r => r.Votes);
+            foreach (var review in subjectReviews)
+            {
+                foreach (var vote in review.Votes)
+                {
+                    if (vote.Vote) vm.PositiveVotesSubjectReviews += 1;
+                    else vm.NegativeVotesSubjectReviews += 1;
+                }
+            }
+            var commentVote = _context.Comment.Where(u => u.AuthorID == user.Id).Include(r => r.Votes);
+            foreach (var comment in commentVote)
+            {
+                foreach (var vote in comment.Votes)
+                {
+                    if (vote.Vote) vm.PositiveVotesComments += 1;
+                    else vm.NegativeVotesComments += 1;
+                }
+            }
+            vm.ProfReviews = _context.ProfessorReview
+                             .Where(r => r.AuthorID == user.Id)
+                             .Include(r => r.ProfessorReviewTagSet)
+                             .ThenInclude(t => t.ProfessorReviewTag)
+                             .Include(r => r.Comments)
+                             .Include(r => r.Professor)
+                             .ToList();
+            vm.SubjectReviews = _context.SubjectReview
+                                .Where(r => r.AuthorID == user.Id)
+                                .Include(r => r.SubjectReviewTagSet)
+                                .ThenInclude(t => t.SubjectReviewTag)
+                                .Include(r => r.Comments)
+                                .Include(r => r.Subject)
+                                .ToList();
+            vm.Comments = _context.Comment
+                          .Where(c => c.AuthorID == user.Id)
+                          .Include(c => c.SubjectReview)
+                          .ThenInclude(c => c.Subject)
+                          .Include(c => c.ProfessorReview)
+                          .ThenInclude(c => c.Professor)
+                          .ToList();
+
+            vm.PositiveVotesGiven = _context.VoteComment.Where(v => v.Voter.UserName == user.UserName).Count() +
+                                    _context.VoteProfessorReview.Where(v => v.Voter.UserName == user.UserName).Count() +
+                                    _context.VoteSubjectReview.Where(v => v.Voter.UserName == user.UserName).Count();
+
+            return View(vm);
+        }
+
+        [Authorize]
+        [HttpPost("UploadFiles")]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            TelemetryClient telemetryClient = new TelemetryClient();
+            try {
+                var extension = file.FileName.Split('.').Last();
+                var filePath = "\\images\\avatars\\" + User.Identity.Name + "." + extension;
+                using (var stream = new FileStream(_hostingEnvironment.WebRootPath + filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                var user = _context.User.SingleOrDefault(u => u.UserName == User.Identity.Name);
+                user.Avatar = filePath;
+                _context.Update(user);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex) { 
+	            telemetryClient.TrackException(ex); 
+            }
+
+            return RedirectToAction("Profile", "Account", new { username = User.Identity.Name });
         }
 
         #region Helpers

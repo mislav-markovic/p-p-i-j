@@ -11,6 +11,17 @@
   <PropertyGroup>
     <UserSecretsId>aspnet-InMyAppinion-88a8cd05-1ead-432b-a8a3-192be7e89138</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot/images\ep_naturalwhite.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\css\navbar.css" />
+    <Content Include="wwwroot\css\professorProfile.css" />
+    <Content Include="wwwroot\css\registration.css" />
+    <Content Include="wwwroot\css\userProfile.css" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
@@ -18,6 +29,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Session" Version="1.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="1.1.1" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.1" />
@@ -34,6 +46,8 @@
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="wwwroot\images\avatars\" />
+    <Folder Include="wwwroot\images\avatars\" />
     <Folder Include="wwwroot\lib\bootstrap\dist\css\" />
     <Folder Include="wwwroot\lib\bootstrap\dist\fonts\" />
     <Folder Include="wwwroot\lib\bootstrap\dist\js\" />

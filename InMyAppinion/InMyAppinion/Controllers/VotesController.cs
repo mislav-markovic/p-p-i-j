@@ -56,6 +56,8 @@ namespace InMyAppinion.Controllers
                             _context.ProfessorReview.Update(review);
                             _context.SaveChanges();
 
+                            await AddPoints(review.AuthorID, 2 * voteValue);
+
                             var result = new
                             {
                                 successful = true,
@@ -101,6 +103,8 @@ namespace InMyAppinion.Controllers
                     _context.ProfessorReview.Update(review);
                     _context.SaveChanges();
 
+                    await AddPoints(review.AuthorID, voteValue);
+
                     var result = new
                     {
                         successful = true,
@@ -141,6 +145,8 @@ namespace InMyAppinion.Controllers
                             _context.VoteSubjectReview.Update(hasVoted);
                             _context.SubjectReview.Update(review);
                             _context.SaveChanges();
+
+                            await AddPoints(review.AuthorID, 2 * voteValue);
 
                             var result = new
                             {
@@ -186,6 +192,8 @@ namespace InMyAppinion.Controllers
                     _context.VoteSubjectReview.Add(voteTable);
                     _context.SubjectReview.Update(review);
                     _context.SaveChanges();
+
+                    await AddPoints(review.AuthorID, voteValue);
 
                     var result = new
                     {
@@ -247,6 +255,8 @@ namespace InMyAppinion.Controllers
                         _context.Comment.Update(comment);
                         _context.SaveChanges();
 
+                        await AddPoints(comment.AuthorID, 2 * voteValue);
+
                         var result = new
                         {
                             successful = true,
@@ -292,6 +302,8 @@ namespace InMyAppinion.Controllers
                 _context.Comment.Update(comment);
                 _context.SaveChanges();
 
+                await AddPoints(comment.AuthorID, voteValue);
+
                 var result = new
                 {
                     successful = true,
@@ -309,6 +321,56 @@ namespace InMyAppinion.Controllers
                 };
                 return Json(error);
             }
+        }
+
+        public async Task<IActionResult> AddPoints(string userId, int vote)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+
+            user.Points += vote;
+            await _userManager.UpdateAsync(user);
+
+            return null;
+        }
+
+        public IActionResult UpdateAllPoints()
+        {
+            var users = _context.User.ToList();
+            foreach(var user in users)
+            {
+                user.Points = 0;
+                _context.User.Update(user);
+                _context.SaveChanges();
+            }
+
+            var profReviews = _context.ProfessorReview.ToList();
+            foreach(var rev in profReviews)
+            {
+                var user = _context.User.SingleOrDefault(u => u.Id == rev.AuthorID);
+                user.Points += rev.Points;
+                _context.User.Update(user);
+                _context.SaveChanges();
+            }
+
+            var subjectReviews = _context.SubjectReview.ToList();
+            foreach (var rev in subjectReviews)
+            {
+                var user = _context.User.SingleOrDefault(u => u.Id == rev.AuthorID);
+                user.Points += rev.Points;
+                _context.User.Update(user);
+                _context.SaveChanges();
+            }
+
+            var comments = _context.Comment.ToList();
+            foreach(var com in comments)
+            {
+                var user = _context.User.SingleOrDefault(u => u.Id == com.AuthorID);
+                user.Points += com.Points;
+                _context.User.Update(user);
+                _context.SaveChanges();
+            }
+
+            return RedirectToAction("Index", "Home", "");
         }
     }
 }

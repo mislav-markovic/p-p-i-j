@@ -19,12 +19,13 @@ namespace InMyAppinion.Models
         public string ShortName { get; set; }
         [Display(Name = "Opis")]
         [Required(ErrorMessage = "{0} je obavezan", AllowEmptyStrings = false)]
-        [StringLength(500, MinimumLength = 3, ErrorMessage = "{0} mora biti između 3 i 500 znakova")]
         public string Description { get; set; }
+        [Display(Name = "Potvrđen?")]
         public bool Validated { get; set; }
         [Required(ErrorMessage = "Obaveno je pridružiti fakultet predmetu")]
         public int FacultyID { get; set; }
 
+        [Display(Name = "Fakultet")]
         public Faculty Faculty { get; set; }
         [Display(Name = "Područja")]
         public ICollection<SubjectTagSet> SubjectTagSet { get; set; }

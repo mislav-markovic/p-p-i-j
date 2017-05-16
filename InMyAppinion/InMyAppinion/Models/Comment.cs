@@ -14,7 +14,7 @@ namespace InMyAppinion.Models
 
         [DataType(DataType.Date)]
         public DateTime Timestamp { get; set; }
-        public int? ParentID { get; set; }
+        public int? ParentCommentID { get; set; }
         public int? ProfessorReviewID { get; set; }
         public int? SubjectReviewID { get; set; }
         public string AuthorID { get; set; }

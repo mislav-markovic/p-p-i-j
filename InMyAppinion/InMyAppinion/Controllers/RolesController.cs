@@ -48,6 +48,44 @@ namespace InMyAppinion.Controllers
             return View(name, description);
         }
 
+        public async Task<IActionResult> Edit(string roleName)
+        {
+            if(roleName == null)
+            {
+                return NotFound();
+            }
+            var role = await roleManager.FindByNameAsync(roleName);
+            if(role == null)
+            {
+                return NotFound();
+            }
+            return View(role);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(string id, string name, string description){
+            if(ModelState.IsValid)
+            {
+                try
+                {
+                    var role = await roleManager.FindByIdAsync(id);
+                    if(role == null)
+                    {
+                        return NotFound();
+                    }
+                    role.Name = name;
+                    role.Description = description;
+                    await roleManager.UpdateAsync(role);
+                }
+                catch
+                {
+                    return NotFound("Greška pri promjeni uloge!");
+                }
+                return RedirectToAction("Index");
+            }
+            return View(name, description);
+        }
+
         public IActionResult Join()
         {
             UserRoleViewModel model = new UserRoleViewModel

@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using InMyAppinion.Data;
 using InMyAppinion.Models;
 using InMyAppinion.Services;
+using System.Globalization;
 
 namespace InMyAppinion
 {
@@ -43,17 +44,29 @@ namespace InMyAppinion
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, ApplicationRole>()
+            services.AddIdentity<ApplicationUser, ApplicationRole>(options => 
+            {
+                options.SecurityStampValidationInterval = TimeSpan.Zero;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddMvc();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
 
             services.AddAuthorization(options =>
             {
                 options.AddPolicy(
                     "CanReview",
                     policyBuilder => policyBuilder.RequireRole("Korisnik"));
+            });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(
+                    "CanModerate",
+                    policyBuilder => policyBuilder.RequireRole("Moderator", "Administrator"));
             });
 
             // Add application services.
@@ -104,6 +117,13 @@ namespace InMyAppinion
 
             app.UseIdentity();
 
+            app.UseSession();
+
+            var cultureInfo = new CultureInfo("hr-HR");
+            cultureInfo.NumberFormat.NumberDecimalSeparator = ".";
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
             // Add external authentication middleware below. To configure them please see https://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>

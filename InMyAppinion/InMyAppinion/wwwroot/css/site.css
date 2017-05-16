@@ -1,6 +1,12 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    font-family: 'Open Sans', sans-serif;
+    background-image: url("../images/concrete_seamless.png");
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif;
 }
 
 /* Wrapping element */
@@ -8,6 +14,10 @@
 .body-content {
     padding-left: 15px;
     padding-right: 15px;
+    background-color: white;
+    -webkit-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.5);
+    -moz-box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.5);
+    box-shadow: 0px 1px 1px 0px rgba(0,0,0,0.5);
 }
 
 /* Set widths on the form inputs since otherwise they're 100% wide */
@@ -53,9 +63,6 @@ ul.nav li.dropdown:hover ul.dropdown-menu {
     display: block;
 }
 
-
-
-
 .nav > li > a:hover{
     border: inherit;
     background-color:inherit;
@@ -68,4 +75,18 @@ ul.nav li.dropdown:hover ul.dropdown-menu {
 
 .clear {
     clear: both;
+}
+
+.margins {
+    margin-top: 17px;
+}
+
+#positive {
+    color: green;
+    padding: 0;
+}
+
+#negative {
+    color: red;
+    padding: 0;
 }

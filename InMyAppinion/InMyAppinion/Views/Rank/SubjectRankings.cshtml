@@ -1,0 +1,70 @@
+@using InMyAppinion.ViewModels
+@model SubjectRankingViewModel
+@{
+    ViewData["Title"] = "Najbolji predmeti";
+}
+
+<h2>Kolegiji</h2>
+
+<form asp-action="SubjectRankings" method="get">
+    <p>
+        <select name="tag" asp-items="ViewBag.SubjectTag" selected="Model.tag" asp-route-sort="Model.sort"><option value="-1"></option></select>
+        <input type="submit" value="Filtriraj područja" class="btn btn-info btn-xs" />
+    </p>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th></th>
+            @{
+                string[] columns = { "Predmet", "Težina", "Zanimljivost", "Korisnost", "Ukupno" };
+            }
+
+            @for (int i = 0; i < columns.Length; i++)
+            {
+                <th>
+                    @if (i > 0)
+                    {
+                        <a asp-route-tag="@Model.tag" asp-route-sort="@i">@columns[i]</a>
+                    }
+                    else
+                    {
+                        @columns[i]
+                    }
+                </th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            int counter = 0;
+            foreach (var item in Model.Subjects)
+            {
+                counter++;
+                <tr>
+                    <td>
+                        @counter.
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td align="center">
+                        @item.AvgDifficultyGrade
+                    </td>
+                    <td align="center">
+                        @item.AvgInterestGrade
+                    </td>
+                    <td align="center">
+                        @item.AvgUsefulnessGrade
+                    <td align="center">
+                        @item.AvgTotal
+                    </td>
+                </tr>
+
+            }
+        }
+    </tbody>
+
+</table>

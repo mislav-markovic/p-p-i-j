@@ -15,6 +15,7 @@ namespace InMyAppinion.Models.ProfessorViewModels
         public string LastName { get; set; }
         [Display(Name = "Biografija")]
         public string Biography { get; set; }
+        [Display(Name ="Potvrđen")]
         public bool Validated { get; set; }
 
         [Display(Name = "Kvaliteta")]
@@ -32,5 +33,21 @@ namespace InMyAppinion.Models.ProfessorViewModels
         public ICollection<Subject> Subjects { get; set; }
         [Display(Name = "Kritike")]
         public ICollection<ProfessorReview> Reviews { get; set; }
+
+        [Display(Name = "Sveučilišta")]
+        public ICollection<University> Universities { get; set; }
+        [Display(Name = "Fakulteti")]
+        public ICollection<Faculty> Faculties { get; set; }
+        [Display(Name = "Interesi")]
+        public ICollection<SubjectTag> Interests { get; set; }
+        public IDictionary<string, GradeInfo> Grades { get; set; }
+
+        public string FullName
+        {
+            get
+            {
+                return FirstName + " " + LastName;
+            }
+        }
     }
 }
