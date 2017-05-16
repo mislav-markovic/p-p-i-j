@@ -218,7 +218,7 @@
                                 <td class="pull-left">
                                     @if (await AuthorizationService.AuthorizeAsync(User, "CanReview"))
                                     {
-                                        <a class="btn btn-danger pull-left" asp-action="Create" asp-controller="SubjectReviews" asp-route-id="@Model.ID">Dodaj kritiku</a>
+                                        <a class="btn btn-danger pull-left" asp-action="Create" asp-controller="ProfessorReviews" asp-route-id="@Model.ID">Dodaj kritiku</a>
                                     }
                                 </td>
                                 <td class="pull-right">
