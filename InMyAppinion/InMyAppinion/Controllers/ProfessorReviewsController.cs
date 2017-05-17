@@ -143,7 +143,7 @@ namespace InMyAppinion.Controllers
             {
                 _context.Add(professorReview);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = professorReview.ID });
             }
             ViewData["AuthorID"] = professorReview.AuthorID;
             ViewData["ProfessorID"] = professorReview.ProfessorID;
@@ -228,7 +228,7 @@ namespace InMyAppinion.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = professorReview.ID });
             }
             ViewData["AuthorID"] = new SelectList(_context.User, "Id", "Id", professorReview.AuthorID);
             ViewData["ProfessorID"] = new SelectList(_context.Professor, "ID", "ID", professorReview.ProfessorID);

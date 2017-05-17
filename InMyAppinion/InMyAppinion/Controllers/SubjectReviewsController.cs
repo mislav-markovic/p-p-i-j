@@ -141,7 +141,7 @@ namespace InMyAppinion.Controllers
             {
                 _context.Add(subjectReview);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = subjectReview.ID });
             }
             ViewData["AuthorID"] = subjectReview.AuthorID;
             ViewData["SubjectID"] = subjectReview.SubjectID;
@@ -218,7 +218,7 @@ namespace InMyAppinion.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction("Index");
+                return RedirectToAction("Details", new { id = subjectReview.ID });
             }
             ViewData["AuthorID"] = new SelectList(_context.User, "Id", "Id", subjectReview.AuthorID);
             ViewData["SubjectID"] = new SelectList(_context.Subject, "ID", "ID", subjectReview.SubjectID);

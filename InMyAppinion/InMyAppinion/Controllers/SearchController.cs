@@ -54,7 +54,10 @@ namespace InMyAppinion.Controllers
                     subjects = subjects.Where(s => s.Name.ToLower().Contains(query.ToLower()) && s.Validated).ToList();
                     foreach (var subject in subjects)
                     {
-                        tmp.Add(subject);
+                        if (!tmp.Contains(subject))
+                        {
+                            tmp.Add(subject);
+                        }
                     }
                     model.subservmod.subjects = tmp.OrderBy(s => s.Name);
 
@@ -62,7 +65,13 @@ namespace InMyAppinion.Controllers
                     // professor part
                     var profs = _context.Professor.Where(o => o.Validated && o.FullName.ToLower().Contains(query.ToLower())).ToList();
                     var x = _context.Subject.Where(s => tmp.Contains(s)).SelectMany(s => s.Professors).Select(s => s.Professor).Where(p => p.Validated).ToList();
-                    profs.AddRange(x);
+                    foreach (var y in x)
+                    {
+                        if (!profs.Contains(y))
+                        {
+                            profs.Add(y);
+                        }
+                    }
 
                     model.profservmod.professors = profs.OrderBy(p => p.FullName);
                 }

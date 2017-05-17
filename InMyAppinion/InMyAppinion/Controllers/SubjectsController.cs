@@ -183,7 +183,9 @@ namespace InMyAppinion.Controllers
             {
                 if(dbTags.Any(t => t == tagID))
                 {
-                    tagSet.Add(new SubjectTagSet { SubjectID = subject.ID, SubjectTagID = tagID });
+                    var tSet = new SubjectTagSet { SubjectID = subject.ID, SubjectTagID = tagID };
+                    tagSet.Add(tSet);
+                    _context.SubjectTagSet.Add(tSet);
                 }
             }
 
@@ -196,7 +198,9 @@ namespace InMyAppinion.Controllers
             {
                 if(dbProfessors.Any(p => p == profID))
                 {
-                    professorSet.Add(new ProfessorSubjectSet { ProfessorID = profID, SubjectID = subject.ID });
+                    var pSet = new ProfessorSubjectSet { ProfessorID = profID, SubjectID = subject.ID };
+                    professorSet.Add(pSet);
+                    _context.ProfessorSubjectSet.Add(pSet);
                 }
             }
 
@@ -229,6 +233,7 @@ namespace InMyAppinion.Controllers
             {
                 return NotFound();
             }
+            ViewData["ProfessorID"] = new SelectList(_context.Professor, "ID", "FullName");
             ViewData["FacultyID"] = new SelectList(_context.Faculty, "ID", "ID", subject.FacultyID);
             return View(subject);
         }
@@ -238,7 +243,7 @@ namespace InMyAppinion.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,ShortName,Description,FacultyID")] Subject subject)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,ShortName,Description,FacultyID")] Subject subject, ICollection<int> professorIDs)
         {
             if (id != subject.ID)
             {
@@ -249,6 +254,18 @@ namespace InMyAppinion.Controllers
             {
                 try
                 {
+                    var professorSet = new HashSet<ProfessorSubjectSet>();
+                    var dbProfessors = _context.Professor.AsNoTracking().Select(p => p.ID).ToList();
+                    foreach (var profID in professorIDs)
+                    {
+                        if (dbProfessors.Any(p => p == profID))
+                        {
+                            var set = new ProfessorSubjectSet { ProfessorID = profID, SubjectID = subject.ID };
+                            professorSet.Add(set);
+                            _context.ProfessorSubjectSet.Add(set);
+                        }
+                    }
+                    subject.Professors = professorSet;
                     _context.Update(subject);
                     await _context.SaveChangesAsync();
                 }
